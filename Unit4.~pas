@@ -1,0 +1,50 @@
+unit Unit4;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, pngimage, ExtCtrls, StdCtrls, RxGIF, abfControls, Animate,
+  GIFCtrl, OleCtrls, SHDocVw;
+
+type
+  Tsplash_screen = class(TForm)
+    Image1: TImage;
+    rx_loading: TRxGIFAnimator;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure Image1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  splash_screen: Tsplash_screen;
+
+implementation
+
+uses Unit1;
+
+{$R *.dfm}
+
+procedure Tsplash_screen.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+splash_screen.Release;
+splash_screen:=Nil;
+end;
+
+procedure Tsplash_screen.FormCreate(Sender: TObject);
+begin
+if Form1 <> nil then
+rx_loading.Visible:=False;
+end;
+
+procedure Tsplash_screen.Image1Click(Sender: TObject);
+begin
+Close;
+end;
+
+end.

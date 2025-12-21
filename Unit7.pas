@@ -1,0 +1,114 @@
+unit Unit7;
+
+interface
+
+uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
+  Buttons, ExtCtrls, registry, pngimage, abfControls, WinSkinData;
+
+type
+  TAboutBox = class(TForm)
+    Label3: TLabel;
+    Bevel1: TBevel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Button1: TButton;
+    Panel1: TPanel;
+    abfImage1: TabfImage;
+    Image1: TImage;
+    SkinData1: TSkinData;
+    procedure FormCreate(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  AboutBox: TAboutBox;
+
+implementation
+
+uses Unit1;
+
+//----------------------------------------------------------
+
+{PEGAR A VERSÃO DO WINDOWS}
+function GetWindowsVersion: string;
+var 
+VerInfo: TOsversionInfo;
+PlatformId: String;
+Reg: TRegistry;
+begin 
+VerInfo.dwOSVersionInfoSize := SizeOf(VerInfo); 
+GetVersionEx(VerInfo);
+// Detect platform 
+Reg := TRegistry.Create; 
+Reg.RootKey := HKEY_LOCAL_MACHINE; 
+case VerInfo.dwPlatformId of 
+VER_PLATFORM_WIN32s: 
+begin 
+// Registry (Huh? What registry?) 
+PlatformId := 'Windows 3.1';
+end;
+VER_PLATFORM_WIN32_WINDOWS: 
+begin 
+// Registry 
+Reg.OpenKey('\SOFTWARE\Microsoft\Windows\CurrentVersion', False);
+PlatformId := Reg.ReadString('ProductName');
+end; 
+VER_PLATFORM_WIN32_NT: 
+begin
+// Registry 
+Reg.OpenKey('\SOFTWARE\Microsoft\Windows NT\CurrentVersion', False);
+PlatformId := Reg.ReadString('ProductName');
+end; 
+end;
+Reg.Free; 
+Result:=PlatformId;
+end;
+//----------------------------------------------------------
+
+{$R *.dfm}
+
+procedure TAboutBox.FormCreate(Sender: TObject);
+begin
+Label3.Caption:='Versão '+SRT_VERSAO_Global
+                +#13+
+                'JMBA Softwares 2004, 2012';
+
+Label5.Caption:=GetWindowsVersion;
+
+ if(AllocMemCount > 0)then
+ Label6.Caption:='Memória Disponível: '+IntToStr(AllocMemCount)+' MB'
+ else
+ Label6.Caption:='';
+
+end;
+
+procedure TAboutBox.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+ //Precisa ativar o KeyPreview no Form para funcionar
+ if Key = VK_ESCAPE then
+ Close;
+ 
+end;
+
+procedure TAboutBox.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+AboutBox.Release;
+AboutBox:=Nil;
+end;
+
+procedure TAboutBox.Button1Click(Sender: TObject);
+begin
+Close;
+
+end;
+
+end.
+
