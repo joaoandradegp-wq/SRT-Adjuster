@@ -34,59 +34,13 @@ implementation
 
 uses Unit1;
 
-//----------------------------------------------------------
-
-{PEGAR A VERSÃO DO WINDOWS}
-function GetWindowsVersion: string;
-var 
-VerInfo: TOsversionInfo;
-PlatformId: String;
-Reg: TRegistry;
-begin 
-VerInfo.dwOSVersionInfoSize := SizeOf(VerInfo); 
-GetVersionEx(VerInfo);
-// Detect platform 
-Reg := TRegistry.Create; 
-Reg.RootKey := HKEY_LOCAL_MACHINE; 
-case VerInfo.dwPlatformId of 
-VER_PLATFORM_WIN32s: 
-begin 
-// Registry (Huh? What registry?) 
-PlatformId := 'Windows 3.1';
-end;
-VER_PLATFORM_WIN32_WINDOWS: 
-begin 
-// Registry 
-Reg.OpenKey('\SOFTWARE\Microsoft\Windows\CurrentVersion', False);
-PlatformId := Reg.ReadString('ProductName');
-end; 
-VER_PLATFORM_WIN32_NT: 
-begin
-// Registry 
-Reg.OpenKey('\SOFTWARE\Microsoft\Windows NT\CurrentVersion', False);
-PlatformId := Reg.ReadString('ProductName');
-end; 
-end;
-Reg.Free; 
-Result:=PlatformId;
-end;
-//----------------------------------------------------------
-
 {$R *.dfm}
 
 procedure TAboutBox.FormCreate(Sender: TObject);
 begin
-Label3.Caption:='Versão '+versao_app
+Label3.Caption:='Versão '+SRT_VERSAO_Global
                 +#13+
-                'JMBA Softwares 2004, 2012';
-
-Label5.Caption:=GetWindowsVersion;
-
- if(AllocMemCount > 0)then
- Label6.Caption:='Memória Disponível: '+IntToStr(AllocMemCount)+' MB'
- else
- Label6.Caption:='';
-
+                'JMBA Softwares 2004, 2026';
 end;
 
 procedure TAboutBox.FormKeyDown(Sender: TObject; var Key: Word;

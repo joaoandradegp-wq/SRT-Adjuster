@@ -177,7 +177,7 @@ var
        SRT_EXE_Global,
       SRT_RAIZ_Global,
     SRT_VERSAO_Global,
-       URL_MD5_Global,
+    //   URL_MD5_Global,
       SRT_BLOG_Global,
   SRT_FACEBOOK_Global,
     SRT_PAYPAL_Global:String;
@@ -199,7 +199,7 @@ const
 
 implementation
 
-uses Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, CommCtrl, Funcoes, Mensagens;
+uses Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, CommCtrl, Funcoes;
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -369,8 +369,8 @@ RichText1.ReadOnly:=True;
  else
  begin
  Panel1.Visible:=True;
- MessageBox(Application.Handle, pchar(Mensagens_Pequenas(22,'')), pchar(Application.Title), MB_ICONSTOP+MB_OK);
- StatusBar1.Panels[0].Text:=Copy(Mensagens_Pequenas(22,''),0,Pos('.',Mensagens_Pequenas(22,'')));
+ MessageBox(Application.Handle, pchar('O documento carregado não possui diálogos no padrão de uma legenda SRT.'+#13#13+'Error code:  #0102'), pchar(Application.Title), MB_ICONSTOP+MB_OK);
+ StatusBar1.Panels[0].Text:='O documento carregado não possui diálogos no padrão de uma legenda SRT.'+#13#13+'Error code:  #0102';
  //------------------------
  btnabrir.Enabled:=True;
  lstabrir.Enabled:=True;
@@ -398,7 +398,7 @@ StatusBar1.Panels[0].Text:='';
 
  if (salvar = True) then
  begin
-  case MessageBox(Application.Handle, pchar(Mensagens_Pequenas(18,'')),pchar(Application.Title),MB_ICONQUESTION+MB_YESNO+MB_DEFBUTTON2) of
+  case MessageBox(Application.Handle, pchar('Deseja salvar as alterações realizadas para esta legenda antes de sair?'),pchar(Application.Title),MB_ICONQUESTION+MB_YESNO+MB_DEFBUTTON2) of
     idYes:btnsalvarcomo.Click;
     idNo :salvar:=False; //--> Variável GLOBAL (Salvar Alterações)
   end;
@@ -416,7 +416,7 @@ StatusBar1.Panels[0].Text:='';
    if not PtInRect(RctMemo, Pt) then
    begin
      if FileCount > 1 then
-     MessageBox(Application.Handle,pchar(Mensagens_Pequenas(20,'')),pchar(Application.Title),MB_ICONINFORMATION+MB_OK);
+     MessageBox(Application.Handle,pchar('Será mostrado apenas o conteúdo da primeira legenda selecionada.'),pchar(Application.Title),MB_ICONINFORMATION+MB_OK);
 
    {PEGA O COMPRIMENTO NECESSÁRIO PARA O NOME DO ARQUIVO, SEM CONTAR COM CARACTERE NULO DO FIM DA STRING}
    {O SEGUNDO PARÂMETRO(ZERO) INDICA O PRIMEIRO ARQUIVO DA LISTA}
@@ -429,8 +429,8 @@ StatusBar1.Panels[0].Text:='';
        //---------------------------------------------------------------------------------------------------
        if (ExtractFileExt(LowerCase(pchar(FileName))) <> '.srt') then
        begin
-       MessageBox(Application.Handle, pchar(Mensagens_Pequenas(23,'')), pchar(Application.Title), MB_ICONSTOP+MB_OK);
-       StatusBar1.Panels[0].Text:=Copy(Mensagens_Pequenas(23,''),0,Pos('.',Mensagens_Pequenas(23,'')));
+       MessageBox(Application.Handle, pchar('O arquivo carregado não é um documento de legenda no formato SRT.'+#13#13+'Error code:  #0103'), pchar(Application.Title), MB_ICONSTOP+MB_OK);
+       StatusBar1.Panels[0].Text:='O arquivo carregado não é um documento de legenda no formato SRT.'+#13#13+'Error code:  #0103';
        end
        else
        Novo_Carregar(FileName);
@@ -439,7 +439,7 @@ StatusBar1.Panels[0].Text:='';
     else
       begin
       Panel1.Visible:=True;
-      MessageBox(Application.Handle, pchar(Mensagens_Pequenas(21,'')), pchar(Application.Title), MB_ICONERROR+MB_OK);
+      MessageBox(Application.Handle, pchar('Ocorreu um erro interno do sistema.'+#13#13+'Error code:  #0101'), pchar(Application.Title), MB_ICONERROR+MB_OK);
       Close;
       end;
 
@@ -507,12 +507,12 @@ Nao_Encontrados,Sim_Encontrados:TStringList;
 begin
 
  {INÍCIO - SelectDirectory}                   {shell:MyComputerFolder}
- if SelectDirectory(Mensagens_Pequenas(27,''), OpenDialog1.InitialDir ,Pasta) then
+ if SelectDirectory('Certifique-se de que exista apenas um título de Série por diretório para que as legendas sejam ajustadas corretamente.', OpenDialog1.InitialDir ,Pasta) then
  begin
 
    if DriveCD = Copy(Pasta,0,1) then
    begin
-   MessageBox(Application.Handle,pchar(Mensagens_Pequenas(24,'')),pchar(Application.Title),MB_ICONERROR+MB_OK);
+   MessageBox(Application.Handle,pchar('Não é possível ajustar arquivos de legenda em uma unidade de CD.'+#13#13+'Error code:  #0104'),pchar(Application.Title),MB_ICONERROR+MB_OK);
    btnrenomear.Click;
    end
    {INÍCIO - ELSE}
@@ -601,21 +601,21 @@ begin
       if Nao_Encontrados.Count > 0 then
       begin
         if Nao_Encontrados.Count = 1 then
-        MessageBox(Application.Handle,pchar(Mensagens_Pequenas(12,'')                             +#13#13+Nao_Encontrados.Text),pchar(Application.Title),MB_ICONERROR+MB_OK)
+        MessageBox(Application.Handle,pchar('Foi realizado ajuste em 1 legenda com sucesso!'), pchar(Application.Title), MB_ICONINFORMATION+MB_OK)
         else
-        MessageBox(Application.Handle,pchar(Mensagens_Pequenas(13,IntToStr(Nao_Encontrados.Count))+#13#13+Nao_Encontrados.Text),pchar(Application.Title),MB_ICONERROR+MB_OK);
+        MessageBox(Application.Handle,pchar('Foram realizados ajustes em '+IntToStr(Nao_Encontrados.Count)+' legendas com sucesso!'),pchar(Application.Title),MB_ICONERROR+MB_OK);
       end;
       //----------------------------------------------------------------------------------------------------------------------------------------
       if Sim_Encontrados.Count > 0 then
       begin
         if Sim_Encontrados.Count = 1 then
-        MessageBox(Application.Handle,pchar(Mensagens_Pequenas(14,'')                             +#13#13+Sim_Encontrados.Text),pchar(Application.Title),MB_ICONINFORMATION+MB_OK)
+        MessageBox(Application.Handle,pchar('Foi realizado ajuste em 1 legenda com sucesso!'), pchar(Application.Title), MB_ICONINFORMATION+MB_OK)
         else
-        MessageBox(Application.Handle,pchar(Mensagens_Pequenas(15,IntToStr(Sim_Encontrados.Count))+#13#13+Sim_Encontrados.Text),pchar(Application.Title),MB_ICONINFORMATION+MB_OK);
+        MessageBox(Application.Handle,pchar('Foram realizados ajustes em '+IntToStr(Nao_Encontrados.Count)+' legendas com sucesso!'),pchar(Application.Title),MB_ICONINFORMATION+MB_OK);
       end;
 
       if (Sim_Encontrados.Count = 0) and (Nao_Encontrados.Count = 0) then
-      MessageBox(Application.Handle,pchar(Mensagens_Pequenas(16,'')+#13#13+pasta),pchar(Application.Title),MB_ICONWARNING+MB_OK);
+      MessageBox(Application.Handle, pchar('Não foi necessário realizar ajustes nas legendas encontradas neste diretório!'+#13+#13+pasta), pchar(Application.Title), MB_ICONWARNING+MB_OK);
       //----------------------------------------------------------------------------------------------------------------------------------------
 
      Sim_Encontrados.Free;
@@ -672,7 +672,7 @@ SaveDialog1.FileName:=Trim(edit_legenda.Text);
        //----------------------------------------------------------------------------------------------------------------------------------------------------
        {INÍCIO - CASE}
        //----------------------------------------------------------------------------------------------------------------------------------------------------
-       case MessageBox(Application.Handle,pchar(Mensagens_Pequenas(26,'')),pchar(Mensagens_Pequenas(0,'')+' '+SaveDialog1.Title),MB_ICONWARNING+MB_YESNO+MB_DEFBUTTON2) of
+       case MessageBox(Application.Handle, pchar('A legenda atual já existe.'+#13+'Deseja substituí-lo?                       '), pchar('Confirmar '+SaveDialog1.Title), MB_ICONWARNING+MB_YESNO+MB_DEFBUTTON2) of
        idYes :
          Salvar_Como;
        idNo :
@@ -801,9 +801,9 @@ ProgressBar1.Refresh;
    if (cont1 > 0) then
    begin
     if (cont1 = 1) then
-    Label3.Caption:=Mensagens_Pequenas(10,'')
+    Label3.Caption:='1 Limite de Linha'
     else
-    Label3.Caption:=Mensagens_Pequenas(11,IntToStr(cont1));;
+    Label3.Caption:=IntToStr(cont1)+' Limites de Linha';
 
    //----------------------------------------
    Image3.Left:=Label3.Width+Form1.Width-174;
@@ -815,9 +815,9 @@ ProgressBar1.Refresh;
    //----------------------------------------
 
     if (cont1 = 1) then
-    StatusBar1.Panels[0].Text:=Mensagens_Pequenas(6,'')
+    StatusBar1.Panels[0].Text:='Esta legenda possui 1 ocorrência.'
     else
-    StatusBar1.Panels[0].Text:=Mensagens_Pequenas(7,IntToStr(cont1+cont2));
+    StatusBar1.Panels[0].Text:='Esta legenda possui '+IntToStr(cont1+cont2)+' ocorrências.';
    end;
                    
    //-----------------------------------------------------------------------
@@ -826,9 +826,9 @@ ProgressBar1.Refresh;
    if (cont2 > 0) then
    begin
       if (cont2 = 1) then
-      Label1.Caption:=Mensagens_Pequenas(8,'')
+      Label1.Caption:='1 Sobreposição'
       else
-      Label1.Caption:=Mensagens_Pequenas(9,IntToStr(cont2));
+      Label1.Caption:=IntToStr(cont2)+' Sobreposições';
 
    //----------------------------------------
    Image1.Left:=Label1.Width+Form1.Width-174;
@@ -841,9 +841,9 @@ ProgressBar1.Refresh;
    lstconsertar.Enabled:=True;
 
      if (cont2 = 1) then
-     StatusBar1.Panels[0].Text:=Mensagens_Pequenas(6,'')
+     StatusBar1.Panels[0].Text:='Esta legenda possui 1 ocorrência.'
      else
-     StatusBar1.Panels[0].Text:=Mensagens_Pequenas(7,IntToStr(cont1+cont2));
+     StatusBar1.Panels[0].Text:='Esta legenda possui '+IntToStr(cont1+cont2)+' ocorrências.';
    end;
    //-----------------------------------------------------------------------
 
@@ -861,7 +861,7 @@ ProgressBar1.Refresh;
      btncores.Enabled  :=True;
      lstcores.Enabled  :=True;
      //-----------------------
-     StatusBar1.Panels[0].Text:=Mensagens_Pequenas(5,'');
+     StatusBar1.Panels[0].Text:='Esta legenda não possui nenhum tipo de ocorrência.';
      end;
 
  if Label1.Visible = True then
@@ -949,7 +949,7 @@ RichText2.SetFocus;
 ProgressBar1.Visible:=False;
 
 //--------------------------------------------------
-StatusBar1.Panels[0].Text:=Mensagens_Pequenas(4,'');
+StatusBar1.Panels[0].Text:='Sobreposições corrigidas com sucesso!';
 Label1.Font.Color:=clBlue; //LETRA AZUL
 Image1.Visible:=False;
 Image2.Visible:=True;
@@ -993,7 +993,7 @@ begin
  end
  else
  begin
-  case MessageBox(Application.Handle,pchar(Mensagens_Pequenas(18,'')),pchar(Application.Title),MB_ICONWARNING+MB_YESNOCANCEL+MB_DEFBUTTON2) of
+  case MessageBox(Application.Handle,pchar('Deseja salvar as alterações realizadas para esta legenda antes de sair?'),pchar(Application.Title),MB_ICONWARNING+MB_YESNOCANCEL+MB_DEFBUTTON2) of
   idYes:
        begin
        btnsalvarcomo.Click;
@@ -1198,7 +1198,7 @@ begin
   if (salvar = True) then
   begin
     //--------------------------------------------------------------------------
-    case MessageBox(Application.Handle,pchar(Mensagens_Pequenas(19,'')),pchar(Application.Title),MB_ICONWARNING+MB_YESNO+MB_DEFBUTTON2) of
+    case MessageBox(Application.Handle,pchar('Tem certeza que deseja sobrescrever a legenda original?'),pchar(Application.Title),MB_ICONWARNING+MB_YESNO+MB_DEFBUTTON2) of
      idYes:
           begin
           salvar:=False;  //--> Variável GLOBAL (Salvar Alterações)
@@ -1245,7 +1245,7 @@ begin
 
 if (salvar = True) then
 begin
- case MessageBox(Application.Handle,pchar(Mensagens_Pequenas(18,'')),pchar(Application.Title),MB_ICONWARNING+MB_YESNOCANCEL+MB_DEFBUTTON2) of
+ case MessageBox(Application.Handle,pchar('Deseja salvar as alterações realizadas para esta legenda antes de sair?'),pchar(Application.Title),MB_ICONWARNING+MB_YESNOCANCEL+MB_DEFBUTTON2) of
  idYes:btnsalvarcomo.Click;
  idNo:
      begin
@@ -1416,7 +1416,7 @@ lstcores.Enabled     :=True;
   Label8.Visible:=True;
   end;
 
-StatusBar1.Panels[0].Text:=Mensagens_Pequenas(3,'');
+StatusBar1.Panels[0].Text:='Correção numérica realizada com sucesso!';
 Panel1.Visible:=False;
 end;
 
@@ -1542,7 +1542,7 @@ begin
 if ParamCount = 1 then
 begin
  if (ExtractFileExt(LowerCase(ParamStr(1))) <> '.srt') then
- MessageBox(Application.Handle, pchar(Mensagens_Pequenas(23,'')), pchar(Application.Title), MB_ICONSTOP+MB_OK)
+ MessageBox(Application.Handle, pchar('O arquivo carregado não é um documento de legenda no formato SRT.'+#13#13+'Error code:  #0103'), pchar(Application.Title), MB_ICONSTOP+MB_OK)
  else
  Novo_Carregar(ParamStr(1));
 end;
@@ -1559,7 +1559,7 @@ posicionar_inicio(RichText2);
 //------------------------------
 
 //--------------------------------------------------
-Form6_substituir.Caption:=Mensagens_Pequenas(2,'');
+Form6_substituir.Caption:='Localizar';
 Form6_substituir.Label2.Visible:=False;
 Form6_substituir.Edit2.Visible:=False;
 Form6_substituir.btn_substituir.Visible:=False;
@@ -1588,7 +1588,7 @@ posicionar_inicio(RichText2);
 //------------------------------
 
 //-------------------------------------------------
-Form6_substituir.Caption:=Mensagens_Pequenas(1,'');
+Form6_substituir.Caption:='Substituir';
 Form6_substituir.Label2.Visible:=True;
 Form6_substituir.Edit2.Visible:=True;
 Form6_substituir.btn_substituir.Visible:=True;
@@ -1811,8 +1811,8 @@ RichText2.Text:=RichText1.Text;
   //--------------------------------
 
 
-    //if StrToTime(tempo1) > StrToTime(tempo2) then
-    //RichText2.Text:=(StringReplace(RichText2.Text,tempo1,tempo2,[rfReplaceAll, rfIgnoreCase]));
+    if StrToTime(tempo1) > StrToTime(tempo2) then
+    RichText2.Text:=(StringReplace(RichText2.Text,tempo1,tempo2,[rfReplaceAll, rfIgnoreCase]));
 
 
   end;
@@ -1825,7 +1825,7 @@ RichText2.SetFocus;
 ProgressBar1.Visible:=False;
 
 //--------------------------------------------------
-StatusBar1.Panels[0].Text:=Mensagens_Pequenas(4,'');
+StatusBar1.Panels[0].Text:='Sobreposições corrigidas com sucesso!';
 Label1.Font.Color:=clBlue; //LETRA AZUL
 Image1.Visible:=False;
 Image2.Visible:=True;

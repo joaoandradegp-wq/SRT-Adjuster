@@ -2,8 +2,7 @@ unit Funcoes;
 
 interface
 
-Uses Unit1,ComCtrls,StdCtrls,Windows,Messages,IdHTTP,Forms,Wininet,
-     SysUtils,Graphics,StrUtils,dialogs;
+Uses Unit1,ComCtrls,StdCtrls,Windows,Messages,IdHTTP,Forms,Wininet,SysUtils,Graphics,StrUtils,dialogs;
 
 {VERIFICA OS ARQUIVOS DE LEGENDA PARA SERIADOS} 
 function Seriado_Quantidade:Boolean;

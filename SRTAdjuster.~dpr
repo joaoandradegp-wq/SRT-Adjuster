@@ -9,20 +9,16 @@ uses
   Unit5 in 'Unit5.pas' {Form5},
   Unit6 in 'Unit6.pas' {Form6_substituir},
   Unit7 in 'Unit7.pas' {AboutBox},
-  Funcoes in 'Funcoes.pas', 
+  Funcoes in 'Funcoes.pas',
   SysUtils,
-  WinInet,   {WinInet -> Update}
-  U_Cipher,  {U_Cipher -> Criptografia MD5}
-  ShellAPI,
-  Mensagens in 'Mensagens.pas';
-
-
+  WinInet,
+  ShellAPI;
 
 {$R *.res}
 
 const
 //------------------------------------------------------
-SRT_VERSAO     = '1.2';
+SRT_VERSAO     = '1.3';
 SRT_HOSPEDAGEM = '.blogspot.com.br';
 SRT_BLOG       = 'http://srtadjuster.blogspot.com.br';
 SRT_FACEBOOK   = 'https://www.facebook.com/srtadjuster';
@@ -31,46 +27,43 @@ SRT_PAYPAL     = 'https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=
 var
 //------------------------------------------------------
 SRT_EXE,
-  SRT_RAIZ,
-    URL_MD5:String;
+SRT_RAIZ:String;
 //------------------------------------------------------
 begin
 //------------------------------------------------------
 SRT_EXE:=Copy(ExtractFileName(Application.ExeName),0,Length(ExtractFileName(Application.ExeName))-4);
 SRT_RAIZ:=GetCurrentDir+'\';
-URL_MD5:=LowerCase(Md5Hash(SRT_EXE+SRT_VERSAO));
 //------------------------------------------------------
 
 {TRANSFERE AS VARIÁVEIS PARA O FORM1}
 //-------------------------------------------------------------------------------
-VarGlobais(SRT_EXE,SRT_RAIZ,SRT_VERSAO,URL_MD5,SRT_BLOG,SRT_FACEBOOK,SRT_PAYPAL);
+VarGlobais(SRT_EXE,SRT_RAIZ,SRT_VERSAO,SRT_BLOG,SRT_FACEBOOK,SRT_PAYPAL);
 //-------------------------------------------------------------------------------
 
 Application.Initialize;
-Application.Title := 'SRT Adjuster 1.2';
-
-Splash_Screen:=Tsplash_screen.Create(Application);
+Application.Title := 'SRT Adjuster 1.3'+SRT_VERSAO;
+  Splash_Screen:=Tsplash_screen.Create(Application);
 Splash_Screen.Show;
 Splash_Screen.Refresh;
 
-Sleep(2000);
+//Sleep(2000);
 
   //------------------------------------------
   {UPDATE - INÍCIO}
-  if InternetCheckConnection('http://www.google.com',1,0)  then
+ { if InternetCheckConnection('http://www.google.com',1,0)  then
   begin
-   if NovoUpdate(LowerCase(Md5Hash('srtadjuster'+SRT_VERSAO))+SRT_HOSPEDAGEM) = True then
+   if NovoUpdate(LowerCase(('srtadjuster'+SRT_VERSAO))+SRT_HOSPEDAGEM) = True then
    begin
    ShellExecute(0,Nil,PChar(SRT_BLOG),Nil,Nil,0);
    Application.Terminate;
    end
    else
-   begin
+   begin    }
    Splash_Screen.Hide;
    Splash_Screen.Free;
    Application.CreateForm(TForm1, Form1);
-   Application.CreateForm(TForm6_substituir, Form6_substituir);
-   Application.Run;
+  Application.CreateForm(TForm6_substituir, Form6_substituir);
+  Application.Run;    {
    end;
   end
   else

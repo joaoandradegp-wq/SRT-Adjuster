@@ -476,7 +476,6 @@ object Form1: TForm1
       item
         Width = 50
       end>
-    SimplePanel = False
   end
   object edit_legenda: TEdit
     Left = 0
@@ -1548,8 +1547,6 @@ object Form1: TForm1
     Top = 499
     Width = 763
     Height = 16
-    Min = 0
-    Max = 100
     TabOrder = 2
     Visible = False
   end
@@ -2406,7 +2403,6 @@ object Form1: TForm1
     Top = 216
   end
   object ColorDialog1: TColorDialog
-    Ctl3D = True
     CustomColors.Strings = (
       'ColorA=FFFFFFFF'
       'ColorB=FFFFFFFF'
