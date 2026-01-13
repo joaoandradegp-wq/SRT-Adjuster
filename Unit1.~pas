@@ -9,6 +9,14 @@ uses
   MruUnit,FileCtrl, RxCombos, OleCtrls, Animate, GIFCtrl;
 
 type
+  TFormatBlock = record
+    StartPos: Integer;
+    Length: Integer;
+    Style: TFontStyles;
+    Color: TColor;
+  end;
+
+type
   TForm1 = class(TForm)
     Label1: TLabel;
     Label4: TLabel;
@@ -155,16 +163,19 @@ type
     procedure lstfundoClick(Sender: TObject);
   private
   MostRecentFiles1: TMostRecentFiles;
-  //--------------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------
+  {ARRASTA E SOLTA - 01/02}
+  //-----------------------------------------------------------------
   procedure WMDropFiles(var Msg: TWMDropFiles); message WM_DROPFILES;
-  //--------------------------------------------------------------------------------------------------  
+  //-----------------------------------------------------------------
     { Private declarations }
   public
-  //--------------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------
   function Novo_Carregar(parametro: String): Boolean;
-  //--------------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------
   { Public declarations }
   end;
+
 
 var
   Form1: TForm1;
@@ -190,10 +201,158 @@ const
   videos_suportados: array[0..qtde_formatos] of String =
   ('.mp4','.avi','.mpg','.mpeg','.mov','.rmvb','.rm','.ra','.wmv','.wma','.flv','.mkv');
 
+//------------------------------------------------------------------------------
+{EDIÇÃO AVANÇADA - 01/03}
+//------------------------------------------------------------------------------
+procedure BuildBlocks(Lines: TStrings;var Blocks: array of TFormatBlock;var BlockCount: Integer;LinePos: array of Integer);
+procedure ApplyBlocks(RE: TRichEdit;const Blocks: array of TFormatBlock;Count: Integer;Progress: TProgressBar);
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
 implementation
 
 uses Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, CommCtrl, Funcoes;
 
+//------------------------------------------------------------------------------
+{EDIÇÃO AVANÇADA - 02/03}
+//------------------------------------------------------------------------------
+procedure Edicao_Avancada(var Legenda: TRichEdit; ProgressBar1: TProgressBar);
+var
+  LinePos: array of Integer;
+  Blocks: array of TFormatBlock;
+  BlockCount, i: Integer;
+begin
+  SetLength(LinePos, Legenda.Lines.Count);
+  for i := 0 to Legenda.Lines.Count - 1 do
+    LinePos[i] := Legenda.Perform(EM_LINEINDEX, i, 0);
+
+  SetLength(Blocks, Legenda.Lines.Count * 3); // margem segura
+
+  BuildBlocks(Legenda.Lines, Blocks, BlockCount, LinePos);
+  ApplyBlocks(Legenda, Blocks, BlockCount, ProgressBar1);
+end;
+//------------------------------------------------------------------------------
+{EDIÇÃO AVANÇADA - 03/03}
+//------------------------------------------------------------------------------
+procedure BuildBlocks(Lines: TStrings; var Blocks: array of TFormatBlock;
+  var BlockCount: Integer; LinePos: array of Integer);
+var
+  i, StartPos, Len: Integer;
+  Line, NoSpace: string;
+begin
+  BlockCount := 0;
+
+  for i := 0 to Lines.Count - 1 do
+  begin
+    Line := Lines[i];
+    NoSpace := StringReplace(Trim(Line), ' ', '', [rfReplaceAll]);
+
+    // Número + timestamp
+    if (IsNumeric(Line)) and
+       (i + 1 < Lines.Count) and
+       (Pos(' --> ', Lines[i + 1]) > 0) and
+       ((i = 0) or (Trim(Lines[i - 1]) = '')) then
+    begin
+      // Número em negrito
+      Blocks[BlockCount].StartPos := LinePos[i];
+      Blocks[BlockCount].Length   := Length(Line);
+      Blocks[BlockCount].Style    := [fsBold];
+      Blocks[BlockCount].Color    := clBlack;
+      Inc(BlockCount);
+
+      // Timestamp azul
+      Blocks[BlockCount].StartPos := LinePos[i + 1];
+      Blocks[BlockCount].Length   := Length(Lines[i + 1]);
+      Blocks[BlockCount].Style    := [];
+      Blocks[BlockCount].Color    := clNavy;
+      Inc(BlockCount);
+    end;
+
+    // <i>
+    if Pos('<i>', Line) > 0 then
+    begin
+      StartPos := LinePos[i] + Pos('<i>', Line) - 1;
+      Len := Length(Line);
+
+      if (i + 1 < Lines.Count) and (Pos('</i>', Lines[i + 1]) > 0) then
+        Len := Len + Length(Lines[i + 1]) + 4;
+
+      Blocks[BlockCount].StartPos := StartPos;
+      Blocks[BlockCount].Length   := Len;
+      Blocks[BlockCount].Style    := [fsItalic];
+      Blocks[BlockCount].Color    := clGray;
+      Inc(BlockCount);
+    end;
+
+    // <u>
+    if Pos('<u>', Line) > 0 then
+    begin
+      StartPos := LinePos[i] + Pos('<u>', Line) - 1;
+      Len := Length(Line);
+
+      if (i + 1 < Lines.Count) and (Pos('</u>', Lines[i + 1]) > 0) then
+        Len := Len + Length(Lines[i + 1]) + 4;
+
+      Blocks[BlockCount].StartPos := StartPos;
+      Blocks[BlockCount].Length   := Len;
+      Blocks[BlockCount].Style    := [fsUnderline];
+      Blocks[BlockCount].Color    := clGray;
+      Inc(BlockCount);
+    end;
+
+    // <fontcolor>
+    if (Pos('<fontcolor="#', NoSpace) > 0) or
+       (Pos('<fontcolor=#', NoSpace) > 0) then
+    begin
+      StartPos := LinePos[i] + Pos('#', Line);
+      Len := Length(Line);
+
+      if (i + 1 < Lines.Count) and (Pos('</font>', Lines[i + 1]) > 0) then
+        Len := Len + Length(Lines[i + 1]) + 4;
+
+      Blocks[BlockCount].StartPos := StartPos;
+      Blocks[BlockCount].Length   := Len;
+      Blocks[BlockCount].Style    := [];
+      Blocks[BlockCount].Color    := HexToColor(Copy(Line, Pos('#', Line) + 1, 6));
+      Inc(BlockCount);
+    end;
+  end;
+end;
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+procedure ApplyBlocks(RE: TRichEdit;const Blocks: array of TFormatBlock;Count: Integer;Progress: TProgressBar);
+var
+  i: Integer;
+begin
+  Progress.Visible := True;
+  Progress.Position := 0;
+  Progress.Max := Count;
+
+  RE.Perform(WM_SETREDRAW, 0, 0);
+
+  try
+    for i := 0 to Count - 1 do
+    begin
+      RE.SelStart  := Blocks[i].StartPos;
+      RE.SelLength := Blocks[i].Length;
+      RE.SelAttributes.Style := Blocks[i].Style;
+      RE.SelAttributes.Color := Blocks[i].Color;
+
+      Progress.Position := i + 1;
+
+      if (i mod 20 = 0) then
+        Application.ProcessMessages;
+    end;
+  finally
+    RE.Perform(WM_SETREDRAW, 1, 0);
+    RE.Invalidate;
+    Progress.Visible := False;
+  end;
+end;
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+{ARRASTA E SOLTA - 02/02}
+//------------------------------------------------------------------------------
 procedure TForm1.WMDropFiles(var Msg: TWMDropFiles);
 var
   Drop: HDROP;
@@ -217,7 +376,6 @@ begin
 
     // Tamanho do nome do arquivo
     BufferSize := DragQueryFile(Drop, 0, nil, 0);
-
     SetLength(FileName, BufferSize);
 
     // Obtém o nome do primeiro arquivo
@@ -232,16 +390,13 @@ begin
         MB_ICONSTOP or MB_OK);
       Exit;
     end;
-
-    // Chamada do seu método
     Novo_Carregar(FileName);
 
   finally
     DragFinish(Drop); // OBRIGATÓRIO
   end;
-
   Msg.Result := 0;
-
+end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 function TForm1.Novo_Carregar(parametro: String): Boolean;

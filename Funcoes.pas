@@ -5,6 +5,8 @@ interface
 Uses Unit1,ComCtrls,StdCtrls,Windows,Messages,IdHTTP,Forms,Wininet,
      SysUtils,Graphics,StrUtils,dialogs;
 
+{REPASSA AS VARIÁVEIS DO ARQUIVO .DPR PARA VARIÁVEIS GLOBAIS}
+procedure VarGlobais(Executavel,Diretorio,Versao,Blog:String);
 {VERIFICA OS ARQUIVOS DE LEGENDA PARA SERIADOS} 
 function Seriado_Quantidade:Boolean;
 {VERIFICA SE UMA STRING É NUMÉRICA}
@@ -20,7 +22,7 @@ procedure Italico_Sublinhado(var Legenda:TRichEdit;Atributo:Boolean;Tag_Open,Tag
 {FUNÇÃO PARA FAZER UM BBCODE DE COR}
 procedure Fonte_Cor(var Legenda:TRichEdit;Tag_Open1:String;Tag_Open2:TColor;Tag_Open3,Tag_Close:String);
 {EDIÇÃO AVANÇADA}
-procedure Edicao_Avancada (var Legenda:TRichEdit;ProgressBar1:TProgressBar);
+//procedure Edicao_Avancada (var Legenda:TRichEdit;ProgressBar1:TProgressBar);
 {CORREÇÃO NUMÉRICA DE ÍNDICE}
 procedure Correcao_Numerica (var Texto1,Texto2:TRichEdit;ProgressBar1:TProgressBar;aux:Boolean;Label_Linha,Label_Dialogo:Tlabel);
 {CONTABILIZAR LINHAS E DIÁLOGOS}
@@ -39,11 +41,18 @@ procedure BotoesTopo_Off;
 function LinhaAtual(TextoLegenda:TRichEdit):Longint;
 {MOSTRAR LISTAGEM DE SOBREPOSIÇÕES E LIMITES DE LINHA - LISTBOX1 E LISTBOX2}
 procedure Lista_Indices(var Texto1,Texto2:TRichEdit;ListBox1:TListBox;aux:Boolean;vetor: Array of Integer);
-{REPASSA AS VARIÁVEIS DO ARQUIVO .DPR PARA VARIÁVEIS GLOBAIS}
-procedure VarGlobais(Executavel,Diretorio,Versao,Blog:String);
 
 implementation
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+procedure VarGlobais(Executavel,Diretorio,Versao,Blog:String);
+begin
+     SRT_EXE_Global:=Executavel;
+    SRT_RAIZ_Global:=Diretorio;
+  SRT_VERSAO_Global:=Versao;
+    SRT_BLOG_Global:=Blog;
+end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 function Seriado_Quantidade:Boolean;
@@ -275,107 +284,6 @@ begin
  else
  MessageBox(Application.Handle, pchar('Não foi possível aplicar a formatação de cores no texto desejado.'+#13+'Remova a atual antes de adicionar outra ou verifique se selecionou corretamente o texto desejado.'), pchar(Application.Title), MB_ICONWARNING+MB_OK);
 
-end;
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-procedure Edicao_Avancada(var Legenda: TRichEdit; ProgressBar1: TProgressBar);
-var
-  i, LineStart: Integer;
-  LinhaAtual, LinhaAnterior, LinhaProxima: string;
-  LinhaSemEspaco, Cores: string;
-begin
-  ProgressBar1.Visible := True;
-  ProgressBar1.Position := 0;
-  ProgressBar1.Max := Legenda.Lines.Count;
-
-  // ?? Desliga redraw (GANHO ENORME)
-  SendMessage(Legenda.Handle, WM_SETREDRAW, 0, 0);
-
-  try
-    for i := 0 to Legenda.Lines.Count - 1 do
-    begin
-      ProgressBar1.Position := i + 1;
-
-      LinhaAtual   := Legenda.Lines[i];
-      LinhaAnterior:= IfThen(i > 0, Legenda.Lines[i - 1], '');
-      LinhaProxima := IfThen(i < Legenda.Lines.Count - 1, Legenda.Lines[i + 1], '');
-
-      // Cache do índice da linha (ANTES você calculava várias vezes)
-      LineStart := Legenda.Perform(EM_LINEINDEX, i, 0);
-
-      // -------------------------------------------------------------
-      // Número + timestamp
-      if IsNumeric(LinhaAtual) and
-         AnsiContainsStr(LinhaProxima, ' --> ') and
-         (Trim(LinhaAnterior) = '') then
-      begin
-        Legenda.SelStart := LineStart;
-        Legenda.SelLength := Length(LinhaAtual);
-        Legenda.SelAttributes.Style := Legenda.SelAttributes.Style + [fsBold];
-
-        Legenda.SelStart := Legenda.Perform(EM_LINEINDEX, i + 1, 0);
-        Legenda.SelLength := Length(LinhaProxima);
-        Legenda.SelAttributes.Color := clNavy;
-      end;
-
-      // -------------------------------------------------------------
-      // Itálico
-      if Pos('<i>', LinhaAtual) > 0 then
-      begin
-        Legenda.SelStart := LineStart + Pos('<i>', LinhaAtual) - 1;
-        if Pos('</i>', LinhaProxima) > 0 then
-          Legenda.SelLength := Length(LinhaAtual) + Length(LinhaProxima) + 4
-        else
-          Legenda.SelLength := Length(LinhaAtual);
-
-        Legenda.SelAttributes.Style := Legenda.SelAttributes.Style + [fsItalic];
-        Legenda.SelAttributes.Color := clGray;
-      end;
-
-      // -------------------------------------------------------------
-      // Sublinhado
-      if Pos('<u>', LinhaAtual) > 0 then
-      begin
-        Legenda.SelStart := LineStart + Pos('<u>', LinhaAtual) - 1;
-        if Pos('</u>', LinhaProxima) > 0 then
-          Legenda.SelLength := Length(LinhaAtual) + Length(LinhaProxima) + 4
-        else
-          Legenda.SelLength := Length(LinhaAtual);
-
-        Legenda.SelAttributes.Style := Legenda.SelAttributes.Style + [fsUnderline];
-        Legenda.SelAttributes.Color := clGray;
-      end;
-
-      // -------------------------------------------------------------
-      // Font color
-      LinhaSemEspaco := StringReplace(Trim(LinhaAtual), ' ', '', [rfReplaceAll]);
-
-      if (Pos('<fontcolor="#', LinhaSemEspaco) > 0) or
-         (Pos('<fontcolor=#', LinhaSemEspaco) > 0) then
-      begin
-        if Pos('<fontcolor="#', LinhaSemEspaco) > 0 then
-          Legenda.SelStart := LineStart + Pos('<fontcolor="#', LinhaSemEspaco) - 1
-        else
-          Legenda.SelStart := LineStart + Pos('<fontcolor=#', LinhaSemEspaco) - 1;
-
-        if Pos('</font>', LinhaProxima) > 0 then
-          Legenda.SelLength := Length(LinhaAtual) + Length(LinhaProxima) + 4
-        else
-          Legenda.SelLength := Length(LinhaAtual);
-
-        Cores := Copy(LinhaAtual, Pos('#', LinhaAtual) + 1, 6);
-        Legenda.SelAttributes.Color := HexToColor(Cores);
-      end;
-    end;
-  finally
-    // ?? Religa redraw e força repaint final
-    SendMessage(Legenda.Handle, WM_SETREDRAW, 1, 0);
-    Legenda.Invalidate;
-  end;
-
-  Legenda.SelStart := 0;
-  Legenda.ReadOnly := False;
-  ProgressBar1.Visible := False;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -634,15 +542,6 @@ Texto1.SetFocus;
  Texto2.Perform(EM_SCROLLCARET, LinhaNova, 0);
  end;
 
-end;
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-procedure VarGlobais(Executavel,Diretorio,Versao,Blog:String);
-begin
-     SRT_EXE_Global:=Executavel;
-    SRT_RAIZ_Global:=Diretorio;
-  SRT_VERSAO_Global:=Versao;
-    SRT_BLOG_Global:=Blog;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
