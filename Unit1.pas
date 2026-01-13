@@ -155,11 +155,13 @@ type
     procedure lstfundoClick(Sender: TObject);
   private
   MostRecentFiles1: TMostRecentFiles;
+  //--------------------------------------------------------------------------------------------------
+  procedure WMDropFiles(var Msg: TWMDropFiles); message WM_DROPFILES;
+  //--------------------------------------------------------------------------------------------------  
     { Private declarations }
   public
-  //--------------------------------------------------------------------------------------------------  
+  //--------------------------------------------------------------------------------------------------
   function Novo_Carregar(parametro: String): Boolean;
-  procedure DropFiles(var Msg: TMessage); message wm_DropFiles;
   //--------------------------------------------------------------------------------------------------
   { Public declarations }
   end;
@@ -191,6 +193,55 @@ const
 implementation
 
 uses Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, CommCtrl, Funcoes;
+
+procedure TForm1.WMDropFiles(var Msg: TWMDropFiles);
+var
+  Drop: HDROP;
+  FileCount: Integer;
+  BufferSize: Integer;
+  FileName: string;
+begin
+  Drop := Msg.Drop;
+  try
+    // Quantidade de arquivos arrastados
+    FileCount := DragQueryFile(Drop, $FFFFFFFF, nil, 0);
+
+    if FileCount = 0 then
+      Exit;
+
+    if FileCount > 1 then
+      MessageBox(Handle,
+        'Será utilizado apenas o primeiro arquivo.',
+        PChar(Application.Title),
+        MB_ICONINFORMATION or MB_OK);
+
+    // Tamanho do nome do arquivo
+    BufferSize := DragQueryFile(Drop, 0, nil, 0);
+
+    SetLength(FileName, BufferSize);
+
+    // Obtém o nome do primeiro arquivo
+    DragQueryFile(Drop, 0, PChar(FileName), BufferSize + 1);
+
+    // Validação da extensão
+    if LowerCase(ExtractFileExt(FileName)) <> '.srt' then
+    begin
+      MessageBox(Handle,
+        'O arquivo carregado não é um documento SRT.',
+        PChar(Application.Title),
+        MB_ICONSTOP or MB_OK);
+      Exit;
+    end;
+
+    // Chamada do seu método
+    Novo_Carregar(FileName);
+
+  finally
+    DragFinish(Drop); // OBRIGATÓRIO
+  end;
+
+  Msg.Result := 0;
+end;
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -376,7 +427,49 @@ Result:=True;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-procedure TForm1.DropFiles(var Msg: TMessage);
+      {
+procedure TForm1.WMDropFiles(var Msg: TWMDropFiles);
+var
+  Drop: HDROP;
+  FileCount: Integer;
+  BufferSize: Integer;
+  FileName: string;
+  Pt: TPoint;
+begin
+
+  Drop := Msg.WParam;
+
+  try
+    DragQueryPoint(Drop, Pt);
+
+    FileCount := DragQueryFile(Drop, $FFFFFFFF, nil, 0);
+
+    if FileCount = 0 then Exit;
+
+    BufferSize := DragQueryFile(Drop, 0, nil, 0);
+    SetLength(FileName, BufferSize);
+
+    DragQueryFile(Drop, 0, PChar(FileName), BufferSize + 1);
+
+    if LowerCase(ExtractFileExt(FileName)) <> '.srt' then
+    begin
+      MessageBox(Handle,
+        'O arquivo carregado não é um documento SRT.',
+        PChar(Application.Title),
+        MB_ICONSTOP or MB_OK);
+      Exit;
+    end;
+
+    Novo_Carregar(FileName);
+
+  finally
+    DragFinish(Drop);
+  end;
+
+  Msg.Result := 0;
+end;                    }
+
+{procedure TForm1.DropFiles(var Msg: TMessage);
 var
 FileCount,BufferSize:Word;
 Drop:HDROP;
@@ -399,18 +492,18 @@ StatusBar1.Panels[0].Text:='';
  begin
   Drop := Msg.wParam;
 
-  {QUANTIDADE DE ARQUIVOS SOLTOS - DROPPED}
+  {QUANTIDADE DE ARQUIVOS SOLTOS - DROPPED
   FileCount := DragQueryFile(Drop, $FFFFFFFF, nil, 0);
-  {PEGA A ÁREA DO FORM1}
+  {PEGA A ÁREA DO FORM1
   RctMemo := Form1.BoundsRect;
-   {SE SOLTOU NA ÁREA DO FORM1}
+   {SE SOLTOU NA ÁREA DO FORM1
    if not PtInRect(RctMemo, Pt) then
    begin
      if FileCount > 1 then
      MessageBox(Application.Handle,pchar('Será mostrado apenas o conteúdo da primeira legenda selecionada.'),pchar(Application.Title),MB_ICONINFORMATION+MB_OK);
 
    {PEGA O COMPRIMENTO NECESSÁRIO PARA O NOME DO ARQUIVO, SEM CONTAR COM CARACTERE NULO DO FIM DA STRING}
-   {O SEGUNDO PARÂMETRO(ZERO) INDICA O PRIMEIRO ARQUIVO DA LISTA}
+   {O SEGUNDO PARÂMETRO(ZERO) INDICA O PRIMEIRO ARQUIVO DA LISTA
    BufferSize:=DragQueryFile(Drop,0,nil,0);
 
    SetLength(FileName,BufferSize+1);
@@ -438,7 +531,7 @@ StatusBar1.Panels[0].Text:='';
   Msg.Result := 0;
  end;
 
-end;
+end;        }
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 {$R *.dfm}
