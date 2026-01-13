@@ -101,6 +101,7 @@ type
     btnfundo: TSpeedButton;
     lstfundo: TMenuItem;
     btntags: TSpeedButton;
+    lsttags: TMenuItem;
     procedure ListBox1Click(Sender: TObject);
     procedure btnsalvarcomoClick(Sender: TObject);
     procedure btnprocurarClick(Sender: TObject);
@@ -158,9 +159,9 @@ type
     procedure lstfonteClick(Sender: TObject);
     procedure Localizar1Click(Sender: TObject);
     procedure btnfundoClick(Sender: TObject);
-    procedure btntagsClick(Sender: TObject);
     procedure Menu_SobreClick(Sender: TObject);
     procedure lstfundoClick(Sender: TObject);
+    procedure btntagsClick(Sender: TObject);
   private
   MostRecentFiles1: TMostRecentFiles;
   //-----------------------------------------------------------------
@@ -201,6 +202,11 @@ const
   videos_suportados: array[0..qtde_formatos] of String =
   ('.mp4','.avi','.mpg','.mpeg','.mov','.rmvb','.rm','.ra','.wmv','.wma','.flv','.mkv');
 
+const
+  EM_SETTEXTMODE = WM_USER + 89;
+  TM_PLAINTEXT   = 1;
+  TM_RICHTEXT    = 2;
+
 //------------------------------------------------------------------------------
 {EDIÇÃO AVANÇADA - 01/03}
 //------------------------------------------------------------------------------
@@ -212,6 +218,143 @@ procedure ApplyBlocks(RE: TRichEdit;const Blocks: array of TFormatBlock;Count: I
 implementation
 
 uses Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, CommCtrl, Funcoes;
+
+{$R *.dfm}
+
+
+procedure SoftResetPreserveText(RE: TRichEdit);
+var
+  Backup: string;
+begin
+  Backup := RE.Text;  // ?? salva conteúdo
+
+  SendMessage(RE.Handle, WM_SETREDRAW, 0, 0);
+
+  SendMessage(RE.Handle, EM_SETTEXTMODE, TM_PLAINTEXT, 0);
+  RE.Clear;
+  SendMessage(RE.Handle, EM_SETTEXTMODE, TM_RICHTEXT, 0);
+
+  RE.Text := Backup;  // ?? restaura conteúdo
+
+  RE.SelAttributes.Assign(RE.DefAttributes);
+
+  SendMessage(RE.Handle, WM_SETREDRAW, 1, 0);
+  RE.Invalidate;
+end;
+
+
+
+procedure ResetRichEdit(var RE: TRichEdit; Owner: TWinControl);
+var
+  NewRE: TRichEdit;
+begin
+  NewRE := TRichEdit.Create(Owner);
+
+  NewRE.Parent := Owner;
+  NewRE.Align  := RE.Align;
+  NewRE.Font.Assign(RE.Font);
+  NewRE.ScrollBars := RE.ScrollBars;
+  NewRE.ReadOnly   := RE.ReadOnly;
+  NewRE.Visible    := RE.Visible;
+
+  RE.Free;
+  RE := NewRE;
+end;
+
+procedure AtualizarTextoComFont(
+  Lines: TStrings;
+  const HexColor: string;
+  Progress: TProgressBar
+);
+var
+  i: Integer;
+  Line, CleanLine: string;
+begin
+  Progress.Visible := True;
+  Progress.Position := 0;
+  Progress.Max := Lines.Count;
+
+  for i := 0 to Lines.Count - 1 do
+  begin
+    Line := Lines[i];
+
+    if (Trim(Line) <> '') and
+       (not IsNumeric(Line)) and
+       (Pos('-->', Line) = 0) then
+    begin
+      CleanLine := Line;
+
+      while Pos('<font', LowerCase(CleanLine)) > 0 do
+        Delete(
+          CleanLine,
+          Pos('<font', LowerCase(CleanLine)),
+          Pos('>', CleanLine) -
+          Pos('<font', LowerCase(CleanLine)) + 1
+        );
+
+      CleanLine := StringReplace(
+        CleanLine, '</font>', '', [rfIgnoreCase]
+      );
+
+      Lines[i] :=
+        '<font color="#' + HexColor + '">' +
+        CleanLine +
+        '</font>';
+    end;
+
+    if (i mod 100 = 0) then
+    begin
+      Progress.Position := i + 1;
+      Application.ProcessMessages;
+    end;
+  end;
+
+  Progress.Visible := False;
+end;
+procedure ColorirVisualLimitado(
+  RE: TRichEdit;
+  AColor: TColor;
+  MaxDialogos: Integer
+);
+var
+  i, DialogosColoridos, j: Integer;
+  LineStart: Integer;
+begin
+  DialogosColoridos := 0;
+
+  SendMessage(RE.Handle, WM_SETREDRAW, 0, 0);
+
+  i := 0;
+  while i < RE.Lines.Count do
+  begin
+    if Pos(' --> ', RE.Lines[i]) > 0 then
+    begin
+      Inc(DialogosColoridos);
+      if DialogosColoridos > MaxDialogos then
+        Break;
+
+      // colore todas as linhas do diálogo
+      j := i + 1;
+      while (j < RE.Lines.Count) and (Trim(RE.Lines[j]) <> '') do
+      begin
+        LineStart := RE.Perform(EM_LINEINDEX, j, 0);
+        RE.SelStart := LineStart;
+        RE.SelLength := Length(RE.Lines[j]);
+        RE.SelAttributes.Color := AColor;
+        Inc(j);
+      end;
+
+      i := j;
+    end
+    else
+      Inc(i);
+  end;
+
+  SendMessage(RE.Handle, WM_SETREDRAW, 1, 0);
+  RE.Invalidate;
+end;
+
+
 
 //------------------------------------------------------------------------------
 {EDIÇÃO AVANÇADA - 02/03}
@@ -581,9 +724,6 @@ Result:=True;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-
-{$R *.dfm}
-
 procedure TForm1.FormCreate(Sender: TObject);
 begin
 //----------------------------
@@ -1554,6 +1694,7 @@ end;
 
 procedure TForm1.btncoresClick(Sender: TObject);
 begin
+SoftResetPreserveText(RichText1);
 //-----------------------------------------------------
 //editar:=True; //--> Variável GLOBAL (Editar)
 //salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
@@ -1900,58 +2041,34 @@ RichText1.Color:=clBlack;
 //-------------------------------
 end;
 
+procedure TForm1.Menu_SobreClick(Sender: TObject);
+begin
+ShellExecute(0,Nil,PChar(SRT_BLOG_Global),Nil,Nil,0);
+end;
+
+procedure TForm1.lstfundoClick(Sender: TObject);
+begin
+btnfundo.Click;
+end;
+
 procedure TForm1.btntagsClick(Sender: TObject);
 var
-i: Integer;
-tempo1,tempo2: String;
+HexColor: string;  
 begin
-//------------------------------------------------------
-salvar:=True;  //--> Variável GLOBAL (Salvar Alterações)
-//------------------------------------------------------
-                     
-//-------------
+
+  if not ColorDialog1.Execute then
+  Exit;
+
+SoftResetPreserveText(RichText1);
+HexColor := ColorToHex(ColorDialog1.Color);
+
 BotoesTopo_Off;
-//-------------
+// FASE 1 — TEXTO (rápido)
+AtualizarTextoComFont(RichText1.Lines, HexColor, ProgressBar1);
+// FASE 2 — VISUAL (15 Primeiros diálogos)
+ColorirVisualLimitado(RichText1, ColorDialog1.Color, 15);
 
-ProgressBar1.Visible:=True;
-ProgressBar1.Position:=0;
-ProgressBar1.Max:=Length(vt_tempo)-1;
-ProgressBar1.Refresh;
-RichText2.Text:=RichText1.Text;
-
-  for i:=0 to Length(vt_tempo)-2 do
-  begin
-  ProgressBar1.Position:=ProgressBar1.Position+1;
-  //--------------------------------
-  tempo1:=copy(vt_tempo[i]  ,18,12);
-  tempo2:=copy(vt_tempo[i+1],1 ,12);
-  //--------------------------------
-
-
-    if StrToTime(tempo1) > StrToTime(tempo2) then
-    RichText2.Text:=(StringReplace(RichText2.Text,tempo1,tempo2,[rfReplaceAll, rfIgnoreCase]));
-
-
-  end;
-
-RichText1.Height:=Trunc(Form1.Height/2)-84;
-RichText2.Height:=RichText1.Height;
-RichText2.Top:=RichText1.Top+RichText1.Height+5;
-RichText2.Visible:=True;
-RichText2.SetFocus;
-ProgressBar1.Visible:=False;
-
-//--------------------------------------------------
-StatusBar1.Panels[0].Text:='Sobreposições corrigidas com sucesso!';
-Label1.Font.Color:=clBlue; //LETRA AZUL
-Image1.Visible:=False;
-Image2.Visible:=True;
-//--------------------------------------------------
-
-//------------------------------------------------
 SendMessage(RichText1.Handle,WM_VSCROLL,SB_TOP,0);
-SendMessage(RichText2.Handle,WM_VSCROLL,SB_TOP,0);
-//------------------------------------------------
 
 //--------------------------
 btnabrir.Enabled     :=True;
@@ -1962,20 +2079,12 @@ btnsalvarcomo.Enabled:=True;
 lstsalvarcomo.Enabled:=True;
 btnrenomear.Enabled  :=True;
 lstrenomear.Enabled  :=True;
-lstlocalizar.Enabled :=False;
+btntags.Enabled      :=True;
+lsttags.Enabled      :=True;
 //--------------------------
 
 end;
 
-procedure TForm1.Menu_SobreClick(Sender: TObject);
-begin
-ShellExecute(0,Nil,PChar(SRT_BLOG_Global),Nil,Nil,0);
-end;
-
-procedure TForm1.lstfundoClick(Sender: TObject);
-begin
-btnfundo.Click;
-end;
 
 end.
 

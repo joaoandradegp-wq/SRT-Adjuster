@@ -496,6 +496,9 @@ Form1.lstnumeros.Enabled:=False;
 {RENOMEAR SÉRIES}
 Form1.btnrenomear.Enabled:=False;
 Form1.lstrenomear.Enabled:=False;
+{ALTERAR COR DA LEGENDA}
+Form1.btntags.Enabled:=True;
+Form1.lsttags.Enabled:=True;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

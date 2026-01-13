@@ -1653,6 +1653,9 @@ object Form1: TForm1
         Caption = 'Ajuste de &M'#250'ltiplas Legendas - S'#233'ries'
         OnClick = lstrenomearClick
       end
+      object lsttags: TMenuItem
+        Caption = 'Alterar &Cor da Legenda'
+      end
     end
     object Menu_Caracter: TMenuItem
       Caption = 'F&onte'
