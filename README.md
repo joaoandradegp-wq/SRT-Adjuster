@@ -6,6 +6,7 @@ São funcionalidades que fui capaz de desenvolver em um único software de manei
 SRT Adjuster é escrito de maneira nativa ao Sistema Operacional Windows™, portanto não é necessário quaisquer instalações à parte.
 
 Funcionalidades:
+
 CORREÇÕES AUTOMÁTICAS
 Identifica sobreposições de diálogo e limites excedentes de linha oferecendo correção automática para as sobreposições e fácil localização dos limites excedentes de linha.
 
