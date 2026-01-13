@@ -2,7 +2,8 @@ unit Funcoes;
 
 interface
 
-Uses Unit1,ComCtrls,StdCtrls,Windows,Messages,IdHTTP,Forms,Wininet,SysUtils,Graphics,StrUtils,dialogs;
+Uses Unit1,ComCtrls,StdCtrls,Windows,Messages,IdHTTP,Forms,Wininet,
+     SysUtils,Graphics,StrUtils,dialogs;
 
 {VERIFICA OS ARQUIVOS DE LEGENDA PARA SERIADOS} 
 function Seriado_Quantidade:Boolean;
@@ -622,14 +623,12 @@ Texto1.SetFocus;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-procedure VarGlobais(Executavel,Diretorio,Versao,Blog,Facebook,PayPal:String);
+procedure VarGlobais(Executavel,Diretorio,Versao,Blog:String);
 begin
      SRT_EXE_Global:=Executavel;
     SRT_RAIZ_Global:=Diretorio;
   SRT_VERSAO_Global:=Versao;
     SRT_BLOG_Global:=Blog;
-SRT_FACEBOOK_Global:=Facebook;
-  SRT_PAYPAL_Global:=PayPal;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

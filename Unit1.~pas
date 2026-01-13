@@ -83,11 +83,6 @@ type
     lstfraps: TMenuItem;
     btnrenomear: TSpeedButton;
     lstrenomear: TMenuItem;
-    Doaes1: TMenuItem;
-    N6: TMenuItem;
-    Website1: TMenuItem;
-    SiganosnoFacebook1: TMenuItem;
-    PerfilLegendasTV1: TMenuItem;
     Sobre1: TMenuItem;
     btnfonte: TSpeedButton;
     lstfonte: TMenuItem;
@@ -150,15 +145,13 @@ type
     procedure btnrenomearClick(Sender: TObject);
     procedure lstrenomearClick(Sender: TObject);
     procedure combo_tamanhoKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure Doaes1Click(Sender: TObject);
-    procedure Website1Click(Sender: TObject);
-    procedure SiganosnoFacebook1Click(Sender: TObject);
     procedure Sobre1Click(Sender: TObject);
     procedure btnfonteClick(Sender: TObject);
     procedure lstfonteClick(Sender: TObject);
     procedure Localizar1Click(Sender: TObject);
     procedure btnfundoClick(Sender: TObject);
     procedure btntagsClick(Sender: TObject);
+    procedure Menu_SobreClick(Sender: TObject);
   private
   MostRecentFiles1: TMostRecentFiles;
     { Private declarations }
@@ -174,13 +167,10 @@ var
   Form1: TForm1;
   //---------------------------------
   {DADOS DO SRT ADJUSTER - VARIÁVEIS}
-       SRT_EXE_Global,
-      SRT_RAIZ_Global,
-    SRT_VERSAO_Global,
-       URL_MD5_Global,
-      SRT_BLOG_Global,
-  SRT_FACEBOOK_Global,
-    SRT_PAYPAL_Global:String;
+  SRT_EXE_Global,
+  SRT_RAIZ_Global,
+  SRT_VERSAO_Global,
+  SRT_BLOG_Global:String;
   //---------------------------------
 
   dialogo,linha,linha_atual,cont_legenda_global,ListBox_Novo: Integer;
@@ -1645,21 +1635,6 @@ end;
 //-------------------------------------------
 end;
 
-procedure TForm1.Doaes1Click(Sender: TObject);
-begin
-ShellExecute(0,Nil,PChar(SRT_PAYPAL_Global),Nil,Nil,0);
-end;
-
-procedure TForm1.Website1Click(Sender: TObject);
-begin
-ShellExecute(0,Nil,PChar(SRT_BLOG_Global),Nil,Nil,0);
-end;
-
-procedure TForm1.SiganosnoFacebook1Click(Sender: TObject);
-begin
-ShellExecute(0,Nil,PChar(SRT_FACEBOOK_Global),Nil,Nil,0);
-end;
-
 procedure TForm1.Sobre1Click(Sender: TObject);
 begin
 Application.CreateForm(TAboutBox, AboutBox);
@@ -1848,6 +1823,11 @@ lstrenomear.Enabled  :=True;
 lstlocalizar.Enabled :=False;
 //--------------------------
 
+end;
+
+procedure TForm1.Menu_SobreClick(Sender: TObject);
+begin
+ShellExecute(0,Nil,PChar(SRT_BLOG_Global),Nil,Nil,0);
 end;
 
 end.

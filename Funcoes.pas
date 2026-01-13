@@ -40,7 +40,7 @@ function LinhaAtual(TextoLegenda:TRichEdit):Longint;
 {MOSTRAR LISTAGEM DE SOBREPOSIÇÕES E LIMITES DE LINHA - LISTBOX1 E LISTBOX2}
 procedure Lista_Indices(var Texto1,Texto2:TRichEdit;ListBox1:TListBox;aux:Boolean;vetor: Array of Integer);
 {REPASSA AS VARIÁVEIS DO ARQUIVO .DPR PARA VARIÁVEIS GLOBAIS}
-procedure VarGlobais(Executavel,Diretorio,Versao,Blog,Facebook,PayPal:String);
+procedure VarGlobais(Executavel,Diretorio,Versao,Blog:String);
 
 implementation
 
@@ -623,14 +623,12 @@ Texto1.SetFocus;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-procedure VarGlobais(Executavel,Diretorio,Versao,Blog,Facebook,PayPal:String);
+procedure VarGlobais(Executavel,Diretorio,Versao,Blog:String);
 begin
      SRT_EXE_Global:=Executavel;
     SRT_RAIZ_Global:=Diretorio;
   SRT_VERSAO_Global:=Versao;
     SRT_BLOG_Global:=Blog;
-SRT_FACEBOOK_Global:=Facebook;
-  SRT_PAYPAL_Global:=PayPal;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
