@@ -21,8 +21,6 @@ procedure posicionar_inicio (var Legenda:TRichEdit);
 procedure Italico_Sublinhado(var Legenda:TRichEdit;Atributo:Boolean;Tag_Open,Tag_Close:String);
 {FUNÇÃO PARA FAZER UM BBCODE DE COR}
 procedure Fonte_Cor(var Legenda:TRichEdit;Tag_Open1:String;Tag_Open2:TColor;Tag_Open3,Tag_Close:String);
-{EDIÇÃO AVANÇADA}
-//procedure Edicao_Avancada (var Legenda:TRichEdit;ProgressBar1:TProgressBar);
 {CORREÇÃO NUMÉRICA DE ÍNDICE}
 procedure Correcao_Numerica (var Texto1,Texto2:TRichEdit;ProgressBar1:TProgressBar;aux:Boolean;Label_Linha,Label_Dialogo:Tlabel);
 {CONTABILIZAR LINHAS E DIÁLOGOS}

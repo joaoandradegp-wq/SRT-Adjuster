@@ -5,6 +5,8 @@ interface
 Uses Unit1,ComCtrls,StdCtrls,Windows,Messages,IdHTTP,Forms,Wininet,
      SysUtils,Graphics,StrUtils,dialogs;
 
+{REPASSA AS VARIÁVEIS DO ARQUIVO .DPR PARA VARIÁVEIS GLOBAIS}
+procedure VarGlobais(Executavel,Diretorio,Versao,Blog:String);
 {VERIFICA OS ARQUIVOS DE LEGENDA PARA SERIADOS} 
 function Seriado_Quantidade:Boolean;
 {VERIFICA SE UMA STRING É NUMÉRICA}
@@ -39,11 +41,18 @@ procedure BotoesTopo_Off;
 function LinhaAtual(TextoLegenda:TRichEdit):Longint;
 {MOSTRAR LISTAGEM DE SOBREPOSIÇÕES E LIMITES DE LINHA - LISTBOX1 E LISTBOX2}
 procedure Lista_Indices(var Texto1,Texto2:TRichEdit;ListBox1:TListBox;aux:Boolean;vetor: Array of Integer);
-{REPASSA AS VARIÁVEIS DO ARQUIVO .DPR PARA VARIÁVEIS GLOBAIS}
-procedure VarGlobais(Executavel,Diretorio,Versao,Blog:String);
 
 implementation
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+procedure VarGlobais(Executavel,Diretorio,Versao,Blog:String);
+begin
+     SRT_EXE_Global:=Executavel;
+    SRT_RAIZ_Global:=Diretorio;
+  SRT_VERSAO_Global:=Versao;
+    SRT_BLOG_Global:=Blog;
+end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 function Seriado_Quantidade:Boolean;
@@ -533,15 +542,6 @@ Texto1.SetFocus;
  Texto2.Perform(EM_SCROLLCARET, LinhaNova, 0);
  end;
 
-end;
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-procedure VarGlobais(Executavel,Diretorio,Versao,Blog:String);
-begin
-     SRT_EXE_Global:=Executavel;
-    SRT_RAIZ_Global:=Diretorio;
-  SRT_VERSAO_Global:=Versao;
-    SRT_BLOG_Global:=Blog;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
