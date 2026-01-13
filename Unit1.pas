@@ -152,6 +152,7 @@ type
     procedure btnfundoClick(Sender: TObject);
     procedure btntagsClick(Sender: TObject);
     procedure Menu_SobreClick(Sender: TObject);
+    procedure lstfundoClick(Sender: TObject);
   private
   MostRecentFiles1: TMostRecentFiles;
     { Private declarations }
@@ -1828,6 +1829,11 @@ end;
 procedure TForm1.Menu_SobreClick(Sender: TObject);
 begin
 ShellExecute(0,Nil,PChar(SRT_BLOG_Global),Nil,Nil,0);
+end;
+
+procedure TForm1.lstfundoClick(Sender: TObject);
+begin
+btnfundo.Click;
 end;
 
 end.

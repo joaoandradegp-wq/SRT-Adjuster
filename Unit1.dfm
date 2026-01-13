@@ -1687,6 +1687,7 @@ object Form1: TForm1
         Caption = 'Fundo de Legenda'
         Enabled = False
         ShortCut = 32838
+        OnClick = lstfundoClick
       end
     end
     object Menu_Sobre: TMenuItem
