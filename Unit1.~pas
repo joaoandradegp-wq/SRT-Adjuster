@@ -625,14 +625,6 @@ begin
  if SelectDirectory('Certifique-se de que exista apenas um título de Série por diretório para que as legendas sejam ajustadas corretamente.', OpenDialog1.InitialDir ,Pasta) then
  begin
 
-   if DriveCD = Copy(Pasta,0,1) then
-   begin
-   MessageBox(Application.Handle,pchar('Não é possível ajustar arquivos de legenda em uma unidade de CD.'+#13#13+'Error code:  #0104'),pchar(Application.Title),MB_ICONERROR+MB_OK);
-   btnrenomear.Click;
-   end
-   {INÍCIO - ELSE}
-   else
-   begin
    //---------------------------------------------------
    cont:=0;
    FillChar(vt_nome_arquivo,SizeOf(vt_nome_arquivo),#0); //--> Vetor GLOBAL
@@ -737,8 +729,7 @@ begin
      Nao_Encontrados.Free;
      end;
      {FIM - Seriado_Quantidade}
-   end;
-   {FIM - ELSE}
+
  end;
  {FIM - SelectDirectory}
 
