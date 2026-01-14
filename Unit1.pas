@@ -73,8 +73,8 @@ type
     Menu_Caracter: TMenuItem;
     lstitalic: TMenuItem;
     lstunderline: TMenuItem;
-    btncores: TSpeedButton;
-    lstcores: TMenuItem;
+    btn_editAvancada: TSpeedButton;
+    lst_editAvancada: TMenuItem;
     ColorDialog1: TColorDialog;
     box_edicao: TGroupBox;
     btnitalico: TSpeedButton;
@@ -98,7 +98,6 @@ type
     Label5: TLabel;
     Localizar1: TMenuItem;
     btnfundo: TSpeedButton;
-    lstfundo: TMenuItem;
     btntags: TSpeedButton;
     lsttags: TMenuItem;
     procedure ListBox1Click(Sender: TObject);
@@ -136,8 +135,8 @@ type
     procedure lstnumerosClick(Sender: TObject);
     procedure RichText1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure RichText2MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-    procedure btncoresClick(Sender: TObject);
-    procedure lstcoresClick(Sender: TObject);
+    procedure btn_editAvancadaClick(Sender: TObject);
+    procedure lst_editAvancadaClick(Sender: TObject);
     procedure lstitalicClick(Sender: TObject);
     procedure lstunderlineClick(Sender: TObject);
     procedure btnunderlineClick(Sender: TObject);
@@ -159,7 +158,6 @@ type
     procedure Localizar1Click(Sender: TObject);
     procedure btnfundoClick(Sender: TObject);
     procedure Menu_SobreClick(Sender: TObject);
-    procedure lstfundoClick(Sender: TObject);
     procedure btntagsClick(Sender: TObject);
   private
   MostRecentFiles1: TMostRecentFiles;
@@ -179,6 +177,10 @@ type
 
 var
   Form1: TForm1;
+  //---------------------------------
+  {SEGURAR PROCESSAMENTO DO ONCHANGE}
+  //---------------------------------
+  FProcessandoLegenda: Boolean;
   //---------------------------------
   {DADOS DO SRT ADJUSTER - VARIÁVEIS}
   SRT_EXE_Global,
@@ -210,14 +212,6 @@ const
   TM_RICHTEXT    = 2;
 //------------------------------
 //------------------------------
-
-//------------------------------------------------------------------------------
-{EDIÇÃO AVANÇADA - 01/04}
-//------------------------------------------------------------------------------
-procedure BuildBlocks(Lines: TStrings;var Blocks: array of TFormatBlock;var BlockCount: Integer;LinePos: array of Integer);
-procedure ApplyBlocks(RE: TRichEdit;const Blocks: array of TFormatBlock;Count: Integer;Progress: TProgressBar);
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
 
 implementation
 
@@ -334,143 +328,6 @@ begin
 
   SendMessage(RE.Handle, WM_SETREDRAW, 1, 0);
   RE.Invalidate;
-end;
-//------------------------------------------------------------------------------
-{EDIÇÃO AVANÇADA - 02/04}
-//------------------------------------------------------------------------------
-procedure Edicao_Avancada(var Legenda: TRichEdit; ProgressBar1: TProgressBar);
-var
-  LinePos: array of Integer;
-  Blocks: array of TFormatBlock;
-  BlockCount, i: Integer;
-begin
-  SetLength(LinePos, Legenda.Lines.Count);
-  for i := 0 to Legenda.Lines.Count - 1 do
-    LinePos[i] := Legenda.Perform(EM_LINEINDEX, i, 0);
-
-  SetLength(Blocks, Legenda.Lines.Count * 3); // margem segura
-
-  BuildBlocks(Legenda.Lines, Blocks, BlockCount, LinePos);
-  ApplyBlocks(Legenda, Blocks, BlockCount, ProgressBar1);
-end;
-//------------------------------------------------------------------------------
-{EDIÇÃO AVANÇADA - 03/04}
-//------------------------------------------------------------------------------
-procedure BuildBlocks(Lines: TStrings; var Blocks: array of TFormatBlock;
-  var BlockCount: Integer; LinePos: array of Integer);
-var
-  i, StartPos, Len: Integer;
-  Line, NoSpace: string;
-begin
-  BlockCount := 0;
-
-  for i := 0 to Lines.Count - 1 do
-  begin
-    Line := Lines[i];
-    NoSpace := StringReplace(Trim(Line), ' ', '', [rfReplaceAll]);
-
-    // Número + timestamp
-    if (IsNumeric(Line)) and
-       (i + 1 < Lines.Count) and
-       (Pos(' --> ', Lines[i + 1]) > 0) and
-       ((i = 0) or (Trim(Lines[i - 1]) = '')) then
-    begin
-      // Número em negrito
-      Blocks[BlockCount].StartPos := LinePos[i];
-      Blocks[BlockCount].Length   := Length(Line);
-      Blocks[BlockCount].Style    := [fsBold];
-      Blocks[BlockCount].Color    := clBlack;
-      Inc(BlockCount);
-
-      // Timestamp azul
-      Blocks[BlockCount].StartPos := LinePos[i + 1];
-      Blocks[BlockCount].Length   := Length(Lines[i + 1]);
-      Blocks[BlockCount].Style    := [];
-      Blocks[BlockCount].Color    := clNavy;
-      Inc(BlockCount);
-    end;
-
-    // <i>
-    if Pos('<i>', Line) > 0 then
-    begin
-      StartPos := LinePos[i] + Pos('<i>', Line) - 1;
-      Len := Length(Line);
-
-      if (i + 1 < Lines.Count) and (Pos('</i>', Lines[i + 1]) > 0) then
-        Len := Len + Length(Lines[i + 1]) + 4;
-
-      Blocks[BlockCount].StartPos := StartPos;
-      Blocks[BlockCount].Length   := Len;
-      Blocks[BlockCount].Style    := [fsItalic];
-      Blocks[BlockCount].Color    := clGray;
-      Inc(BlockCount);
-    end;
-
-    // <u>
-    if Pos('<u>', Line) > 0 then
-    begin
-      StartPos := LinePos[i] + Pos('<u>', Line) - 1;
-      Len := Length(Line);
-
-      if (i + 1 < Lines.Count) and (Pos('</u>', Lines[i + 1]) > 0) then
-        Len := Len + Length(Lines[i + 1]) + 4;
-
-      Blocks[BlockCount].StartPos := StartPos;
-      Blocks[BlockCount].Length   := Len;
-      Blocks[BlockCount].Style    := [fsUnderline];
-      Blocks[BlockCount].Color    := clGray;
-      Inc(BlockCount);
-    end;
-
-    // <fontcolor>
-    if (Pos('<fontcolor="#', NoSpace) > 0) or
-       (Pos('<fontcolor=#', NoSpace) > 0) then
-    begin
-      StartPos := LinePos[i] + Pos('#', Line);
-      Len := Length(Line);
-
-      if (i + 1 < Lines.Count) and (Pos('</font>', Lines[i + 1]) > 0) then
-        Len := Len + Length(Lines[i + 1]) + 4;
-
-      Blocks[BlockCount].StartPos := StartPos;
-      Blocks[BlockCount].Length   := Len;
-      Blocks[BlockCount].Style    := [];
-      Blocks[BlockCount].Color    := HexToColor(Copy(Line, Pos('#', Line) + 1, 6));
-      Inc(BlockCount);
-    end;
-  end;
-end;
-//------------------------------------------------------------------------------
-{EDIÇÃO AVANÇADA - 04/04}
-//------------------------------------------------------------------------------
-procedure ApplyBlocks(RE: TRichEdit;const Blocks: array of TFormatBlock;Count: Integer;Progress: TProgressBar);
-var
-  i: Integer;
-begin
-  Progress.Visible := True;
-  Progress.Position := 0;
-  Progress.Max := Count;
-
-  RE.Perform(WM_SETREDRAW, 0, 0);
-
-  try
-    for i := 0 to Count - 1 do
-    begin
-      RE.SelStart  := Blocks[i].StartPos;
-      RE.SelLength := Blocks[i].Length;
-      RE.SelAttributes.Style := Blocks[i].Style;
-      RE.SelAttributes.Color := Blocks[i].Color;
-
-      Progress.Position := i + 1;
-
-      if (i mod 20 = 0) then
-        Application.ProcessMessages;
-    end;
-  finally
-    RE.Perform(WM_SETREDRAW, 1, 0);
-    RE.Invalidate;
-    Progress.Visible := False;
-  end;
 end;
 //------------------------------------------------------------------------------
 {ARRASTA E SOLTA - 02/02}
@@ -620,8 +477,8 @@ RichText1.ReadOnly:=True;
  lstabrir.Enabled:=True;
  btnprocurar.Enabled:=True;
  lstprocurar.Enabled:=True;
- btncores.Enabled:=True;
- lstcores.Enabled:=True;
+ btn_editAvancada.Enabled:=True;
+ lst_editAvancada.Enabled:=True;
  btntempo.Enabled:=True;
  lsttempo.Enabled:=True;
  btnstretch.Enabled:=True;
@@ -1116,8 +973,8 @@ ProgressBar1.Refresh;
      lstfraps.Enabled  :=True;
      btnnumeros.Enabled:=True;
      lstnumeros.Enabled:=True;
-     btncores.Enabled  :=True;
-     lstcores.Enabled  :=True;
+     btn_editAvancada.Enabled  :=True;
+     lst_editAvancada.Enabled  :=True;
      //-----------------------
      StatusBar1.Panels[0].Text:='Esta legenda não possui nenhum tipo de ocorrência.';
      end;
@@ -1354,6 +1211,12 @@ R: TRect;
 MargenIzquierdo: Integer;
 MargenDerecho: Integer;
 begin
+ //--------------------------------
+ {SEGURA PROCESSAMENTO DO ONCHANGE}
+ //--------------------------------
+ if FProcessandoLegenda then
+ Exit;
+ //--------------------------------
 
  if RichText1.ReadOnly = False then
  begin
@@ -1469,8 +1332,8 @@ begin
           lstfraps.Enabled     :=False;
           btnnumeros.Enabled   :=False;
           lstnumeros.Enabled   :=False;
-          btncores.Enabled     :=False;
-          lstcores.Enabled     :=False;
+          btn_editAvancada.Enabled     :=False;
+          lst_editAvancada.Enabled     :=False;
           //---------------------------
 
            if RichText2.Visible = True then
@@ -1647,8 +1510,8 @@ btnsalvarcomo.Enabled:=True;
 lstsalvarcomo.Enabled:=True;
 btnrenomear.Enabled  :=True;
 lstrenomear.Enabled  :=True;
-btncores.Enabled     :=True;
-lstcores.Enabled     :=True;
+btn_editAvancada.Enabled     :=True;
+lst_editAvancada.Enabled     :=True;
 //--------------------------
 
   if box_edicao.Visible = True then
@@ -1678,13 +1541,10 @@ StatusBar1.Panels[0].Text:='Correção numérica realizada com sucesso!';
 Panel1.Visible:=False;
 end;
 
-procedure TForm1.btncoresClick(Sender: TObject);
+procedure TForm1.btn_editAvancadaClick(Sender: TObject);
 begin
+{LIMPEZA DE MEMÓRIA INTERNA DO RICHTEXT}
 SoftResetPreserveText(RichText1);
-//-----------------------------------------------------
-//editar:=True; //--> Variável GLOBAL (Editar)
-//salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
-//-----------------------------------------------------
 
 StatusBar1.Panels[0].Text:='';
 
@@ -1706,10 +1566,15 @@ BotoesTopo_Off;
 lstsubstituir.Enabled:=True;
 //--------------------------
 
-  if RichText1.Visible = True then
-  Edicao_Avancada(RichText1,ProgressBar1)
-  else
-  Edicao_Avancada(RichText2,ProgressBar1);
+  FProcessandoLegenda := True;
+  Try
+     if RichText1.Visible = True then
+     Edicao_Avancada(RichText1,ProgressBar1)
+     else
+     Edicao_Avancada(RichText2,ProgressBar1);
+  Finally
+  FProcessandoLegenda := False;
+  end;
 
 //------------------------------
 box_edicao.Top:=RichText1.Top-5;
@@ -1718,7 +1583,6 @@ box_edicao.Visible:=True;
 lstitalic.Enabled:=True;
 lstunderline.Enabled:=True;
 lstfonte.Enabled:=True;
-lstfundo.Enabled:=True;
 //------------------------------
 
 //--------------------------
@@ -1962,9 +1826,9 @@ begin
 btnrenomear.Click;
 end;
 
-procedure TForm1.lstcoresClick(Sender: TObject);
+procedure TForm1.lst_editAvancadaClick(Sender: TObject);
 begin
-btncores.Click;
+btn_editAvancada.Click;
 end;
 
 procedure TForm1.lstitalicClick(Sender: TObject);
@@ -2032,11 +1896,6 @@ begin
 ShellExecute(0,Nil,PChar(SRT_BLOG_Global),Nil,Nil,0);
 end;
 
-procedure TForm1.lstfundoClick(Sender: TObject);
-begin
-btnfundo.Click;
-end;
-
 procedure TForm1.btntagsClick(Sender: TObject);
 var
 HexColor: string;  
@@ -2049,12 +1908,23 @@ SoftResetPreserveText(RichText1);
 HexColor := ColorToHex(ColorDialog1.Color);
 
 BotoesTopo_Off;
-// FASE 1 — TEXTO (rápido)
-AtualizarTextoComFont(RichText1.Lines, HexColor, ProgressBar1);
-// FASE 2 — VISUAL (15 Primeiros diálogos)
-ColorirVisualLimitado(RichText1, ColorDialog1.Color, 15);
+
+  FProcessandoLegenda := True;
+  Try
+  // FASE 1 — TEXTO (rápido)
+  AtualizarTextoComFont(RichText1.Lines, HexColor, ProgressBar1);
+  // FASE 2 — VISUAL (15 Primeiros diálogos)
+  ColorirVisualLimitado(RichText1, ColorDialog1.Color, 15);
+  Finally
+  FProcessandoLegenda := False;
+  end;
 
 SendMessage(RichText1.Handle,WM_VSCROLL,SB_TOP,0);
+
+//-----------------------------------------------------
+editar:=True; //--> Variável GLOBAL (Editar)
+salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
+//-----------------------------------------------------
 
 //--------------------------
 btnabrir.Enabled     :=True;

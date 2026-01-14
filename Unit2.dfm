@@ -3,8 +3,8 @@ object Form2: TForm2
   Top = 163
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
-  ClientHeight = 458
-  ClientWidth = 393
+  ClientHeight = 487
+  ClientWidth = 418
   Color = clBtnFace
   Font.Charset = SYMBOL_CHARSET
   Font.Color = clWindowText
@@ -19,141 +19,141 @@ object Form2: TForm2
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   PixelsPerInch = 96
-  TextHeight = 16
+  TextHeight = 17
   object Label2: TLabel
-    Left = 8
-    Top = 174
-    Width = 69
-    Height = 14
+    Left = 9
+    Top = 185
+    Width = 76
+    Height = 16
     Caption = 'Segundos:'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -13
     Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ParentFont = False
   end
   object Label1: TLabel
-    Left = 8
-    Top = 230
-    Width = 56
-    Height = 14
+    Left = 9
+    Top = 244
+    Width = 62
+    Height = 16
     Caption = 'Minutos:'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -13
     Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ParentFont = False
   end
   object Label3: TLabel
-    Left = 8
-    Top = 286
-    Width = 44
-    Height = 14
+    Left = 9
+    Top = 304
+    Width = 48
+    Height = 16
     Caption = 'Horas:'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -13
     Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ParentFont = False
   end
   object btnOK: TSpeedButton
-    Left = 8
-    Top = 416
-    Width = 273
-    Height = 33
+    Left = 9
+    Top = 442
+    Width = 290
+    Height = 35
     Caption = 'OK'
     Enabled = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
+    Font.Height = -12
     Font.Name = 'MS Sans Serif'
     Font.Style = []
     ParentFont = False
     OnClick = btnOKClick
   end
   object btnCancelar: TSpeedButton
-    Left = 288
-    Top = 416
-    Width = 97
-    Height = 33
+    Left = 306
+    Top = 442
+    Width = 103
+    Height = 35
     Caption = 'Cancelar'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
+    Font.Height = -12
     Font.Name = 'MS Sans Serif'
     Font.Style = []
     ParentFont = False
     OnClick = btnCancelarClick
   end
   object Label5: TLabel
-    Left = 8
-    Top = 342
-    Width = 97
-    Height = 14
+    Left = 9
+    Top = 363
+    Width = 107
+    Height = 16
     Caption = 'Milissegundos:'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -13
     Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ParentFont = False
   end
   object ScrollBar1: TScrollBar
-    Left = 8
-    Top = 192
-    Width = 377
-    Height = 25
+    Left = 9
+    Top = 204
+    Width = 400
+    Height = 27
     Max = 59
     PageSize = 0
     TabOrder = 1
     OnChange = ScrollBar1Change
   end
   object ScrollBar2: TScrollBar
-    Left = 8
-    Top = 248
-    Width = 377
-    Height = 25
+    Left = 9
+    Top = 264
+    Width = 400
+    Height = 26
     Max = 59
     PageSize = 0
     TabOrder = 2
     OnChange = ScrollBar2Change
   end
   object ScrollBar3: TScrollBar
-    Left = 8
-    Top = 304
-    Width = 377
-    Height = 25
+    Left = 9
+    Top = 323
+    Width = 400
+    Height = 27
     Max = 5
     PageSize = 0
     TabOrder = 3
     OnChange = ScrollBar3Change
   end
   object GroupBox1: TGroupBox
-    Left = 208
-    Top = 72
-    Width = 177
-    Height = 81
+    Left = 221
+    Top = 77
+    Width = 188
+    Height = 86
     Caption = ' Sobre o texto '
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -13
     Font.Name = 'Verdana'
     Font.Style = []
     ParentFont = False
     TabOrder = 0
     object RadioDepois: TRadioButton
-      Left = 8
-      Top = 24
-      Width = 153
-      Height = 17
+      Left = 9
+      Top = 26
+      Width = 162
+      Height = 18
       Caption = 'O texto vir'#225' depois'
       Checked = True
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -12
+      Font.Height = -13
       Font.Name = 'Verdana'
       Font.Style = []
       ParentFont = False
@@ -162,14 +162,14 @@ object Form2: TForm2
       OnClick = RadioDepoisClick
     end
     object RadioAntes: TRadioButton
-      Left = 8
-      Top = 48
-      Width = 145
-      Height = 17
+      Left = 9
+      Top = 51
+      Width = 154
+      Height = 18
       Caption = 'O texto vir'#225' antes'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -12
+      Font.Height = -13
       Font.Name = 'Verdana'
       Font.Style = []
       ParentFont = False
@@ -178,43 +178,43 @@ object Form2: TForm2
     end
   end
   object GroupBox2: TGroupBox
-    Left = 8
-    Top = 80
-    Width = 177
-    Height = 73
+    Left = 9
+    Top = 85
+    Width = 188
+    Height = 78
     Caption = ' Ajuste do tempo: '
     Enabled = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -13
     Font.Name = 'Verdana'
     Font.Style = []
     ParentFont = False
     TabOrder = 5
     object Label4: TLabel
-      Left = 10
-      Top = 28
-      Width = 17
-      Height = 25
+      Left = 11
+      Top = 30
+      Width = 19
+      Height = 28
       Caption = '+'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -21
+      Font.Height = -23
       Font.Name = 'Verdana'
       Font.Style = []
       ParentFont = False
     end
     object MaskEdit1: TMaskEdit
-      Left = 30
-      Top = 30
-      Width = 137
-      Height = 21
+      Left = 32
+      Top = 32
+      Width = 145
+      Height = 22
       BorderStyle = bsNone
       Ctl3D = False
       EditMask = '!90:00:00,000;1;_'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -19
+      Font.Height = -20
       Font.Name = 'Verdana'
       Font.Style = []
       MaxLength = 12
@@ -226,10 +226,10 @@ object Form2: TForm2
     end
   end
   object ScrollBar4: TScrollBar
-    Left = 8
-    Top = 360
-    Width = 377
-    Height = 25
+    Left = 9
+    Top = 383
+    Width = 400
+    Height = 26
     LargeChange = 100
     Max = 900
     PageSize = 0
@@ -238,28 +238,28 @@ object Form2: TForm2
     OnChange = ScrollBar4Change
   end
   object GroupBox3: TGroupBox
-    Left = 8
-    Top = 8
-    Width = 377
-    Height = 54
+    Left = 9
+    Top = 9
+    Width = 400
+    Height = 57
     Caption = ' Ajustar '
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -13
     Font.Name = 'Verdana'
     Font.Style = []
     ParentFont = False
     TabOrder = 6
     object RadioTempo: TRadioButton
-      Left = 27
-      Top = 23
-      Width = 142
-      Height = 17
+      Left = 29
+      Top = 24
+      Width = 151
+      Height = 19
       Caption = 'Tempo da Legenda'
       Checked = True
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -12
+      Font.Height = -13
       Font.Name = 'Verdana'
       Font.Style = []
       ParentFont = False
@@ -268,14 +268,14 @@ object Form2: TForm2
       OnClick = RadioTempoClick
     end
     object RadioDuracao: TRadioButton
-      Left = 192
-      Top = 23
-      Width = 158
-      Height = 17
+      Left = 204
+      Top = 24
+      Width = 168
+      Height = 19
       Caption = 'Dura'#231#227'o dos Di'#225'logos'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -12
+      Font.Height = -13
       Font.Name = 'Verdana'
       Font.Style = []
       ParentFont = False

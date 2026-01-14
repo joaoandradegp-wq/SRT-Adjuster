@@ -190,7 +190,7 @@ SetLength(new_legenda,Form1.RichText1.Lines.Count); //--> Define o tamanho do Ve
            Form1.ProgressBar1.Position:=Form1.ProgressBar1.Position+1;
            new_legenda[j]:=Form1.RichText1.Lines[j];
 
-              if (AnsiContainsStr(Form1.RichText1.Lines[j],' --> ')) and (Form1.IsNumeric(Form1.RichText1.lines[j-1])) and (Trim(Form1.RichText1.lines[j-2]) = '') then
+              if (AnsiContainsStr(Form1.RichText1.Lines[j],' --> ')) and (IsNumeric(Form1.RichText1.lines[j-1])) and (Trim(Form1.RichText1.lines[j-2]) = '') then
               begin
               Inc(cont);
 

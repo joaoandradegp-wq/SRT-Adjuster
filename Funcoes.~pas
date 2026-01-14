@@ -433,8 +433,8 @@ Form1.btnsalvar.Enabled:=False;
 Form1.lstsalvar.Enabled:=False;
 Form1.btnsalvarcomo.Enabled:=False;
 Form1.lstsalvarcomo.Enabled:=False;
-Form1.btncores.Enabled:=False;
-Form1.lstcores.Enabled:=False;
+Form1.btn_editAvancada.Enabled:=False;
+Form1.lst_editAvancada.Enabled:=False;
 Form1.btnfraps.Enabled:=False;
 Form1.lstfraps.Enabled:=False;
 Form1.btnnumeros.Enabled:=False;
@@ -479,8 +479,8 @@ Form1.lstconsertar.Enabled:=False;
 Form1.btneditar.Enabled:=False;
 Form1.lsteditar.Enabled:=False;
 {EDIÇÃO AVANÇADA}
-Form1.btncores.Enabled:=False;
-Form1.lstcores.Enabled:=False;
+Form1.btn_editAvancada.Enabled:=False;
+Form1.lst_editAvancada.Enabled:=False;
 {AJUSTE DE TEMPO}
 Form1.btntempo.Enabled:=False;
 Form1.lsttempo.Enabled:=False;
@@ -497,8 +497,8 @@ Form1.lstnumeros.Enabled:=False;
 Form1.btnrenomear.Enabled:=False;
 Form1.lstrenomear.Enabled:=False;
 {ALTERAR COR DA LEGENDA}
-Form1.btntags.Enabled:=True;
-Form1.lsttags.Enabled:=True;
+Form1.btntags.Enabled:=False;
+Form1.lsttags.Enabled:=False;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

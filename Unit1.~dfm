@@ -113,7 +113,7 @@ object Form1: TForm1
     Visible = False
   end
   object Image3: TImage
-    Left = 698
+    Left = 706
     Top = 167
     Width = 16
     Height = 16
@@ -953,7 +953,7 @@ object Form1: TForm1
       ShowHint = True
       OnClick = btneditarClick
     end
-    object btncores: TSpeedButton
+    object btn_editAvancada: TSpeedButton
       Left = 287
       Top = 2
       Width = 46
@@ -1019,7 +1019,7 @@ object Form1: TForm1
         CCCEE4E5E6E9E9E9E9E9E9E8E8E8E8E8E8E9E9E9E8E8E8E9E9E9}
       ParentShowHint = False
       ShowHint = True
-      OnClick = btncoresClick
+      OnClick = btn_editAvancadaClick
     end
     object ToolButton1: TToolButton
       Left = 333
@@ -1440,6 +1440,8 @@ object Form1: TForm1
         59E2FBAFF3FD46E6F9FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF6FDFFFFFFFF81
         E1FDDFF8FFCDF6FE80E9FCFFFFFFF6FEFFFFFFFFFFFFFFFFFFFF}
+      ParentShowHint = False
+      ShowHint = True
       OnClick = btntagsClick
     end
   end
@@ -1605,17 +1607,14 @@ object Form1: TForm1
         Caption = 'Ajuste de &M'#250'ltiplas Legendas - S'#233'ries'
         OnClick = lstrenomearClick
       end
-      object lsttags: TMenuItem
-        Caption = 'Alterar &Cor da Legenda'
-      end
     end
     object Menu_Caracter: TMenuItem
       Caption = 'F&onte'
-      object lstcores: TMenuItem
+      object lst_editAvancada: TMenuItem
         Caption = 'Edi'#231#227'o Avan'#231'ada       '
         Enabled = False
         ShortCut = 32837
-        OnClick = lstcoresClick
+        OnClick = lst_editAvancadaClick
       end
       object N01: TMenuItem
         Caption = '-'
@@ -1638,11 +1637,10 @@ object Form1: TForm1
         ShortCut = 32835
         OnClick = lstfonteClick
       end
-      object lstfundo: TMenuItem
-        Caption = 'Fundo de Legenda'
+      object lsttags: TMenuItem
+        Caption = 'Alterar &Cor da Legenda'
         Enabled = False
         ShortCut = 32838
-        OnClick = lstfundoClick
       end
     end
     object Menu_Sobre: TMenuItem
