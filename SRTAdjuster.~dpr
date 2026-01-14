@@ -19,10 +19,7 @@ uses
 const
 //------------------------------------------------------
 SRT_VERSAO     = '1.3';
-SRT_HOSPEDAGEM = '.blogspot.com.br';
-SRT_BLOG       = 'http://srtadjuster.blogspot.com.br';
-SRT_FACEBOOK   = 'https://www.facebook.com/srtadjuster';
-SRT_PAYPAL     = 'https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=srtadjuster@gmail.com&lc=BR&item_name=SRT Adjuster&item_number=001&no_note=0&currency_code=BRL&bn=PP-DonationsBF:btn_donate_SM.gif:NonHostedGuest';
+SRT_BLOG       = 'http://phobosfreeware.blogspot.com.br';
 //------------------------------------------------------
 var
 //------------------------------------------------------
@@ -37,45 +34,21 @@ SRT_RAIZ:=GetCurrentDir+'\';
 
 {TRANSFERE AS VARIÁVEIS PARA O FORM1}
 //-------------------------------------------------------------------------------
-VarGlobais(SRT_EXE,SRT_RAIZ,SRT_VERSAO,SRT_BLOG,SRT_FACEBOOK,SRT_PAYPAL);
+VarGlobais(SRT_EXE,SRT_RAIZ,SRT_VERSAO,SRT_BLOG);
 //-------------------------------------------------------------------------------
 
 Application.Initialize;
 Application.Title := 'SRT Adjuster 1.3';
-  Splash_Screen:=Tsplash_screen.Create(Application);
+Splash_Screen:=Tsplash_screen.Create(Application);
 Splash_Screen.Show;
 Splash_Screen.Refresh;
-
 //Sleep(2000);
+Splash_Screen.Hide;
+Splash_Screen.Free;
 
-  //------------------------------------------
-  {UPDATE - INÍCIO}
- { if InternetCheckConnection('http://www.google.com',1,0)  then
-  begin
-   if NovoUpdate(LowerCase(('srtadjuster'+SRT_VERSAO))+SRT_HOSPEDAGEM) = True then
-   begin
-   ShellExecute(0,Nil,PChar(SRT_BLOG),Nil,Nil,0);
-   Application.Terminate;
-   end
-   else
-   begin    }
-   Splash_Screen.Hide;
-   Splash_Screen.Free;
-   Application.CreateForm(TForm1, Form1);
-  Application.CreateForm(TForm6_substituir, Form6_substituir);
-  Application.Run;    {
-   end;
-  end
-  else
-  begin
-  Splash_Screen.Hide;
-  Splash_Screen.Free;
-  Application.CreateForm(TForm1, Form1);
-  Application.CreateForm(TForm6_substituir, Form6_substituir);
-  Application.Run;
-  end;
-  {UPDATE - FIM}
-  //------------------------------------------
+Application.CreateForm(TForm1, Form1);
+Application.CreateForm(TForm6_substituir, Form6_substituir);
+Application.Run;
 
 end.
 

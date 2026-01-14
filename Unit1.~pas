@@ -201,13 +201,18 @@ const
   videos_suportados: array[0..qtde_formatos] of String =
   ('.mp4','.avi','.mpg','.mpeg','.mov','.rmvb','.rm','.ra','.wmv','.wma','.flv','.mkv');
 
+//------------------------------
+{ALTERA COR DA LEGENDA - 01/03}
+//------------------------------
 const
   EM_SETTEXTMODE = WM_USER + 89;
   TM_PLAINTEXT   = 1;
   TM_RICHTEXT    = 2;
+//------------------------------
+//------------------------------
 
 //------------------------------------------------------------------------------
-{EDIÇÃO AVANÇADA - 01/03}
+{EDIÇÃO AVANÇADA - 01/04}
 //------------------------------------------------------------------------------
 procedure BuildBlocks(Lines: TStrings;var Blocks: array of TFormatBlock;var BlockCount: Integer;LinePos: array of Integer);
 procedure ApplyBlocks(RE: TRichEdit;const Blocks: array of TFormatBlock;Count: Integer;Progress: TProgressBar);
@@ -220,7 +225,9 @@ uses Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, CommCtrl, Funcoes;
 
 {$R *.dfm}
 
-
+//------------------------------------------------------------------------------
+{RESETAR DA MEMÓRIA O CAMPO RICHTEXT}
+//------------------------------------------------------------------------------
 procedure SoftResetPreserveText(RE: TRichEdit);
 var
   Backup: string;
@@ -228,43 +235,20 @@ begin
   Backup := RE.Text;  // ?? salva conteúdo
 
   SendMessage(RE.Handle, WM_SETREDRAW, 0, 0);
-
   SendMessage(RE.Handle, EM_SETTEXTMODE, TM_PLAINTEXT, 0);
   RE.Clear;
   SendMessage(RE.Handle, EM_SETTEXTMODE, TM_RICHTEXT, 0);
 
   RE.Text := Backup;  // ?? restaura conteúdo
-
   RE.SelAttributes.Assign(RE.DefAttributes);
 
   SendMessage(RE.Handle, WM_SETREDRAW, 1, 0);
   RE.Invalidate;
 end;
-
-
-
-procedure ResetRichEdit(var RE: TRichEdit; Owner: TWinControl);
-var
-  NewRE: TRichEdit;
-begin
-  NewRE := TRichEdit.Create(Owner);
-
-  NewRE.Parent := Owner;
-  NewRE.Align  := RE.Align;
-  NewRE.Font.Assign(RE.Font);
-  NewRE.ScrollBars := RE.ScrollBars;
-  NewRE.ReadOnly   := RE.ReadOnly;
-  NewRE.Visible    := RE.Visible;
-
-  RE.Free;
-  RE := NewRE;
-end;
-
-procedure AtualizarTextoComFont(
-  Lines: TStrings;
-  const HexColor: string;
-  Progress: TProgressBar
-);
+//------------------------------------------------------------------------------
+{ALTERA COR DA LEGENDA - 02/03}
+//------------------------------------------------------------------------------
+procedure AtualizarTextoComFont(Lines: TStrings;const HexColor: string;Progress: TProgressBar);
 var
   i: Integer;
   Line, CleanLine: string;
@@ -310,11 +294,10 @@ begin
 
   Progress.Visible := False;
 end;
-procedure ColorirVisualLimitado(
-  RE: TRichEdit;
-  AColor: TColor;
-  MaxDialogos: Integer
-);
+//------------------------------------------------------------------------------
+{ALTERA COR DA LEGENDA - 03/03}
+//------------------------------------------------------------------------------
+procedure ColorirVisualLimitado(RE: TRichEdit;AColor: TColor;MaxDialogos: Integer);
 var
   i, DialogosColoridos, j: Integer;
   LineStart: Integer;
@@ -352,11 +335,8 @@ begin
   SendMessage(RE.Handle, WM_SETREDRAW, 1, 0);
   RE.Invalidate;
 end;
-
-
-
 //------------------------------------------------------------------------------
-{EDIÇÃO AVANÇADA - 02/03}
+{EDIÇÃO AVANÇADA - 02/04}
 //------------------------------------------------------------------------------
 procedure Edicao_Avancada(var Legenda: TRichEdit; ProgressBar1: TProgressBar);
 var
@@ -374,7 +354,7 @@ begin
   ApplyBlocks(Legenda, Blocks, BlockCount, ProgressBar1);
 end;
 //------------------------------------------------------------------------------
-{EDIÇÃO AVANÇADA - 03/03}
+{EDIÇÃO AVANÇADA - 03/04}
 //------------------------------------------------------------------------------
 procedure BuildBlocks(Lines: TStrings; var Blocks: array of TFormatBlock;
   var BlockCount: Integer; LinePos: array of Integer);
@@ -461,6 +441,7 @@ begin
   end;
 end;
 //------------------------------------------------------------------------------
+{EDIÇÃO AVANÇADA - 04/04}
 //------------------------------------------------------------------------------
 procedure ApplyBlocks(RE: TRichEdit;const Blocks: array of TFormatBlock;Count: Integer;Progress: TProgressBar);
 var
@@ -491,7 +472,6 @@ begin
     Progress.Visible := False;
   end;
 end;
-//------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 {ARRASTA E SOLTA - 02/02}
 //------------------------------------------------------------------------------
@@ -652,6 +632,8 @@ RichText1.ReadOnly:=True;
  lstnumeros.Enabled:=True;
  btnrenomear.Enabled:=True;
  lstrenomear.Enabled:=True;
+ btntags.Enabled:=True;
+ lsttags.Enabled:=True; 
  //------------------------
 
  {SOBREPOSIÇÕES}
@@ -725,6 +707,11 @@ end;
 //------------------------------------------------------------------------------
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+{
+Scaled := False;
+AutoScroll := False;
+BorderStyle := bsSingle;
+}
 //----------------------------
 {ARRASTAR E SOLTAR - ATIVANDO}
 DragAcceptFiles(Handle, True);

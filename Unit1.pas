@@ -632,6 +632,8 @@ RichText1.ReadOnly:=True;
  lstnumeros.Enabled:=True;
  btnrenomear.Enabled:=True;
  lstrenomear.Enabled:=True;
+ btntags.Enabled:=True;
+ lsttags.Enabled:=True; 
  //------------------------
 
  {SOBREPOSIÇÕES}
@@ -705,6 +707,11 @@ end;
 //------------------------------------------------------------------------------
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+{
+Scaled := False;
+AutoScroll := False;
+BorderStyle := bsSingle;
+}
 //----------------------------
 {ARRASTAR E SOLTAR - ATIVANDO}
 DragAcceptFiles(Handle, True);

@@ -26,6 +26,7 @@ var
 SRT_EXE,
 SRT_RAIZ:String;
 //------------------------------------------------------
+
 begin
 //------------------------------------------------------
 SRT_EXE:=Copy(ExtractFileName(Application.ExeName),0,Length(ExtractFileName(Application.ExeName))-4);

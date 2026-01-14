@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 147
-  Top = 115
+  Left = 280
+  Top = 124
   Width = 776
   Height = 574
   Color = clBtnFace
@@ -25,14 +25,14 @@ object Form1: TForm1
   object Label3: TLabel
     Left = 592
     Top = 168
-    Width = 113
-    Height = 15
+    Width = 118
+    Height = 13
     Caption = '0 Limites de Linha'
     Color = clBtnFace
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI Symbol'
+    Font.Height = -11
+    Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
@@ -42,40 +42,40 @@ object Form1: TForm1
   object Label8: TLabel
     Left = 592
     Top = 128
-    Width = 65
-    Height = 15
+    Width = 68
+    Height = 13
     Caption = '0 Di'#225'logos'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI Symbol'
+    Font.Height = -11
+    Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ParentFont = False
   end
   object Label4: TLabel
     Left = 592
     Top = 112
-    Width = 51
-    Height = 15
+    Width = 54
+    Height = 13
     Caption = '0 Linhas'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI Symbol'
+    Font.Height = -11
+    Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ParentFont = False
   end
   object Label1: TLabel
     Left = 592
     Top = 152
-    Width = 100
-    Height = 15
+    Width = 107
+    Height = 13
     Caption = '0 Sobreposi'#231#245'es'
     Color = clBtnFace
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI Symbol'
+    Font.Height = -11
+    Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
@@ -113,7 +113,7 @@ object Form1: TForm1
     Visible = False
   end
   object Image3: TImage
-    Left = 698
+    Left = 706
     Top = 167
     Width = 16
     Height = 16
@@ -183,13 +183,13 @@ object Form1: TForm1
   object Label5: TLabel
     Left = 592
     Top = 96
-    Width = 52
-    Height = 15
+    Width = 56
+    Height = 13
     Caption = '0 Kbytes'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI Symbol'
+    Font.Height = -11
+    Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ParentFont = False
   end
@@ -435,15 +435,15 @@ object Form1: TForm1
       Left = 20
       Top = 17
       Width = 117
-      Height = 23
+      Height = 21
       AutoComplete = False
       Style = csDropDownList
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -12
-      Font.Name = 'Segoe UI Semibold'
-      Font.Style = [fsBold]
-      ItemHeight = 15
+      Font.Height = -11
+      Font.Name = 'Verdana'
+      Font.Style = []
+      ItemHeight = 13
       ItemIndex = 0
       ParentFont = False
       TabOrder = 0
@@ -495,8 +495,8 @@ object Form1: TForm1
     Ctl3D = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ItemHeight = 13
     ParentCtl3D = False
@@ -515,8 +515,8 @@ object Form1: TForm1
     Ctl3D = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ItemHeight = 13
     ParentCtl3D = False

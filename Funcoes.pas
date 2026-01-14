@@ -497,8 +497,8 @@ Form1.lstnumeros.Enabled:=False;
 Form1.btnrenomear.Enabled:=False;
 Form1.lstrenomear.Enabled:=False;
 {ALTERAR COR DA LEGENDA}
-Form1.btntags.Enabled:=True;
-Form1.lsttags.Enabled:=True;
+Form1.btntags.Enabled:=False;
+Form1.lsttags.Enabled:=False;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
