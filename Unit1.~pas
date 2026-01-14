@@ -1583,7 +1583,6 @@ box_edicao.Visible:=True;
 lstitalic.Enabled:=True;
 lstunderline.Enabled:=True;
 lstfonte.Enabled:=True;
-lstfundo.Enabled:=True;
 //------------------------------
 
 //--------------------------
