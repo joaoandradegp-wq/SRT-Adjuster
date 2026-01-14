@@ -97,11 +97,10 @@ type
     N01: TMenuItem;
     Label5: TLabel;
     Localizar1: TMenuItem;
-    Label2: TLabel;
     btnfundo: TSpeedButton;
     lstfundo: TMenuItem;
     btntags: TSpeedButton;
-    AlterarCordaLegenda1: TMenuItem;
+    lsttags: TMenuItem;
     procedure ListBox1Click(Sender: TObject);
     procedure btnsalvarcomoClick(Sender: TObject);
     procedure btnprocurarClick(Sender: TObject);

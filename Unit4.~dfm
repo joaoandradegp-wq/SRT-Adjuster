@@ -1,6 +1,6 @@
 object splash_screen: Tsplash_screen
-  Left = 267
-  Top = 129
+  Left = 353
+  Top = 259
   Anchors = []
   AutoSize = True
   BorderIcons = []
@@ -3537,7 +3537,6 @@ object splash_screen: Tsplash_screen
       DF999BF7C8B95A7ED4D16B7E9773CE5FE8B12D8497C318973A0F2FD7355E4EBC
       D49F9FF21AF6DA27CEB67F2FF5F12F77FF750EFF3F8EC32C5875CA0367000000
       0049454E44AE426082}
-    OnClick = Image1Click
   end
   object rx_loading: TRxGIFAnimator
     Left = 257
@@ -3546,7 +3545,7 @@ object splash_screen: Tsplash_screen
     Height = 9
     AsyncDrawing = True
     Animate = True
-    FrameIndex = 5
+    FrameIndex = 7
     Image.Data = {
       8904000047494638396164000900A20400CE3131CE6363CE9C9CCECECEFFFFFF
       FFFFFF000000FFFFFF21FF0B4E45545343415045322E30030100000021F90405

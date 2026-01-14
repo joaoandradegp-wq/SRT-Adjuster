@@ -5,15 +5,15 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, pngimage, ExtCtrls, StdCtrls, RxGIF, abfControls, Animate,
-  GIFCtrl, OleCtrls, SHDocVw;
+  GIFCtrl, OleCtrls, SHDocVw, RXCtrls;
 
 type
   Tsplash_screen = class(TForm)
     Image1: TImage;
     rx_loading: TRxGIFAnimator;
+    RxLabel1: TRxLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
-    procedure Image1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -40,11 +40,6 @@ procedure Tsplash_screen.FormCreate(Sender: TObject);
 begin
 if Form1 <> nil then
 rx_loading.Visible:=False;
-end;
-
-procedure Tsplash_screen.Image1Click(Sender: TObject);
-begin
-Close;
 end;
 
 end.
