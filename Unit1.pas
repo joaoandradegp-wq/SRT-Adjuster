@@ -161,6 +161,15 @@ type
     procedure btntagsClick(Sender: TObject);
   private
   MostRecentFiles1: TMostRecentFiles;
+
+  //-------------------------
+  {DICIONÁRIO - 01/03}
+  //-------------------------
+  HunHandle: Pointer;
+  procedure InitHunspell;
+  procedure FinalizeHunspell;
+  //-------------------------
+
   //-----------------------------------------------------------------
   {ARRASTA E SOLTA - 01/02}
   //-----------------------------------------------------------------
@@ -173,7 +182,6 @@ type
   //-----------------------------------------------------------------
   { Public declarations }
   end;
-
 
 var
   Form1: TForm1;
@@ -217,8 +225,34 @@ implementation
 
 uses Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, CommCtrl, Funcoes;
 
+//-------------------------------------------------------------------------------------------------
+{DICIONÁRIO - 02/03}
+//-------------------------------------------------------------------------------------------------
+function Hunspell_create(affpath, dicpath: PAnsiChar): Pointer; cdecl; external 'hunspell.dll';
+function Hunspell_destroy(handle: Pointer): Integer; cdecl; external 'hunspell.dll';
+function Hunspell_spell(handle: Pointer; word: PAnsiChar): Integer; cdecl; external 'hunspell.dll';
+//-------------------------------------------------------------------------------------------------
+
 {$R *.dfm}
 
+//-------------------------------------------------------------------------------------------------
+{DICIONÁRIO - 03/03}
+//-------------------------------------------------------------------------------------------------
+procedure TForm1.FinalizeHunspell;
+begin
+  if HunHandle <> nil then
+    Hunspell_destroy(HunHandle);
+end;
+procedure TForm1.InitHunspell;
+begin
+ HunHandle := Hunspell_create(
+    PAnsiChar(AnsiString(ExtractFilePath(Application.ExeName) + 'dict\pt_BR.aff')),
+    PAnsiChar(AnsiString(ExtractFilePath(Application.ExeName) + 'dict\pt_BR.dic'))
+  );
+
+  if HunHandle = nil then
+    raise Exception.Create('Erro ao inicializar Hunspell');
+end;
 //------------------------------------------------------------------------------
 {RESETAR DA MEMÓRIA O CAMPO RICHTEXT}
 //------------------------------------------------------------------------------
@@ -564,6 +598,7 @@ end;
 //------------------------------------------------------------------------------
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+InitHunspell;
 {
 Scaled := False;
 AutoScroll := False;
@@ -607,6 +642,7 @@ end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
+FinalizeHunspell;
 //-------------------------------
 {ARRASTAR E SOLTAR - DESATIVANDO}
 DragAcceptFiles(Handle, False);
