@@ -43,7 +43,7 @@ Application.Title := 'SRT Adjuster 1.3';
 Splash_Screen:=Tsplash_screen.Create(Application);
 Splash_Screen.Show;
 Splash_Screen.Refresh;
-Sleep(2000);
+Sleep(3000);
 Splash_Screen.Hide;
 Splash_Screen.Free;
 
