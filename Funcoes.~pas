@@ -31,8 +31,6 @@ procedure Contar_Linhas_Dialogos (var Legenda:TRichEdit;ProgressBar1:TProgressBa
 procedure Mensagem_Texto_LinhaDialogo(var linha_aux,dialogo_aux:Integer;Label_Linha,Label_Dialogo:TLabel);
 {FORMATAR NÚMEROS COM ZERO A ESQUERDA - AJUSTE DE TEMPO - FORM2}
 function FormatZero(const aNumber,Length:Integer):String;
-{VERIFICAR SE FOI SELECIONADO O DRIVE DE CD}
-function DriveCD:Char;
 {SALVAR COMO...}
 procedure Salvar_Como;
 {TODOS OS BOTÕES DO TOPO FICAM "FALSE"}
@@ -467,43 +465,6 @@ end;
 function FormatZero(const aNumber,Length:Integer):String;
 begin
 Result:=SysUtils.Format('%.*d',[Length,aNumber]);
-end;
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-function DriveCD:Char;
-var
-drivemap,mask:DWORD;
-i:Integer;
-root:String;
-begin
-Result:=#0;
-root:='A:';
-drivemap:=GetLogicalDrives;
-mask:=1;
-
-{
-0 The drive type cannot be determined.
-1 The root directory does not exist.
-
-DRIVE_REMOVABLE The drive can be removed from the drive.
-DRIVE_FIXED The disk cannot be removed from the drive.
-DRIVE_REMOTE The drive is a remote (network) drive.
-DRIVE_CDROM The drive is a CD-ROM drive.
-DRIVE_RAMDISK The drive is a RAM disk.
-}
-
-  for i:= 1 to 32 do
-  begin
-    if (mask and drivemap) <> 0 then
-      if GetDriveType(PChar(root)) = DRIVE_CDROM then
-      begin
-      result:=root[1];
-      break;
-      end;
-    mask:=mask shl 1;
-    Inc(root[1]);
-    end;
-
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

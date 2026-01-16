@@ -10,26 +10,19 @@ uses
 
 type
   //-------------------------------------------------------------------------------------------------
-  {DICIONÁRIO - 01/04}
+  {DICIONÁRIO - 01/03}
   //-------------------------------------------------------------------------------------------------
   PHunspell = Pointer;
 
   function Hunspell_create(affpath, dicpath: PAnsiChar): Pointer; cdecl; external 'hunspell.dll';
   function Hunspell_destroy(handle: Pointer): Integer; cdecl; external 'hunspell.dll';
   function Hunspell_spell(handle: Pointer; word: PAnsiChar): Integer; cdecl; external 'hunspell.dll';
-
-function SpellOK(const Palavra: string): Boolean;
+  function SpellOK(const Palavra: string): Boolean;
   function CleanWord(const S: string): string;
   function IsLetter(C: Char): Boolean;
+  procedure InitHunspell;
+//procedure FinalizeHunspell;
   //-------------------------------------------------------------------------------------------------
-
-type
-  TFormatBlock = record
-    StartPos: Integer;
-    Length: Integer;
-    Style: TFontStyles;
-    Color: TColor;
-  end;
 
 type
   TForm1 = class(TForm)
@@ -116,6 +109,7 @@ type
     btntags: TSpeedButton;
     lsttags: TMenuItem;
     btn_ortografia: TSpeedButton;
+    lst_ortografia: TMenuItem;
     procedure ListBox1Click(Sender: TObject);
     procedure btnsalvarcomoClick(Sender: TObject);
     procedure btnprocurarClick(Sender: TObject);
@@ -178,16 +172,6 @@ type
     procedure btn_ortografiaClick(Sender: TObject);
   private
   { Private declarations }
-
-    //----------------------------------
-    {DICIONÁRIO - 02/04}
-    //----------------------------------
-
-    procedure InitHunspell;
-    procedure FinalizeHunspell;
-    procedure CheckRichEdit;
-    //----------------------------------
-
   //-----------------------------------------------------------------
   {ARRASTA E SOLTA - 01/02}
   //-----------------------------------------------------------------
@@ -205,7 +189,7 @@ var
   Form1: TForm1;
    MostRecentFiles1: TMostRecentFiles;
    //-------------------------
-   {DICIONÁRIO - 03/04}
+   {DICIONÁRIO - 02/03}
    //-------------------------
    HunHandle: Pointer;
    //-------------------------
@@ -255,9 +239,7 @@ implementation
 uses Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, CommCtrl, Funcoes;
 
 //-------------------------------------------------------------------------------------------------
-{DICIONÁRIO - 04/04}
-//-------------------------------------------------------------------------------------------------
-
+{DICIONÁRIO - 03/03}
 //-------------------------------------------------------------------------------------------------
 function IsLetter(C: Char): Boolean;
 begin
@@ -266,15 +248,11 @@ begin
     ((C >= 'a') and (C <= 'z')) or
     (Ord(C) >= 192);
 end;
-
+//-------------------------------------------------------------------------------------------------
 function CleanWord(const S: string): string;
-
 begin
  Result := LowerCase(Trim(S));
 end;
-
-//-------------------------------------------------------------------------------------------------
-
 //-------------------------------------------------------------------------------------------------
 function SpellOK(const Palavra: string): Boolean;
 var
@@ -286,45 +264,23 @@ begin
   W := AnsiString(LowerCase(Palavra));
   Result := Hunspell_spell(HunHandle, PAnsiChar(W)) <> 0;
 end;
-
-
 //-------------------------------------------------------------------------------------------------
-function StartsWithUpper(const S: string): Boolean;
-begin
-  Result := (S <> '') and (S[1] = UpCase(S[1]));
-end;
 function IsTooShort(const S: string): Boolean;
 begin
   Result := Length(S) <= 3;
 end;
-function IsWhitelisted(const S: string): Boolean;
-const
-  WhiteList: array[0..4] of string =
-    ('irmã', 'cisto', 'eca', 'esqueça', 'laceração');
-var
-  I: Integer;
-begin
-  for I := Low(WhiteList) to High(WhiteList) do
-    if SameText(S, WhiteList[I]) then
-      Exit;
-  Result := False;
-end;
-
-
 //-------------------------------------------------------------------------------------------------
-procedure TForm1.InitHunspell;
+procedure InitHunspell;
 var
   AffPath, DicPath: UTF8String;
 begin
   AffPath := UTF8Encode(
     IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) +
-    'dict\pt_BR.aff'
-  );
+    'dict\pt_BR.aff');
 
   DicPath := UTF8Encode(
     IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) +
-    'dict\pt_BR.dic'
-  );
+    'dict\pt_BR.dic');
 
   if not FileExists(string(AffPath)) or not FileExists(string(DicPath)) then
     raise Exception.Create('Arquivos do dicionário Hunspell não encontrados.');
@@ -338,9 +294,8 @@ begin
     raise Exception.Create('Erro ao inicializar Hunspell');
 end;
 //-------------------------------------------------------------------------------------------------
-
-
-procedure TForm1.FinalizeHunspell;
+{
+procedure FinalizeHunspell;
 begin
   if HunHandle <> nil then
   begin
@@ -348,44 +303,7 @@ begin
     HunHandle := nil;
   end;
 end;
-//-------------------------------------------------------------------------------------------------
-procedure TForm1.CheckRichEdit;
-var
-  Txt: AnsiString;
-  I, StartPos: Integer;
-  Palavra: AnsiString;
-begin
-  RichText1.SelLength := 0;
-  Txt := RichText1.Text;
-  I := 1;
-
-  while I <= Length(Txt) do
-  begin
-    if IsLetter(Txt[I]) then
-    begin
-      StartPos := I;
-      Palavra := '';
-
-      while (I <= Length(Txt)) and IsLetter(Txt[I]) do
-      begin
-        Palavra := Palavra + Txt[I];
-        Inc(I);
-      end;
-
-      if not SpellOK(CleanWord(Palavra))
-      and
-       (not IsTooShort(Palavra))
-      then
-      begin
-        RichText1.SelStart  := StartPos - 1;
-        RichText1.SelLength := Length(Palavra);
-        RichText1.SelAttributes.Color := clRed;
-      end;
-    end
-    else
-      Inc(I);
-  end;
-end;
+}
 //-------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------
 
@@ -644,7 +562,7 @@ RichText1.ReadOnly:=True;
    Label8.Visible:=True;
    end;
 
- //------------------------
+ //----------------------------
  btnabrir.Enabled:=True;
  lstabrir.Enabled:=True;
  btnprocurar.Enabled:=True;
@@ -662,8 +580,10 @@ RichText1.ReadOnly:=True;
  btnrenomear.Enabled:=True;
  lstrenomear.Enabled:=True;
  btntags.Enabled:=True;
- lsttags.Enabled:=True; 
- //------------------------
+ lsttags.Enabled:=True;
+ btn_ortografia.Enabled:=False;
+ lst_ortografia.Enabled:=False;
+ //----------------------------
 
  {SOBREPOSIÇÕES}
  Label1.Caption:='';
@@ -736,16 +656,11 @@ end;
 //------------------------------------------------------------------------------
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+//---------------------------------------
+{CARREGA A DLL PARA CORREÇÃO ORTOGRÁFICA}
 InitHunspell;
-if HunHandle = nil then
-  ShowMessage('Hunspell = NIL')
-else
-  ShowMessage('Hunspell carregado');
-{
-Scaled := False;
-AutoScroll := False;
-BorderStyle := bsSingle;
-}
+//---------------------------------------
+
 //----------------------------
 {ARRASTAR E SOLTAR - ATIVANDO}
 DragAcceptFiles(Handle, True);
@@ -1754,17 +1669,19 @@ lstfonte.Enabled:=True;
 //------------------------------
 
 //--------------------------
-btnabrir.Enabled     :=True;
-lstabrir.Enabled     :=True;
-btnsalvar.Enabled    :=True;
-lstsalvar.Enabled    :=True;
-btnsalvarcomo.Enabled:=True;
-lstsalvarcomo.Enabled:=True;
-btnnumeros.Enabled   :=True;
-lstnumeros.Enabled   :=True;
-btnrenomear.Enabled  :=True;
-lstrenomear.Enabled  :=True;
-//--------------------------
+btnabrir.Enabled      :=True;
+lstabrir.Enabled      :=True;
+btnsalvar.Enabled     :=True;
+lstsalvar.Enabled     :=True;
+btnsalvarcomo.Enabled :=True;
+lstsalvarcomo.Enabled :=True;
+btnnumeros.Enabled    :=True;
+lstnumeros.Enabled    :=True;
+btnrenomear.Enabled   :=True;
+lstrenomear.Enabled   :=True;
+btn_ortografia.Enabled:=True;
+lst_ortografia.Enabled:=True;
+//---------------------------
 
 end;
 
@@ -2115,19 +2032,16 @@ var
   Texto, Palavra: string;
   I, InicioPalavra: Integer;
 begin
-ShowMessage(
-  'irmã = ' + BoolToStr(SpellOK('irmã'), True) + sLineBreak +
-  'Esqueça = ' + BoolToStr(SpellOK('Esqueça'), True) + sLineBreak +
-  'meses = ' + BoolToStr(SpellOK('meses'), True)
-);
+
   FProcessandoLegenda := True;
   try
     // Limpa formatação
+    {
     RichText1.SelectAll;
     RichText1.SelAttributes.Style := [];
     RichText1.SelAttributes.Color := clBlack;
     RichText1.SelLength := 0;
-
+    }
     Texto := RichText1.Text;
     Palavra := '';
     InicioPalavra := 0;
@@ -2137,15 +2051,15 @@ ShowMessage(
       if IsLetter(Texto[I]) then
       begin
         if Palavra = '' then
-          InicioPalavra := I - 1; // RichText é 0-based
+        InicioPalavra := I - 1; // RichText é 0-based
 
-        Palavra := Palavra + Texto[I];
+      Palavra := Palavra + Texto[I];
       end
       else
       begin
         if Palavra <> '' then
         begin
-          Palavra := CleanWord(Palavra);
+        Palavra := CleanWord(Palavra);
 
           if (Length(Palavra) > 2) and (not SpellOK(Palavra)) then
           begin
@@ -2155,7 +2069,7 @@ ShowMessage(
             RichText1.SelAttributes.Color := clRed;
           end;
 
-          Palavra := '';
+        Palavra := '';
         end;
       end;
     end;
@@ -2175,9 +2089,15 @@ ShowMessage(
     end;
 
     RichText1.SelLength := 0;
-  finally
-    FProcessandoLegenda := False;
+  Finally
+  FProcessandoLegenda := False;
   end;
+
+SendMessage(RichText1.Handle,WM_VSCROLL,SB_TOP,0);
+//----------------------------
+btn_ortografia.Enabled:=False;
+lst_ortografia.Enabled:=False;
+//----------------------------
 end;
 
 

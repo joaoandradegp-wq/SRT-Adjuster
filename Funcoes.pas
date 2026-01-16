@@ -543,6 +543,9 @@ Form1.lstrenomear.Enabled:=False;
 {ALTERAR COR DA LEGENDA}
 Form1.btntags.Enabled:=False;
 Form1.lsttags.Enabled:=False;
+{VERIFICAR ORTOGRAFIA}
+Form1.btn_ortografia.Enabled:=False;
+Form1.lst_ortografia.Enabled:=False;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
