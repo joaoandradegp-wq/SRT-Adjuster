@@ -5,6 +5,7 @@ São funcionalidades que fui capaz de desenvolver em um único software de manei
 
 SRT Adjuster é escrito de maneira nativa ao Sistema Operacional Windows™, portanto não é necessário quaisquer instalações à parte.
 
+
 Funcionalidades:
 
 CORREÇÕES AUTOMÁTICAS
