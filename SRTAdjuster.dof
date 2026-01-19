@@ -90,7 +90,7 @@ MaxStackSize=1048576
 ImageBase=4194304
 ExeDescription=
 [Directories]
-OutputDir=
+OutputDir=D:\GitHUB\SRT-Adjuster\JMBA Softwares\SRT Adjuster
 UnitOutputDir=
 PackageDLLOutputDir=
 PackageDCPOutputDir=
@@ -138,6 +138,7 @@ Comments=
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlOutputDirectorry]
-Count=2
-Item0=C:\Users\joaoa\Desktop
-Item1=C:\Users\Phobos\Desktop
+Count=3
+Item0=D:\GitHUB\SRT-Adjuster\JMBA Softwares\SRT Adjuster
+Item1=C:\Users\joaoa\Desktop
+Item2=C:\Users\Phobos\Desktop
