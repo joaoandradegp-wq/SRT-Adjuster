@@ -1,5 +1,4 @@
-<img width="128" height="128" alt="PNG_128-128" src="https://github.com/user-attachments/assets/e6aacfdf-7e46-43e4-ad30-07c899669ed0" />
-
+<img width="501" height="70" alt="Logo_Topo" src="https://github.com/user-attachments/assets/132550d1-02f2-47b6-853f-4135d151dfc2" />
 
 SRT Adjuster é um aplicativo nativo para Windows™ voltado a usuários que desejam ajustar, editar e sincronizar legendas SRT de forma simples e intuitiva, sem necessidade de conhecimento técnico avançado.
 O software reúne, em uma única ferramenta, funcionalidades inspiradas em diversos editores existentes, com foco em usabilidade, visualização amigável e edição no estilo “Bloco de Notas”.
