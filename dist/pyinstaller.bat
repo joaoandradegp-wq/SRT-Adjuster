@@ -1,1 +1,0 @@
-python -m PyInstaller check_update.py --onefile --noconsole

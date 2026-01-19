@@ -40,6 +40,7 @@ VarGlobais(SRT_EXE,SRT_RAIZ,SRT_VERSAO,SRT_BLOG);
 
 Application.Initialize;
 Application.Title := 'SRT Adjuster 1.3';
+
 Splash_Screen:=Tsplash_screen.Create(Application);
 Splash_Screen.Show;
 Splash_Screen.Refresh;

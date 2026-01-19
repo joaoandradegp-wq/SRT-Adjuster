@@ -1,0 +1,1 @@
+python -m PyInstaller check_update.py --onefile --noconsole --icon=icon.ico

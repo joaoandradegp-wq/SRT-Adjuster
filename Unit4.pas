@@ -29,11 +29,6 @@ uses Unit1;
 
 {$R *.dfm}
 
-procedure ExecutarExe(const CaminhoExe: string);
-begin
-  ShellExecute(0,'open',PChar(CaminhoExe),nil,nil,SW_SHOWNORMAL);
-end;
-
 procedure Tsplash_screen.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
@@ -46,7 +41,8 @@ begin
 if Form1 <> nil then
 rx_loading.Visible:=False;
 
-ExecutarExe(ExtractFilePath(Application.ExeName) + 'check_update.exe');
+ShellExecute(0,'open','check_update.exe',pchar(SRT_VERSAO_Global),nil,SW_HIDE);
+
 end;
 
 end.
