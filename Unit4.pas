@@ -12,6 +12,7 @@ type
     Image1: TImage;
     rx_loading: TRxGIFAnimator;
     RxLabel1: TRxLabel;
+    abfImage1: TabfImage;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
   private
