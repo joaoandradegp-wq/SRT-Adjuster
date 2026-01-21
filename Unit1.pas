@@ -1280,6 +1280,8 @@ salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
  lstconsertar.Enabled :=False;
  btneditar.Enabled    :=False;
  lsteditar.Enabled    :=False;
+ btn_ortografia.Enabled:=True;
+ lst_ortografia.Enabled:=True;
  //---------------------------
 
 //------------------------
