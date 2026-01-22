@@ -5,10 +5,14 @@ interface
 Uses Unit1,ComCtrls,StdCtrls,Windows,Messages,IdHTTP,Forms,Wininet,
      SysUtils,Graphics,StrUtils,dialogs;
 
-{VERIFICA OS ARQUIVOS DE LEGENDA PARA SERIADOS} 
-function Seriado_Quantidade:Boolean;
+{REPASSA AS VARIÁVEIS DO ARQUIVO .DPR PARA VARIÁVEIS GLOBAIS}
+procedure VarGlobais(Executavel,Diretorio,Versao,Blog:String);
 {VERIFICA SE UMA STRING É NUMÉRICA}
 function IsNumeric(const S:String):Boolean;
+{FUNÇÃO PARA EDIÇÃO AVANÇADA}
+procedure Edicao_Avancada (var Legenda: TRichEdit; ProgressBar1: TProgressBar);
+{VERIFICA OS ARQUIVOS DE LEGENDA PARA SERIADOS} 
+function Seriado_Quantidade:Boolean;
 {CONVERTER CORES EM HEXADECIAL PARA TCOLOR}
 function HexToColor(AValue:String):TColor;
 {CONVERTER CORES EM TCOLOR PARA HEXADECIAL}
@@ -19,8 +23,6 @@ procedure posicionar_inicio (var Legenda:TRichEdit);
 procedure Italico_Sublinhado(var Legenda:TRichEdit;Atributo:Boolean;Tag_Open,Tag_Close:String);
 {FUNÇÃO PARA FAZER UM BBCODE DE COR}
 procedure Fonte_Cor(var Legenda:TRichEdit;Tag_Open1:String;Tag_Open2:TColor;Tag_Open3,Tag_Close:String);
-{EDIÇÃO AVANÇADA}
-procedure Edicao_Avancada (var Legenda:TRichEdit;ProgressBar1:TProgressBar);
 {CORREÇÃO NUMÉRICA DE ÍNDICE}
 procedure Correcao_Numerica (var Texto1,Texto2:TRichEdit;ProgressBar1:TProgressBar;aux:Boolean;Label_Linha,Label_Dialogo:Tlabel);
 {CONTABILIZAR LINHAS E DIÁLOGOS}
@@ -29,8 +31,6 @@ procedure Contar_Linhas_Dialogos (var Legenda:TRichEdit;ProgressBar1:TProgressBa
 procedure Mensagem_Texto_LinhaDialogo(var linha_aux,dialogo_aux:Integer;Label_Linha,Label_Dialogo:TLabel);
 {FORMATAR NÚMEROS COM ZERO A ESQUERDA - AJUSTE DE TEMPO - FORM2}
 function FormatZero(const aNumber,Length:Integer):String;
-{VERIFICAR SE FOI SELECIONADO O DRIVE DE CD}
-function DriveCD:Char;
 {SALVAR COMO...}
 procedure Salvar_Como;
 {TODOS OS BOTÕES DO TOPO FICAM "FALSE"}
@@ -39,13 +39,101 @@ procedure BotoesTopo_Off;
 function LinhaAtual(TextoLegenda:TRichEdit):Longint;
 {MOSTRAR LISTAGEM DE SOBREPOSIÇÕES E LIMITES DE LINHA - LISTBOX1 E LISTBOX2}
 procedure Lista_Indices(var Texto1,Texto2:TRichEdit;ListBox1:TListBox;aux:Boolean;vetor: Array of Integer);
-{REPASSA AS VARIÁVEIS DO ARQUIVO .DPR PARA VARIÁVEIS GLOBAIS}
-procedure VarGlobais(Executavel,Diretorio,Versao,Blog:String);
 
 implementation
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
+procedure VarGlobais(Executavel,Diretorio,Versao,Blog:String);
+begin
+     SRT_EXE_Global:=Executavel;
+    SRT_RAIZ_Global:=Diretorio;
+  SRT_VERSAO_Global:=Versao;
+    SRT_BLOG_Global:=Blog;
+end;
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+procedure Edicao_Avancada (var Legenda: TRichEdit; ProgressBar1: TProgressBar);
+var
+i: Integer;
+linha_sem_espaco,cores:String;
+begin
+ProgressBar1.Visible:=True;
+ProgressBar1.Position:=0;
+ProgressBar1.Max:=Legenda.Lines.Count;
+ProgressBar1.Refresh;
+
+    for i:= 0 to Legenda.Lines.Count -1 do
+    begin
+    ProgressBar1.Position:=ProgressBar1.Position+1;
+
+       if (IsNumeric(Legenda.lines[i])) and (AnsiContainsStr(Legenda.Lines[i+1],' --> ')) and (Trim(Legenda.lines[i-1]) = '') then
+       begin
+       Legenda.SelStart := Legenda.Perform(EM_LINEINDEX, i, 0);
+       Legenda.SelLength := Length(Legenda.Lines[i]);
+       Legenda.SelAttributes.Style:=Legenda.SelAttributes.Style+[fsBold];
+
+       Legenda.SelStart := Legenda.Perform(EM_LINEINDEX, i+1, 0);
+       Legenda.SelLength := Length(Legenda.Lines[i+1]);
+       Legenda.SelAttributes.Color:=clNavy;
+       end;
+
+       //-------------------------------------------------------------------------------------
+       if Pos('<i>',Legenda.Lines[i]) > 0 then
+       begin
+       Legenda.SelStart := Legenda.Perform(EM_LINEINDEX, i, 0)+Pos('<i>',Legenda.Lines[i])-1;
+
+          if Pos('</i>',Legenda.Lines[i+1]) > 0 then
+          Legenda.SelLength := Length(Legenda.Lines[i])+Length(Legenda.Lines[i+1])+4
+          else
+          Legenda.SelLength := Length(Legenda.Lines[i]);
+
+       Legenda.SelAttributes.Style:=Legenda.SelAttributes.Style+[fsItalic];
+       Legenda.SelAttributes.Color:=clGray;
+       end;
+       //-------------------------------------------------------------------------------------
+
+       //-------------------------------------------------------------------------------------
+       if Pos('<u>',Legenda.Lines[i]) > 0 then
+       begin
+       Legenda.SelStart := Legenda.Perform(EM_LINEINDEX, i, 0)+Pos('<u>',Legenda.Lines[i])-1;
+
+          if Pos('</u>',Legenda.Lines[i+1]) > 0 then
+          Legenda.SelLength := Length(Legenda.Lines[i])+Length(Legenda.Lines[i+1])+4
+          else
+          Legenda.SelLength := Length(Legenda.Lines[i]);
+
+       Legenda.SelAttributes.Style:=Legenda.SelAttributes.Style+[fsUnderline];
+       Legenda.SelAttributes.Color:=clGray;
+       end;
+       //-------------------------------------------------------------------------------------
+
+       {RETIRA OS ESPAÇOS EM BRANCO DO MEIO DA STRING}
+       linha_sem_espaco:=StringReplace(Trim(Legenda.Lines[i]),' ',EmptyStr,[rfReplaceAll]);
+       //-------------------------------------------------------------------------------------
+       if Pos('<fontcolor="#',linha_sem_espaco) > 0 then
+       begin
+       Legenda.SelStart := Legenda.Perform(EM_LINEINDEX, i, 0)+Pos('<fontcolor="#',linha_sem_espaco)-1;
+
+          if Pos('</font>',Legenda.Lines[i+1]) > 0 then
+          Legenda.SelLength := Length(Legenda.Lines[i])+Length(Legenda.Lines[i+1])+4
+          else
+          Legenda.SelLength := Length(Legenda.Lines[i]);
+
+       cores:=Copy(Trim(Legenda.Lines[i]),Pos('#',Trim(Legenda.Lines[i]))+1,6);
+       Legenda.SelAttributes.Color:=HexToColor(cores);
+       end;
+       //-------------------------------------------------------------------------------------
+
+    end;
+
+ Legenda.SelStart:=0;
+ Legenda.ReadOnly:=False;
+
+ProgressBar1.Visible:=False;
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+end;
 function Seriado_Quantidade:Boolean;
 var
 i,j,cont_video: Integer;
@@ -278,93 +366,6 @@ begin
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-procedure Edicao_Avancada (var Legenda:TRichEdit;ProgressBar1:TProgressBar);
-var
-i: Integer;
-linha_sem_espaco,cores:String;
-begin
-ProgressBar1.Visible:=True;
-ProgressBar1.Position:=0;
-ProgressBar1.Max:=Legenda.Lines.Count;
-ProgressBar1.Refresh;
-
-for i:= 0 to Legenda.Lines.Count -1 do
-begin
-ProgressBar1.Position:=ProgressBar1.Position+1;
-
-   //-------------------------------------------------------------------------------------
-   if (IsNumeric(Legenda.lines[i])) and (AnsiContainsStr(Legenda.Lines[i+1],' --> ')) and (Trim(Legenda.lines[i-1]) = '') then
-   begin
-   Legenda.SelStart := Legenda.Perform(EM_LINEINDEX, i, 0);
-   Legenda.SelLength := Length(Legenda.Lines[i]);
-   Legenda.SelAttributes.Style:=Legenda.SelAttributes.Style+[fsBold];
-
-   Legenda.SelStart := Legenda.Perform(EM_LINEINDEX, i+1, 0);
-   Legenda.SelLength := Length(Legenda.Lines[i+1]);
-   Legenda.SelAttributes.Color:=clNavy;
-   end;
-   //-------------------------------------------------------------------------------------
-
-   //-------------------------------------------------------------------------------------
-   if Pos('<i>',Legenda.Lines[i]) > 0 then
-   begin
-   Legenda.SelStart := Legenda.Perform(EM_LINEINDEX, i, 0)+Pos('<i>',Legenda.Lines[i])-1;
-
-      if Pos('</i>',Legenda.Lines[i+1]) > 0 then
-      Legenda.SelLength := Length(Legenda.Lines[i])+Length(Legenda.Lines[i+1])+4
-      else
-      Legenda.SelLength := Length(Legenda.Lines[i]);
-
-   Legenda.SelAttributes.Style:=Legenda.SelAttributes.Style+[fsItalic];
-   Legenda.SelAttributes.Color:=clGray;
-   end;
-   //-------------------------------------------------------------------------------------
-
-   //-------------------------------------------------------------------------------------
-   if Pos('<u>',Legenda.Lines[i]) > 0 then
-   begin
-   Legenda.SelStart := Legenda.Perform(EM_LINEINDEX, i, 0)+Pos('<u>',Legenda.Lines[i])-1;
-
-      if Pos('</u>',Legenda.Lines[i+1]) > 0 then
-      Legenda.SelLength := Length(Legenda.Lines[i])+Length(Legenda.Lines[i+1])+4
-      else
-      Legenda.SelLength := Length(Legenda.Lines[i]);
-
-   Legenda.SelAttributes.Style:=Legenda.SelAttributes.Style+[fsUnderline];
-   Legenda.SelAttributes.Color:=clGray;
-   end;
-   //-------------------------------------------------------------------------------------
-
-   {RETIRA OS ESPAÇOS EM BRANCO DO MEIO DA STRING}
-   linha_sem_espaco:=StringReplace(Trim(Legenda.Lines[i]),' ',EmptyStr,[rfReplaceAll]);
-
-   //-------------------------------------------------------------------------------------
-   if (Pos('<fontcolor="#',linha_sem_espaco) > 0) or (Pos('<fontcolor=#',linha_sem_espaco) > 0) then
-   begin
-     if (Pos('<fontcolor="#',linha_sem_espaco) > 0) then {FONT COLOR COM ASPAS}
-     Legenda.SelStart := Legenda.Perform(EM_LINEINDEX, i, 0)+Pos('<fontcolor="#',linha_sem_espaco)-1;
-
-     if (Pos('<fontcolor=#' ,linha_sem_espaco) > 0) then {FONT COLOR SEM ASPAS}
-     Legenda.SelStart := Legenda.Perform(EM_LINEINDEX, i, 0)+Pos('<fontcolor=#' ,linha_sem_espaco)-1;
-
-      if Pos('</font>',Legenda.Lines[i+1]) > 0 then
-      Legenda.SelLength := Length(Legenda.Lines[i])+Length(Legenda.Lines[i+1])+4
-      else
-      Legenda.SelLength := Length(Legenda.Lines[i]);
-
-   cores:=Copy(Trim(Legenda.Lines[i]),Pos('#',Trim(Legenda.Lines[i]))+1,6);
-   Legenda.SelAttributes.Color:=HexToColor(cores);
-   end;
-   //-------------------------------------------------------------------------------------
-end;
-
-Legenda.SelStart:=0;
-Legenda.ReadOnly:=False;
-
-ProgressBar1.Visible:=False;
-end;
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
 procedure Correcao_Numerica (var Texto1,Texto2:TRichEdit;ProgressBar1:TProgressBar;aux:Boolean;Label_Linha,Label_Dialogo:Tlabel);
 var
 j,numero_id: Integer;
@@ -467,43 +468,6 @@ Result:=SysUtils.Format('%.*d',[Length,aNumber]);
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-function DriveCD:Char;
-var
-drivemap,mask:DWORD;
-i:Integer;
-root:String;
-begin
-Result:=#0;
-root:='A:';
-drivemap:=GetLogicalDrives;
-mask:=1;
-
-{
-0 The drive type cannot be determined.
-1 The root directory does not exist.
-
-DRIVE_REMOVABLE The drive can be removed from the drive.
-DRIVE_FIXED The disk cannot be removed from the drive.
-DRIVE_REMOTE The drive is a remote (network) drive.
-DRIVE_CDROM The drive is a CD-ROM drive.
-DRIVE_RAMDISK The drive is a RAM disk.
-}
-
-  for i:= 1 to 32 do
-  begin
-    if (mask and drivemap) <> 0 then
-      if GetDriveType(PChar(root)) = DRIVE_CDROM then
-      begin
-      result:=root[1];
-      break;
-      end;
-    mask:=mask shl 1;
-    Inc(root[1]);
-    end;
-
-end;
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
 procedure Salvar_Como;
 begin
 salvar:=False; //--> Variável GLOBAL (Salvar Alterações)
@@ -513,8 +477,8 @@ Form1.btnsalvar.Enabled:=False;
 Form1.lstsalvar.Enabled:=False;
 Form1.btnsalvarcomo.Enabled:=False;
 Form1.lstsalvarcomo.Enabled:=False;
-Form1.btncores.Enabled:=False;
-Form1.lstcores.Enabled:=False;
+Form1.btn_editAvancada.Enabled:=False;
+Form1.lst_editAvancada.Enabled:=False;
 Form1.btnfraps.Enabled:=False;
 Form1.lstfraps.Enabled:=False;
 Form1.btnnumeros.Enabled:=False;
@@ -559,8 +523,8 @@ Form1.lstconsertar.Enabled:=False;
 Form1.btneditar.Enabled:=False;
 Form1.lsteditar.Enabled:=False;
 {EDIÇÃO AVANÇADA}
-Form1.btncores.Enabled:=False;
-Form1.lstcores.Enabled:=False;
+Form1.btn_editAvancada.Enabled:=False;
+Form1.lst_editAvancada.Enabled:=False;
 {AJUSTE DE TEMPO}
 Form1.btntempo.Enabled:=False;
 Form1.lsttempo.Enabled:=False;
@@ -576,6 +540,12 @@ Form1.lstnumeros.Enabled:=False;
 {RENOMEAR SÉRIES}
 Form1.btnrenomear.Enabled:=False;
 Form1.lstrenomear.Enabled:=False;
+{ALTERAR COR DA LEGENDA}
+Form1.btntags.Enabled:=False;
+Form1.lsttags.Enabled:=False;
+{VERIFICAR ORTOGRAFIA}
+Form1.btn_ortografia.Enabled:=False;
+Form1.lst_ortografia.Enabled:=False;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -620,15 +590,6 @@ Texto1.SetFocus;
  Texto2.Perform(EM_SCROLLCARET, LinhaNova, 0);
  end;
 
-end;
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-procedure VarGlobais(Executavel,Diretorio,Versao,Blog:String);
-begin
-     SRT_EXE_Global:=Executavel;
-    SRT_RAIZ_Global:=Diretorio;
-  SRT_VERSAO_Global:=Versao;
-    SRT_BLOG_Global:=Blog;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

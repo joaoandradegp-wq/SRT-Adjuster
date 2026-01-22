@@ -26,29 +26,29 @@ var
 SRT_EXE,
 SRT_RAIZ:String;
 //------------------------------------------------------
+
 begin
-//------------------------------------------------------
-SRT_EXE:=Copy(ExtractFileName(Application.ExeName),0,Length(ExtractFileName(Application.ExeName))-4);
-SRT_RAIZ:=GetCurrentDir+'\';
-//------------------------------------------------------
+  Application.Initialize;
+  Application.Title := 'SRT Adjuster 1.3';
 
-{TRANSFERE AS VARIÁVEIS PARA O FORM1}
-//-------------------------------------------------------------------------------
-VarGlobais(SRT_EXE,SRT_RAIZ,SRT_VERSAO,SRT_BLOG);
-//-------------------------------------------------------------------------------
+  SRT_EXE  := Copy(ExtractFileName(Application.ExeName), 1,
+                   Length(ExtractFileName(Application.ExeName)) - 4);
+  SRT_RAIZ := ExtractFilePath(Application.ExeName);
 
-Application.Initialize;
-Application.Title := 'SRT Adjuster 1.3';
-Splash_Screen:=Tsplash_screen.Create(Application);
-Splash_Screen.Show;
-Splash_Screen.Refresh;
-//Sleep(2000);
-Splash_Screen.Hide;
-Splash_Screen.Free;
+  VarGlobais(SRT_EXE, SRT_RAIZ, SRT_VERSAO, SRT_BLOG);
 
-Application.CreateForm(TForm1, Form1);
-Application.CreateForm(TForm6_substituir, Form6_substituir);
-Application.Run;
+  Splash_Screen := TSplash_Screen.Create(nil);
+  try
+    Splash_Screen.Show;
+    Splash_Screen.Update;
+    Sleep(3000);
+  finally
+    Splash_Screen.Free;
+  end;
+
+  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TForm6_substituir, Form6_substituir);
+  Application.Run;
 
 end.
 

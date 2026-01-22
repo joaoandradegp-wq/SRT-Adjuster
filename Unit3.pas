@@ -250,8 +250,8 @@ Form1.RichText2.Visible:=True;
   Form1.lstnumeros.Enabled:=True;
   Form1.btnrenomear.Enabled:=True;
   Form1.lstrenomear.Enabled:=True;
-  Form1.btncores.Enabled:=True;
-  Form1.lstcores.Enabled:=True;
+  Form1.btn_editAvancada.Enabled:=True;
+  Form1.lst_editAvancada.Enabled:=True;
   //--------------------------------
 
  Form1.ProgressBar1.Visible:=False;

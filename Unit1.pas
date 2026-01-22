@@ -9,6 +9,22 @@ uses
   MruUnit,FileCtrl, RxCombos, OleCtrls, Animate, GIFCtrl;
 
 type
+  //-------------------------------------------------------------------------------------------------
+  {DICIONÁRIO - 01/03}
+  //-------------------------------------------------------------------------------------------------
+  PHunspell = Pointer;
+
+  function Hunspell_create(affpath, dicpath: PAnsiChar): Pointer; cdecl; external 'hunspell.dll';
+  function Hunspell_destroy(handle: Pointer): Integer; cdecl; external 'hunspell.dll';
+  function Hunspell_spell(handle: Pointer; word: PAnsiChar): Integer; cdecl; external 'hunspell.dll';
+  function SpellOK(const Palavra: string): Boolean;
+  function CleanWord(const S: string): string;
+  function IsLetter(C: Char): Boolean;
+  procedure InitHunspell;
+//procedure FinalizeHunspell;
+  //-------------------------------------------------------------------------------------------------
+
+type
   TForm1 = class(TForm)
     Label1: TLabel;
     Label4: TLabel;
@@ -65,8 +81,8 @@ type
     Menu_Caracter: TMenuItem;
     lstitalic: TMenuItem;
     lstunderline: TMenuItem;
-    btncores: TSpeedButton;
-    lstcores: TMenuItem;
+    btn_editAvancada: TSpeedButton;
+    lst_editAvancada: TMenuItem;
     ColorDialog1: TColorDialog;
     box_edicao: TGroupBox;
     btnitalico: TSpeedButton;
@@ -89,10 +105,11 @@ type
     N01: TMenuItem;
     Label5: TLabel;
     Localizar1: TMenuItem;
-    Label2: TLabel;
     btnfundo: TSpeedButton;
-    lstfundo: TMenuItem;
     btntags: TSpeedButton;
+    lsttags: TMenuItem;
+    btn_ortografia: TSpeedButton;
+    lst_ortografia: TMenuItem;
     procedure ListBox1Click(Sender: TObject);
     procedure btnsalvarcomoClick(Sender: TObject);
     procedure btnprocurarClick(Sender: TObject);
@@ -128,8 +145,8 @@ type
     procedure lstnumerosClick(Sender: TObject);
     procedure RichText1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure RichText2MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-    procedure btncoresClick(Sender: TObject);
-    procedure lstcoresClick(Sender: TObject);
+    procedure btn_editAvancadaClick(Sender: TObject);
+    procedure lst_editAvancadaClick(Sender: TObject);
     procedure lstitalicClick(Sender: TObject);
     procedure lstunderlineClick(Sender: TObject);
     procedure btnunderlineClick(Sender: TObject);
@@ -150,22 +167,39 @@ type
     procedure lstfonteClick(Sender: TObject);
     procedure Localizar1Click(Sender: TObject);
     procedure btnfundoClick(Sender: TObject);
-    procedure btntagsClick(Sender: TObject);
     procedure Menu_SobreClick(Sender: TObject);
-    procedure lstfundoClick(Sender: TObject);
+    procedure btntagsClick(Sender: TObject);
+    procedure btn_ortografiaClick(Sender: TObject);
   private
-  MostRecentFiles1: TMostRecentFiles;
-    { Private declarations }
+  { Private declarations }
+  //-----------------------------------------------------------------
+  {ARRASTA E SOLTA - 01/02}
+  //-----------------------------------------------------------------
+  procedure WMDropFiles(var Msg: TWMDropFiles); message WM_DROPFILES;
+  //-----------------------------------------------------------------
+
   public
-  //--------------------------------------------------------------------------------------------------  
-  function Novo_Carregar(parametro: String): Boolean;
-  procedure DropFiles(var Msg: TMessage); message wm_DropFiles;
-  //--------------------------------------------------------------------------------------------------
   { Public declarations }
+  //-----------------------------------------------------------------
+  function Novo_Carregar(parametro: String): Boolean;
+  //-----------------------------------------------------------------
   end;
 
 var
   Form1: TForm1;
+   MostRecentFiles1: TMostRecentFiles;
+   //-------------------------
+   {DICIONÁRIO - 02/03}
+   //-------------------------
+   HunHandle: Pointer;
+   //-------------------------
+
+  //---------------------------------
+  {SEGURAR PROCESSAMENTO DO ONCHANGE}
+  //---------------------------------
+  FProcessandoLegenda: Boolean;
+  //---------------------------------
+
   //---------------------------------
   {DADOS DO SRT ADJUSTER - VARIÁVEIS}
   SRT_EXE_Global,
@@ -183,15 +217,255 @@ var
   arquivo:TextFile;
   Flags : Cardinal;
 
+  Hun: PHunspell;
+
 const
   qtde_formatos = 11;
   videos_suportados: array[0..qtde_formatos] of String =
   ('.mp4','.avi','.mpg','.mpeg','.mov','.rmvb','.rm','.ra','.wmv','.wma','.flv','.mkv');
 
+//------------------------------
+{ALTERA COR DA LEGENDA - 01/03}
+//------------------------------
+const
+  EM_SETTEXTMODE = WM_USER + 89;
+  TM_PLAINTEXT   = 1;
+  TM_RICHTEXT    = 2;
+//------------------------------
+//------------------------------
+
 implementation
 
 uses Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, CommCtrl, Funcoes;
 
+//-------------------------------------------------------------------------------------------------
+{DICIONÁRIO - 03/03}
+//-------------------------------------------------------------------------------------------------
+function IsLetter(C: Char): Boolean;
+begin
+  Result :=
+    ((C >= 'A') and (C <= 'Z')) or
+    ((C >= 'a') and (C <= 'z')) or
+    (Ord(C) >= 192);
+end;
+//-------------------------------------------------------------------------------------------------
+function CleanWord(const S: string): string;
+begin
+ Result := LowerCase(Trim(S));
+end;
+//-------------------------------------------------------------------------------------------------
+function SpellOK(const Palavra: string): Boolean;
+var
+  W: AnsiString;
+begin
+  if Palavra = '' then
+    Exit;
+
+  W := AnsiString(LowerCase(Palavra));
+  Result := Hunspell_spell(HunHandle, PAnsiChar(W)) <> 0;
+end;
+//-------------------------------------------------------------------------------------------------
+function IsTooShort(const S: string): Boolean;
+begin
+  Result := Length(S) <= 3;
+end;
+//-------------------------------------------------------------------------------------------------
+procedure InitHunspell;
+var
+  AffPath, DicPath: UTF8String;
+begin
+  AffPath := UTF8Encode(
+    IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) +
+    'dict\pt_BR.aff');
+
+  DicPath := UTF8Encode(
+    IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) +
+    'dict\pt_BR.dic');
+
+  if not FileExists(string(AffPath)) or not FileExists(string(DicPath)) then
+    raise Exception.Create('Arquivos do dicionário Hunspell não encontrados.');
+
+  HunHandle := Hunspell_create(
+    PAnsiChar(AffPath),
+    PAnsiChar(DicPath)
+  );
+
+  if HunHandle = nil then
+    raise Exception.Create('Erro ao inicializar Hunspell');
+end;
+//-------------------------------------------------------------------------------------------------
+{
+procedure FinalizeHunspell;
+begin
+  if HunHandle <> nil then
+  begin
+    Hunspell_destroy(HunHandle);
+    HunHandle := nil;
+  end;
+end;
+}
+//-------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
+
+{$R *.dfm}
+
+//------------------------------------------------------------------------------
+{RESETAR DA MEMÓRIA O CAMPO RICHTEXT}
+//------------------------------------------------------------------------------
+procedure SoftResetPreserveText(RE: TRichEdit);
+var
+  Backup: string;
+begin
+  Backup := RE.Text;  // ?? salva conteúdo
+
+  SendMessage(RE.Handle, WM_SETREDRAW, 0, 0);
+  SendMessage(RE.Handle, EM_SETTEXTMODE, TM_PLAINTEXT, 0);
+  RE.Clear;
+  SendMessage(RE.Handle, EM_SETTEXTMODE, TM_RICHTEXT, 0);
+
+  RE.Text := Backup;  // ?? restaura conteúdo
+  RE.SelAttributes.Assign(RE.DefAttributes);
+
+  SendMessage(RE.Handle, WM_SETREDRAW, 1, 0);
+  RE.Invalidate;
+end;
+//------------------------------------------------------------------------------
+{ALTERA COR DA LEGENDA - 02/03}
+//------------------------------------------------------------------------------
+procedure AtualizarTextoComFont(Lines: TStrings;const HexColor: string;Progress: TProgressBar);
+var
+  i: Integer;
+  Line, CleanLine: string;
+begin
+  Progress.Visible := True;
+  Progress.Position := 0;
+  Progress.Max := Lines.Count;
+
+  for i := 0 to Lines.Count - 1 do
+  begin
+    Line := Lines[i];
+
+    if (Trim(Line) <> '') and
+       (not IsNumeric(Line)) and
+       (Pos('-->', Line) = 0) then
+    begin
+      CleanLine := Line;
+
+      while Pos('<font', LowerCase(CleanLine)) > 0 do
+        Delete(
+          CleanLine,
+          Pos('<font', LowerCase(CleanLine)),
+          Pos('>', CleanLine) -
+          Pos('<font', LowerCase(CleanLine)) + 1
+        );
+
+      CleanLine := StringReplace(
+        CleanLine, '</font>', '', [rfIgnoreCase]
+      );
+
+      Lines[i] :=
+        '<font color="#' + HexColor + '">' +
+        CleanLine +
+        '</font>';
+    end;
+
+    if (i mod 100 = 0) then
+    begin
+      Progress.Position := i + 1;
+      Application.ProcessMessages;
+    end;
+  end;
+
+  Progress.Visible := False;
+end;
+//------------------------------------------------------------------------------
+{ALTERA COR DA LEGENDA - 03/03}
+//------------------------------------------------------------------------------
+procedure ColorirVisualLimitado(RE: TRichEdit;AColor: TColor;MaxDialogos: Integer);
+var
+  i, DialogosColoridos, j: Integer;
+  LineStart: Integer;
+begin
+  DialogosColoridos := 0;
+
+  SendMessage(RE.Handle, WM_SETREDRAW, 0, 0);
+
+  i := 0;
+  while i < RE.Lines.Count do
+  begin
+    if Pos(' --> ', RE.Lines[i]) > 0 then
+    begin
+      Inc(DialogosColoridos);
+      if DialogosColoridos > MaxDialogos then
+        Break;
+
+      // colore todas as linhas do diálogo
+      j := i + 1;
+      while (j < RE.Lines.Count) and (Trim(RE.Lines[j]) <> '') do
+      begin
+        LineStart := RE.Perform(EM_LINEINDEX, j, 0);
+        RE.SelStart := LineStart;
+        RE.SelLength := Length(RE.Lines[j]);
+        RE.SelAttributes.Color := AColor;
+        Inc(j);
+      end;
+
+      i := j;
+    end
+    else
+      Inc(i);
+  end;
+
+  SendMessage(RE.Handle, WM_SETREDRAW, 1, 0);
+  RE.Invalidate;
+end;
+//------------------------------------------------------------------------------
+{ARRASTA E SOLTA - 02/02}
+//------------------------------------------------------------------------------
+procedure TForm1.WMDropFiles(var Msg: TWMDropFiles);
+var
+  Drop: HDROP;
+  FileCount: Integer;
+  BufferSize: Integer;
+  FileName: string;
+begin
+  Drop := Msg.Drop;
+  try
+    // Quantidade de arquivos arrastados
+    FileCount := DragQueryFile(Drop, $FFFFFFFF, nil, 0);
+
+    if FileCount = 0 then
+      Exit;
+
+    if FileCount > 1 then
+      MessageBox(Handle,
+        'Será utilizado apenas o primeiro arquivo.',
+        PChar(Application.Title),
+        MB_ICONINFORMATION or MB_OK);
+
+    // Tamanho do nome do arquivo
+    BufferSize := DragQueryFile(Drop, 0, nil, 0);
+    SetLength(FileName, BufferSize);
+
+    // Obtém o nome do primeiro arquivo
+    DragQueryFile(Drop, 0, PChar(FileName), BufferSize + 1);
+
+    // Validação da extensão
+    if LowerCase(ExtractFileExt(FileName)) <> '.srt' then
+    begin
+      MessageBox(Handle,
+        'O arquivo carregado não é um documento SRT.',
+        PChar(Application.Title),
+        MB_ICONSTOP or MB_OK);
+      Exit;
+    end;
+    Novo_Carregar(FileName);
+
+  finally
+    DragFinish(Drop); // OBRIGATÓRIO
+  end;
+  Msg.Result := 0;
+end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 function TForm1.Novo_Carregar(parametro: String): Boolean;
@@ -288,24 +562,28 @@ RichText1.ReadOnly:=True;
    Label8.Visible:=True;
    end;
 
- //------------------------
+ //----------------------------
  btnabrir.Enabled:=True;
  lstabrir.Enabled:=True;
  btnprocurar.Enabled:=True;
  lstprocurar.Enabled:=True;
- btncores.Enabled:=True;
- lstcores.Enabled:=True;
+ btn_editAvancada.Enabled:=True;
+ lst_editAvancada.Enabled:=True;
  btntempo.Enabled:=True;
  lsttempo.Enabled:=True;
  btnstretch.Enabled:=True;
- btnstretch.Enabled:=True;
+ lststretch.Enabled:=True;
  btnfraps.Enabled:=True;
  lstfraps.Enabled:=True;
  btnnumeros.Enabled:=True;
  lstnumeros.Enabled:=True;
  btnrenomear.Enabled:=True;
  lstrenomear.Enabled:=True;
- //------------------------
+ btntags.Enabled:=True;
+ lsttags.Enabled:=True;
+ btn_ortografia.Enabled:=False;
+ lst_ortografia.Enabled:=False;
+ //----------------------------
 
  {SOBREPOSIÇÕES}
  Label1.Caption:='';
@@ -376,75 +654,13 @@ Result:=True;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-procedure TForm1.DropFiles(var Msg: TMessage);
-var
-FileCount,BufferSize:Word;
-Drop:HDROP;
-FileName:String;
-Pt:TPoint;
-RctMemo:TRect;
-begin
-
-StatusBar1.Panels[0].Text:='';
-
- if (salvar = True) then
- begin
-  case MessageBox(Application.Handle, pchar('Deseja salvar as alterações realizadas para esta legenda antes de sair?'),pchar(Application.Title),MB_ICONQUESTION+MB_YESNO+MB_DEFBUTTON2) of
-    idYes:btnsalvarcomo.Click;
-    idNo :salvar:=False; //--> Variável GLOBAL (Salvar Alterações)
-  end;
- end;
-
- if (salvar = False) then
- begin
-  Drop := Msg.wParam;
-
-  {QUANTIDADE DE ARQUIVOS SOLTOS - DROPPED}
-  FileCount := DragQueryFile(Drop, $FFFFFFFF, nil, 0);
-  {PEGA A ÁREA DO FORM1}
-  RctMemo := Form1.BoundsRect;
-   {SE SOLTOU NA ÁREA DO FORM1}
-   if not PtInRect(RctMemo, Pt) then
-   begin
-     if FileCount > 1 then
-     MessageBox(Application.Handle,pchar('Será mostrado apenas o conteúdo da primeira legenda selecionada.'),pchar(Application.Title),MB_ICONINFORMATION+MB_OK);
-
-   {PEGA O COMPRIMENTO NECESSÁRIO PARA O NOME DO ARQUIVO, SEM CONTAR COM CARACTERE NULO DO FIM DA STRING}
-   {O SEGUNDO PARÂMETRO(ZERO) INDICA O PRIMEIRO ARQUIVO DA LISTA}
-   BufferSize:=DragQueryFile(Drop,0,nil,0);
-
-   SetLength(FileName,BufferSize+1);
-
-    if DragQueryFile(Drop, 0, PChar(FileName), BufferSize+1) = BufferSize then
-    begin
-       //---------------------------------------------------------------------------------------------------
-       if (ExtractFileExt(LowerCase(pchar(FileName))) <> '.srt') then
-       begin
-       MessageBox(Application.Handle, pchar('O arquivo carregado não é um documento de legenda no formato SRT.'+#13#13+'Error code:  #0103'), pchar(Application.Title), MB_ICONSTOP+MB_OK);
-       StatusBar1.Panels[0].Text:='O arquivo carregado não é um documento de legenda no formato SRT.'+#13#13+'Error code:  #0103';
-       end
-       else
-       Novo_Carregar(FileName);
-       //---------------------------------------------------------------------------------------------------
-    end
-    else
-      begin
-      Panel1.Visible:=True;
-      MessageBox(Application.Handle, pchar('Ocorreu um erro interno do sistema.'+#13#13+'Error code:  #0101'), pchar(Application.Title), MB_ICONERROR+MB_OK);
-      Close;
-      end;
-
-   end;
-  Msg.Result := 0;
- end;
-
-end;
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-{$R *.dfm}
-
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+//---------------------------------------
+{CARREGA A DLL PARA CORREÇÃO ORTOGRÁFICA}
+InitHunspell;
+//---------------------------------------
+
 //----------------------------
 {ARRASTAR E SOLTAR - ATIVANDO}
 DragAcceptFiles(Handle, True);
@@ -483,6 +699,7 @@ end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
+//FinalizeHunspell;
 //-------------------------------
 {ARRASTAR E SOLTAR - DESATIVANDO}
 DragAcceptFiles(Handle, False);
@@ -501,14 +718,6 @@ begin
  if SelectDirectory('Certifique-se de que exista apenas um título de Série por diretório para que as legendas sejam ajustadas corretamente.', OpenDialog1.InitialDir ,Pasta) then
  begin
 
-   if DriveCD = Copy(Pasta,0,1) then
-   begin
-   MessageBox(Application.Handle,pchar('Não é possível ajustar arquivos de legenda em uma unidade de CD.'+#13#13+'Error code:  #0104'),pchar(Application.Title),MB_ICONERROR+MB_OK);
-   btnrenomear.Click;
-   end
-   {INÍCIO - ELSE}
-   else
-   begin
    //---------------------------------------------------
    cont:=0;
    FillChar(vt_nome_arquivo,SizeOf(vt_nome_arquivo),#0); //--> Vetor GLOBAL
@@ -613,8 +822,7 @@ begin
      Nao_Encontrados.Free;
      end;
      {FIM - Seriado_Quantidade}
-   end;
-   {FIM - ELSE}
+
  end;
  {FIM - SelectDirectory}
 
@@ -849,8 +1057,8 @@ ProgressBar1.Refresh;
      lstfraps.Enabled  :=True;
      btnnumeros.Enabled:=True;
      lstnumeros.Enabled:=True;
-     btncores.Enabled  :=True;
-     lstcores.Enabled  :=True;
+     btn_editAvancada.Enabled  :=True;
+     lst_editAvancada.Enabled  :=True;
      //-----------------------
      StatusBar1.Panels[0].Text:='Esta legenda não possui nenhum tipo de ocorrência.';
      end;
@@ -973,7 +1181,6 @@ end;
 
 procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-
  //-----------------------------------------------------------------------------
  if salvar = False then
  begin
@@ -1073,6 +1280,8 @@ salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
  lstconsertar.Enabled :=False;
  btneditar.Enabled    :=False;
  lsteditar.Enabled    :=False;
+ btn_ortografia.Enabled:=True;
+ lst_ortografia.Enabled:=True;
  //---------------------------
 
 //------------------------
@@ -1087,6 +1296,12 @@ R: TRect;
 MargenIzquierdo: Integer;
 MargenDerecho: Integer;
 begin
+ //--------------------------------
+ {SEGURA PROCESSAMENTO DO ONCHANGE}
+ //--------------------------------
+ if FProcessandoLegenda then
+ Exit;
+ //--------------------------------
 
  if RichText1.ReadOnly = False then
  begin
@@ -1202,8 +1417,8 @@ begin
           lstfraps.Enabled     :=False;
           btnnumeros.Enabled   :=False;
           lstnumeros.Enabled   :=False;
-          btncores.Enabled     :=False;
-          lstcores.Enabled     :=False;
+          btn_editAvancada.Enabled     :=False;
+          lst_editAvancada.Enabled     :=False;
           //---------------------------
 
            if RichText2.Visible = True then
@@ -1380,8 +1595,8 @@ btnsalvarcomo.Enabled:=True;
 lstsalvarcomo.Enabled:=True;
 btnrenomear.Enabled  :=True;
 lstrenomear.Enabled  :=True;
-btncores.Enabled     :=True;
-lstcores.Enabled     :=True;
+btn_editAvancada.Enabled     :=True;
+lst_editAvancada.Enabled     :=True;
 //--------------------------
 
   if box_edicao.Visible = True then
@@ -1411,12 +1626,10 @@ StatusBar1.Panels[0].Text:='Correção numérica realizada com sucesso!';
 Panel1.Visible:=False;
 end;
 
-procedure TForm1.btncoresClick(Sender: TObject);
+procedure TForm1.btn_editAvancadaClick(Sender: TObject);
 begin
-//-----------------------------------------------------
-//editar:=True; //--> Variável GLOBAL (Editar)
-//salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
-//-----------------------------------------------------
+{LIMPEZA DE MEMÓRIA INTERNA DO RICHTEXT}
+SoftResetPreserveText(RichText1);
 
 StatusBar1.Panels[0].Text:='';
 
@@ -1438,10 +1651,15 @@ BotoesTopo_Off;
 lstsubstituir.Enabled:=True;
 //--------------------------
 
-  if RichText1.Visible = True then
-  Edicao_Avancada(RichText1,ProgressBar1)
-  else
-  Edicao_Avancada(RichText2,ProgressBar1);
+  FProcessandoLegenda := True;
+  Try
+     if RichText1.Visible = True then
+     Edicao_Avancada(RichText1,ProgressBar1)
+     else
+     Edicao_Avancada(RichText2,ProgressBar1);
+  Finally
+  FProcessandoLegenda := False;
+  end;
 
 //------------------------------
 box_edicao.Top:=RichText1.Top-5;
@@ -1450,21 +1668,22 @@ box_edicao.Visible:=True;
 lstitalic.Enabled:=True;
 lstunderline.Enabled:=True;
 lstfonte.Enabled:=True;
-lstfundo.Enabled:=True;
 //------------------------------
 
 //--------------------------
-btnabrir.Enabled     :=True;
-lstabrir.Enabled     :=True;
-btnsalvar.Enabled    :=True;
-lstsalvar.Enabled    :=True;
-btnsalvarcomo.Enabled:=True;
-lstsalvarcomo.Enabled:=True;
-btnnumeros.Enabled   :=True;
-lstnumeros.Enabled   :=True;
-btnrenomear.Enabled  :=True;
-lstrenomear.Enabled  :=True;
-//--------------------------
+btnabrir.Enabled      :=True;
+lstabrir.Enabled      :=True;
+btnsalvar.Enabled     :=True;
+lstsalvar.Enabled     :=True;
+btnsalvarcomo.Enabled :=True;
+lstsalvarcomo.Enabled :=True;
+btnnumeros.Enabled    :=True;
+lstnumeros.Enabled    :=True;
+btnrenomear.Enabled   :=True;
+lstrenomear.Enabled   :=True;
+btn_ortografia.Enabled:=True;
+lst_ortografia.Enabled:=True;
+//---------------------------
 
 end;
 
@@ -1694,9 +1913,9 @@ begin
 btnrenomear.Click;
 end;
 
-procedure TForm1.lstcoresClick(Sender: TObject);
+procedure TForm1.lst_editAvancadaClick(Sender: TObject);
 begin
-btncores.Click;
+btn_editAvancada.Click;
 end;
 
 procedure TForm1.lstitalicClick(Sender: TObject);
@@ -1759,58 +1978,40 @@ RichText1.Color:=clBlack;
 //-------------------------------
 end;
 
+procedure TForm1.Menu_SobreClick(Sender: TObject);
+begin
+ShellExecute(0,Nil,PChar(SRT_BLOG_Global),Nil,Nil,0);
+end;
+
 procedure TForm1.btntagsClick(Sender: TObject);
 var
-i: Integer;
-tempo1,tempo2: String;
+HexColor: string;  
 begin
-//------------------------------------------------------
-salvar:=True;  //--> Variável GLOBAL (Salvar Alterações)
-//------------------------------------------------------
-                     
-//-------------
+
+  if not ColorDialog1.Execute then
+  Exit;
+
+SoftResetPreserveText(RichText1);
+HexColor := ColorToHex(ColorDialog1.Color);
+
 BotoesTopo_Off;
-//-------------
 
-ProgressBar1.Visible:=True;
-ProgressBar1.Position:=0;
-ProgressBar1.Max:=Length(vt_tempo)-1;
-ProgressBar1.Refresh;
-RichText2.Text:=RichText1.Text;
-
-  for i:=0 to Length(vt_tempo)-2 do
-  begin
-  ProgressBar1.Position:=ProgressBar1.Position+1;
-  //--------------------------------
-  tempo1:=copy(vt_tempo[i]  ,18,12);
-  tempo2:=copy(vt_tempo[i+1],1 ,12);
-  //--------------------------------
-
-
-    if StrToTime(tempo1) > StrToTime(tempo2) then
-    RichText2.Text:=(StringReplace(RichText2.Text,tempo1,tempo2,[rfReplaceAll, rfIgnoreCase]));
-
-
+  FProcessandoLegenda := True;
+  Try
+  // FASE 1 — TEXTO (rápido)
+  AtualizarTextoComFont(RichText1.Lines, HexColor, ProgressBar1);
+  // FASE 2 — VISUAL (15 Primeiros diálogos)
+  ColorirVisualLimitado(RichText1, ColorDialog1.Color, 15);
+  Finally
+  FProcessandoLegenda := False;
   end;
 
-RichText1.Height:=Trunc(Form1.Height/2)-84;
-RichText2.Height:=RichText1.Height;
-RichText2.Top:=RichText1.Top+RichText1.Height+5;
-RichText2.Visible:=True;
-RichText2.SetFocus;
-ProgressBar1.Visible:=False;
-
-//--------------------------------------------------
-StatusBar1.Panels[0].Text:='Sobreposições corrigidas com sucesso!';
-Label1.Font.Color:=clBlue; //LETRA AZUL
-Image1.Visible:=False;
-Image2.Visible:=True;
-//--------------------------------------------------
-
-//------------------------------------------------
 SendMessage(RichText1.Handle,WM_VSCROLL,SB_TOP,0);
-SendMessage(RichText2.Handle,WM_VSCROLL,SB_TOP,0);
-//------------------------------------------------
+
+//-----------------------------------------------------
+editar:=True; //--> Variável GLOBAL (Editar)
+salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
+//-----------------------------------------------------
 
 //--------------------------
 btnabrir.Enabled     :=True;
@@ -1821,20 +2022,86 @@ btnsalvarcomo.Enabled:=True;
 lstsalvarcomo.Enabled:=True;
 btnrenomear.Enabled  :=True;
 lstrenomear.Enabled  :=True;
-lstlocalizar.Enabled :=False;
+btntags.Enabled      :=True;
+lsttags.Enabled      :=True;
 //--------------------------
 
 end;
 
-procedure TForm1.Menu_SobreClick(Sender: TObject);
+
+procedure TForm1.btn_ortografiaClick(Sender: TObject);
+var
+  Texto, Palavra: string;
+  I, InicioPalavra: Integer;
 begin
-ShellExecute(0,Nil,PChar(SRT_BLOG_Global),Nil,Nil,0);
+
+  FProcessandoLegenda := True;
+  try
+    // Limpa formatação
+    {
+    RichText1.SelectAll;
+    RichText1.SelAttributes.Style := [];
+    RichText1.SelAttributes.Color := clBlack;
+    RichText1.SelLength := 0;
+    }
+    Texto := RichText1.Text;
+    Palavra := '';
+    InicioPalavra := 0;
+
+    for I := 1 to Length(Texto) do
+    begin
+      if IsLetter(Texto[I]) then
+      begin
+        if Palavra = '' then
+        InicioPalavra := I - 1; // RichText é 0-based
+
+      Palavra := Palavra + Texto[I];
+      end
+      else
+      begin
+        if Palavra <> '' then
+        begin
+        Palavra := CleanWord(Palavra);
+
+          if (Length(Palavra) > 2) and (not SpellOK(Palavra)) then
+          begin
+            RichText1.SelStart := InicioPalavra;
+            RichText1.SelLength := Length(Palavra);
+            RichText1.SelAttributes.Style := [fsUnderline];
+            RichText1.SelAttributes.Color := clRed;
+          end;
+
+        Palavra := '';
+        end;
+      end;
+    end;
+
+    // Última palavra
+    if Palavra <> '' then
+    begin
+      Palavra := CleanWord(Palavra);
+
+      if (Length(Palavra) > 2) and (not SpellOK(Palavra)) then
+      begin
+        RichText1.SelStart := InicioPalavra;
+        RichText1.SelLength := Length(Palavra);
+        RichText1.SelAttributes.Style := [fsUnderline];
+        RichText1.SelAttributes.Color := clRed;
+      end;
+    end;
+
+    RichText1.SelLength := 0;
+  Finally
+  FProcessandoLegenda := False;
+  end;
+
+SendMessage(RichText1.Handle,WM_VSCROLL,SB_TOP,0);
+//----------------------------
+btn_ortografia.Enabled:=False;
+lst_ortografia.Enabled:=False;
+//----------------------------
 end;
 
-procedure TForm1.lstfundoClick(Sender: TObject);
-begin
-btnfundo.Click;
-end;
 
 end.
 

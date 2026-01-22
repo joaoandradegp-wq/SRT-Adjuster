@@ -362,8 +362,8 @@ SendMessage(Form1.RichText1.Handle, WM_VSCROLL, SB_TOP, 0);
     Form1.lstnumeros.Enabled:=True;
     Form1.btnrenomear.Enabled:=True;
     Form1.lstrenomear.Enabled:=True;
-    Form1.btncores.Enabled:=True;
-    Form1.lstcores.Enabled:=True;
+    Form1.btn_editAvancada.Enabled:=True;
+    Form1.lst_editAvancada.Enabled:=True;
     //------------------------------
 
 end
@@ -388,8 +388,8 @@ SendMessage(Form1.RichText2.Handle, WM_VSCROLL, SB_TOP, 0);
   Form1.lstnumeros.Enabled:=True;
   Form1.btnrenomear.Enabled:=True;
   Form1.lstrenomear.Enabled:=True;
-  Form1.btncores.Enabled:=True;
-  Form1.lstcores.Enabled:=True;
+  Form1.btn_editAvancada.Enabled:=True;
+  Form1.lst_editAvancada.Enabled:=True;
   //-------------------------------
 
 end;
