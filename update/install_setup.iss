@@ -5,7 +5,7 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{5B4B8335-1DA9-49BE-B91F-73D817833F6B}
+AppId={{D9183DB6-28AD-4E5F-BF2C-81D6BC75D33F}
 AppName=SRT Adjuster
 AppVersion=1.3
 ;AppVerName=SRT Adjuster 1.3

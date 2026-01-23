@@ -6214,7 +6214,7 @@ object splash_screen: Tsplash_screen
     Height = 9
     AsyncDrawing = True
     Animate = True
-    FrameIndex = 4
+    FrameIndex = 3
     Image.Data = {
       8904000047494638396164000900A20400CE3131CE6363CE9C9CCECECEFFFFFF
       FFFFFF000000FFFFFF21FF0B4E45545343415045322E30030100000021F90405
@@ -6256,8 +6256,8 @@ object splash_screen: Tsplash_screen
     Stretch = True
   end
   object RxLabel1: TRxLabel
-    Left = 161
-    Top = 265
+    Left = 162
+    Top = 275
     Width = 324
     Height = 17
     Caption = #169' 2026 JMBA Softwares. Todos os direitos reservados.'
@@ -6267,6 +6267,7 @@ object splash_screen: Tsplash_screen
     Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
+    Transparent = True
   end
   object abfImage1: TabfImage
     Left = 63
