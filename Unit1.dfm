@@ -1089,8 +1089,16 @@ object Form1: TForm1
       ShowHint = True
       OnClick = btn_ortografiaClick
     end
-    object btntags: TSpeedButton
+    object btnclosecaption: TSpeedButton
       Left = 379
+      Top = 2
+      Width = 46
+      Height = 45
+      Caption = 'NOVO'
+      OnClick = btnclosecaptionClick
+    end
+    object btntags: TSpeedButton
+      Left = 425
       Top = 2
       Width = 46
       Height = 45
@@ -1158,14 +1166,14 @@ object Form1: TForm1
       OnClick = btntagsClick
     end
     object ToolButton1: TToolButton
-      Left = 425
+      Left = 471
       Top = 2
       Width = 8
       Caption = 'ToolButton1'
       Style = tbsSeparator
     end
     object btntempo: TSpeedButton
-      Left = 433
+      Left = 479
       Top = 2
       Width = 46
       Height = 45
@@ -1233,7 +1241,7 @@ object Form1: TForm1
       OnClick = btntempoClick
     end
     object btnstretch: TSpeedButton
-      Left = 479
+      Left = 525
       Top = 2
       Width = 46
       Height = 45
@@ -1301,7 +1309,7 @@ object Form1: TForm1
       OnClick = btnstretchClick
     end
     object btnfraps: TSpeedButton
-      Left = 525
+      Left = 571
       Top = 2
       Width = 46
       Height = 45
@@ -1369,7 +1377,7 @@ object Form1: TForm1
       OnClick = btnfrapsClick
     end
     object btnnumeros: TSpeedButton
-      Left = 571
+      Left = 617
       Top = 2
       Width = 46
       Height = 45
@@ -1437,7 +1445,7 @@ object Form1: TForm1
       OnClick = btnnumerosClick
     end
     object ToolButton4: TToolButton
-      Left = 617
+      Left = 663
       Top = 2
       Width = 8
       Caption = 'ToolButton4'
@@ -1445,7 +1453,7 @@ object Form1: TForm1
       Style = tbsSeparator
     end
     object btnrenomear: TSpeedButton
-      Left = 625
+      Left = 671
       Top = 2
       Width = 46
       Height = 45

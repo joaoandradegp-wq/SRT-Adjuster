@@ -110,6 +110,7 @@ type
     lsttags: TMenuItem;
     btn_ortografia: TSpeedButton;
     lst_ortografia: TMenuItem;
+    btnclosecaption: TSpeedButton;
     procedure ListBox1Click(Sender: TObject);
     procedure btnsalvarcomoClick(Sender: TObject);
     procedure btnprocurarClick(Sender: TObject);
@@ -170,6 +171,7 @@ type
     procedure Menu_SobreClick(Sender: TObject);
     procedure btntagsClick(Sender: TObject);
     procedure btn_ortografiaClick(Sender: TObject);
+    procedure btnclosecaptionClick(Sender: TObject);
   private
   { Private declarations }
   //-----------------------------------------------------------------
@@ -2102,6 +2104,100 @@ lst_ortografia.Enabled:=False;
 //----------------------------
 end;
 
+
+procedure TForm1.btnclosecaptionClick(Sender: TObject);
+var
+  i, j, k: Integer;
+  Linha, LinhaLimpa: String;
+  NovoSRT, BlocoTemp: TStringList;
+  SomenteColchete: Boolean;
+begin
+  NovoSRT := TStringList.Create;
+  BlocoTemp := TStringList.Create;
+  try
+    ProgressBar1.Visible := True;
+    ProgressBar1.Position := 0;
+    ProgressBar1.Max := RichText1.Lines.Count;
+
+    i := 0;
+
+    while i < RichText1.Lines.Count do
+    begin
+      ProgressBar1.Position := i + 1;
+
+      // Detecta início de bloco SRT
+      if (IsNumeric(Trim(RichText1.Lines[i]))) and
+         (i + 1 < RichText1.Lines.Count) and
+         (AnsiContainsStr(RichText1.Lines[i+1], ' --> ')) then
+      begin
+        SomenteColchete := True;
+        BlocoTemp.Clear;
+
+        // ID e tempo
+        BlocoTemp.Add(RichText1.Lines[i]);
+        BlocoTemp.Add(RichText1.Lines[i+1]);
+
+        j := i + 2;
+
+        // Lê diálogo
+        while (j < RichText1.Lines.Count) and (Trim(RichText1.Lines[j]) <> '') do
+        begin
+          Linha := Trim(RichText1.Lines[j]);
+          LinhaLimpa := Linha;
+
+          // Remove [conteúdo]
+          while (Pos('[', LinhaLimpa) > 0) and (Pos(']', LinhaLimpa) > 0) do
+          begin
+            Delete(LinhaLimpa,
+                   Pos('[', LinhaLimpa),
+                   Pos(']', LinhaLimpa) - Pos('[', LinhaLimpa) + 1);
+          end;
+
+          LinhaLimpa := Trim(LinhaLimpa);
+
+          // Se sobrou texto ? não é só colchete
+          if LinhaLimpa <> '' then
+            SomenteColchete := False;
+
+          if LinhaLimpa <> '' then
+            BlocoTemp.Add(LinhaLimpa);
+
+          Inc(j);
+        end;
+
+        // Mantém bloco se não for só colchete
+        if not SomenteColchete then
+        begin
+          for k := 0 to BlocoTemp.Count - 1 do
+            NovoSRT.Add(BlocoTemp[k]);
+
+          NovoSRT.Add('');
+        end;
+
+        i := j;
+      end
+      else
+      begin
+        Inc(i);
+      end;
+    end;
+
+    // Atualiza RichText
+    RichText1.Lines.BeginUpdate;
+    try
+      RichText1.Lines.Assign(NovoSRT);
+    finally
+      RichText1.Lines.EndUpdate;
+    end;
+
+    StatusBar1.Panels[0].Text := 'Closed captions removidos (OK).';
+
+  finally
+    BlocoTemp.Free;
+    NovoSRT.Free;
+    ProgressBar1.Visible := False;
+  end;
+end;
 
 end.
 
