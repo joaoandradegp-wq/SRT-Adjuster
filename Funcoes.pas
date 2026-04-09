@@ -546,6 +546,9 @@ Form1.lsttags.Enabled:=False;
 {VERIFICAR ORTOGRAFIA}
 Form1.btn_ortografia.Enabled:=False;
 Form1.lst_ortografia.Enabled:=False;
+{REMOVER CLOSE-CAPTION}
+Form1.btnclosecaption.Enabled:=False;
+Form1.lstclosecaption.Enabled:=False;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
