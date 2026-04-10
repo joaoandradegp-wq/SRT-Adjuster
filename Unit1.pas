@@ -1412,7 +1412,7 @@ begin
      idYes:
           begin
           salvar:=False;  //--> Variável GLOBAL (Salvar Alterações)
-          //---------------------------
+          //------------------------------
           btnsalvar.Enabled    :=False;
           lstsalvar.Enabled    :=False;
           btnsalvarcomo.Enabled:=False;
@@ -1421,9 +1421,9 @@ begin
           lstfraps.Enabled     :=False;
           btnnumeros.Enabled   :=False;
           lstnumeros.Enabled   :=False;
-          btn_editAvancada.Enabled     :=False;
-          lst_editAvancada.Enabled     :=False;
-          //---------------------------
+          btn_editAvancada.Enabled:=False;
+          lst_editAvancada.Enabled:=False;
+          //------------------------------
 
            if RichText2.Visible = True then
            RichText2.Lines.SaveToFile(caminho_arquivo)
@@ -1437,9 +1437,9 @@ begin
           lstsubstituir.Enabled:=False;
           //---------------------------
           Panel1.Visible:=True;
+          Close; //Ficou aqui pra não precisar fechar manualmente para testar
           end;
-     idNo:
-         salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
+     idNo: salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
     end;
     //--------------------------------------------------------------------------
   end;
@@ -1991,14 +1991,20 @@ procedure TForm1.btntagsClick(Sender: TObject);
 var
 HexColor: string;  
 begin
+//-----------------------------------------------------
+editar:=True; //--> Variável GLOBAL (Editar)
+salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
+//-----------------------------------------------------
+
+Panel1.Visible:=True;
+
+BotoesTopo_Off;
 
   if not ColorDialog1.Execute then
   Exit;
 
 SoftResetPreserveText(RichText1);
 HexColor := ColorToHex(ColorDialog1.Color);
-
-BotoesTopo_Off;
 
   FProcessandoLegenda := True;
   Try
@@ -2009,13 +2015,6 @@ BotoesTopo_Off;
   Finally
   FProcessandoLegenda := False;
   end;
-
-SendMessage(RichText1.Handle,WM_VSCROLL,SB_TOP,0);
-
-//-----------------------------------------------------
-editar:=True; //--> Variável GLOBAL (Editar)
-salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
-//-----------------------------------------------------
 
 //--------------------------
 btnabrir.Enabled     :=True;
@@ -2030,6 +2029,10 @@ btntags.Enabled      :=True;
 lsttags.Enabled      :=True;
 //--------------------------
 
+SendMessage(RichText1.Handle, WM_VSCROLL, SB_TOP, 0);
+
+StatusBar1.Panels[0].Text := 'Alteração de cor realizada com sucesso!';
+Panel1.Visible := False;
 end;
 
 
@@ -2115,8 +2118,8 @@ Bloco, Novo: TStringList;
 TemTextoValido: Boolean;
 begin
 //-----------------------------------------------------
-salvar:=True;
-editar:=True;
+editar:=True; //--> Variável GLOBAL (Editar)
+salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
 //-----------------------------------------------------
 
 Panel1.Visible:=True;
