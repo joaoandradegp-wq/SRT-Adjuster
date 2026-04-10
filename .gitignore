@@ -1,1 +1,4 @@
 *.exe
+*.ini
+*.dcu
+SRTAdjuster.exe
