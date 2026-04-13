@@ -1434,6 +1434,7 @@ object Form1: TForm1
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       ParentShowHint = False
       ShowHint = True
+      Transparent = False
       OnClick = btnclosecaptionClick
     end
     object btnnumeros: TSpeedButton

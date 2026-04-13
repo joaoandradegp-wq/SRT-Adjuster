@@ -1402,6 +1402,8 @@ linha_atual:=LinhaAtual(RichText2);
 end;
 
 procedure TForm1.btnsalvarClick(Sender: TObject);
+var
+VideoPath: String;
 begin
 
   //----------------------------------------------------------------------------
@@ -1437,6 +1439,15 @@ begin
           lstsubstituir.Enabled:=False;
           //---------------------------
           Panel1.Visible:=True;
+
+          VideoPath := EncontrarVideoCorrespondente(caminho_arquivo);
+
+            if VideoPath <> '' then
+            begin
+              if MessageBox(Application.Handle,PChar('Legenda salva! Deseja abrir o vídeo agora?'),PChar(Application.Title),MB_ICONQUESTION + MB_YESNO) = IDYES then
+              ShellExecute(0, 'open', PChar(VideoPath), nil, nil, SW_SHOWNORMAL);
+            end;
+
           Close; //Ficou aqui pra não precisar fechar manualmente para testar
           end;
      idNo: salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
@@ -2207,6 +2218,10 @@ Novo :=TStringList.Create;
 //----------------------------
 btnabrir.Enabled:=True;
 lstabrir.Enabled:=True;
+lstsalvar.Enabled:=True;
+btnsalvar.Enabled:=True;
+lstsalvarcomo.Enabled:=True;
+btnsalvarcomo.Enabled:=True;
 btn_editAvancada.Enabled:=True;
 lst_editAvancada.Enabled:=True;
 btnnumeros.Enabled:=True;
