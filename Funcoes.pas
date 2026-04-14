@@ -581,6 +581,14 @@ Form1.lst_ortografia.Enabled:=False;
 {REMOVER CLOSE-CAPTION}
 Form1.btnclosecaption.Enabled:=False;
 Form1.lstclosecaption.Enabled:=False;
+
+{INFORMAÇÕES DE PROCESSAMENTO}
+Form1.Label1.Visible:=False;
+Form1.Label3.Visible:=False;
+//--------------------------
+Form1.Image1.Visible:=False;
+Form1.Image2.Visible:=False;
+Form1.Image3.Visible:=False;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

@@ -1444,7 +1444,7 @@ begin
 
             if VideoPath <> '' then
             begin
-              if MessageBox(Application.Handle,PChar('Legenda salva! Deseja abrir o vídeo agora?'),PChar(Application.Title),MB_ICONQUESTION + MB_YESNO) = IDYES then
+              if MessageBox(Application.Handle,PChar('Deseja agora abrir o vídeo?'),PChar(Application.Title),MB_ICONQUESTION + MB_YESNO) = IDYES then
               ShellExecute(0, 'open', PChar(VideoPath), nil, nil, SW_SHOWNORMAL);
             end;
 
@@ -2002,17 +2002,17 @@ procedure TForm1.btntagsClick(Sender: TObject);
 var
 HexColor: string;  
 begin
+
+  if not ColorDialog1.Execute then
+  Exit;
+
 //-----------------------------------------------------
 editar:=True; //--> Variável GLOBAL (Editar)
 salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
 //-----------------------------------------------------
-
 Panel1.Visible:=True;
 
 BotoesTopo_Off;
-
-  if not ColorDialog1.Execute then
-  Exit;
 
 SoftResetPreserveText(RichText1);
 HexColor := ColorToHex(ColorDialog1.Color);
@@ -2127,6 +2127,7 @@ j: Integer;
 Linha,LinhaLimpa: String;
 Bloco, Novo: TStringList;
 TemTextoValido: Boolean;
+ContadorRemocoes: Integer;
 begin
 //-----------------------------------------------------
 editar:=True; //--> Variável GLOBAL (Editar)
@@ -2136,6 +2137,8 @@ salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
 Panel1.Visible:=True;
 
 BotoesTopo_Off;
+
+ContadorRemocoes:=0;
 
 ProgressBar1.Visible:=True;
 ProgressBar1.Position:=0;
@@ -2171,6 +2174,7 @@ Novo :=TStringList.Create;
           Delete(LinhaLimpa,
                  Pos('[', LinhaLimpa),
                  Pos(']', LinhaLimpa) - Pos('[', LinhaLimpa) + 1);
+          Inc(ContadorRemocoes);
           end;
 
         LinhaLimpa := Trim(LinhaLimpa);
@@ -2236,7 +2240,17 @@ lst_ortografia.Enabled:=True;
 
 SendMessage(RichText1.Handle, WM_VSCROLL, SB_TOP, 0);
 
-StatusBar1.Panels[0].Text := 'Closed captions removidos com sucesso!';
+  if ContadorRemocoes = 0 then
+  StatusBar1.Panels[0].Text := 'Nenhum closed caption encontrado.'
+  else
+  begin
+  Label1.Caption:=IntToStr(ContadorRemocoes)+' Closed Captions';
+  Label1.Visible:=True;
+  Image2.Left:=Label1.Width+Form1.Width-174;
+  Image2.Visible:=True;
+  StatusBar1.Panels[0].Text := 'Os closed captions foram removidos com sucesso!';
+  end;
+
 Panel1.Visible := False;
 end;
 
