@@ -734,7 +734,8 @@ begin
         {INÍCIO - SR.Attr}
         if (SR.Attr and faDirectory) <> faDirectory then
         begin
-        nome_arquivo:=LowerCase(SR.Name);
+        //nome_arquivo:=LowerCase(SR.Name);
+        nome_arquivo:=SR.Name;
         extensao_video:=ExtractFileExt(nome_arquivo);
            //-------------------------------------------------------------------------------
            {INÍCIO - EXTENSÃO}
@@ -785,7 +786,9 @@ begin
             {INÍCIO - IF}
             if (FileExists(pasta+'\'+vt_nome_arquivo[i])) then
             begin
-              if (vt_nome_arquivo[i] = LowerCase(vt_nome_arquivo_normal[i])+'.srt') then
+              //if (vt_nome_arquivo[i] = LowerCase(vt_nome_arquivo_normal[i])+'.srt') then
+              //if SameText(vt_nome_arquivo[i], vt_nome_arquivo_normal[i]+'.srt') then
+              if vt_nome_arquivo[i] = vt_nome_arquivo_normal[i]+'.srt' then
               Dec(cont_legenda_global)
               else
               begin
@@ -815,7 +818,7 @@ begin
         if Sim_Encontrados.Count = 1 then
         MessageBox(Application.Handle,pchar('Foi realizado ajuste em 1 legenda com sucesso!'), pchar(Application.Title), MB_ICONINFORMATION+MB_OK)
         else
-        MessageBox(Application.Handle,pchar('Foram realizados ajustes em '+IntToStr(Nao_Encontrados.Count)+' legendas com sucesso!'),pchar(Application.Title),MB_ICONINFORMATION+MB_OK);
+        MessageBox(Application.Handle,pchar('Foram realizados ajustes em '+IntToStr(Sim_Encontrados.Count)+' legendas com sucesso!'),pchar(Application.Title),MB_ICONINFORMATION+MB_OK);
       end;
 
       if (Sim_Encontrados.Count = 0) and (Nao_Encontrados.Count = 0) then
