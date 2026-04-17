@@ -7,8 +7,8 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{D9183DB6-28AD-4E5F-BF2C-81D6BC75D33F}
 AppName=SRT Adjuster
-AppVersion=1.3
-;AppVerName=SRT Adjuster 1.3
+AppVersion=1.4
+;AppVerName=SRT Adjuster 1.4
 AppPublisher=JMBA Softwares
 AppPublisherURL=http://phobosfreeware.blogspot.com.br/
 AppSupportURL=http://phobosfreeware.blogspot.com.br/
@@ -18,7 +18,7 @@ DisableDirPage=yes
 DefaultGroupName=SRT Adjuster
 DisableProgramGroupPage=yes
 OutputDir=C:\Users\Phobos\Desktop
-OutputBaseFilename=SRTAdjuster_1.3_Setup
+OutputBaseFilename=SRTAdjuster_1.4_Setup
 SetupIconFile=C:\JMBA Softwares\SRT Adjuster\bin\subtitle.ico
 Compression=lzma
 SolidCompression=yes
@@ -43,11 +43,11 @@ Source: "C:\JMBA Softwares\SRT Adjuster\*"; DestDir: "{app}"; Flags: ignoreversi
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\SRT Adjuster 1.3"; Filename: "{app}\SRTAdjuster.exe"; IconFilename: "{app}\bin\application.ico"
+Name: "{group}\SRT Adjuster 1.4"; Filename: "{app}\check_update.exe"; IconFilename: "{app}\bin\application.ico"
 Name: "{group}\Desinstalar"; Filename: "{uninstallexe}"; IconFilename: "{app}\bin\uninstall.ico"
-Name: "{commondesktop}\SRT Adjuster 1.3"; Filename: "{app}\SRTAdjuster.exe"; Tasks: desktopicon; IconFilename: "{app}\bin\application.ico"
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\SRT Adjuster 1.3"; Filename: "{app}\SRTAdjuster.exe"; Tasks: quicklaunchicon; IconFilename: "{app}\bin\application.ico"
+Name: "{commondesktop}\SRT Adjuster 1.4"; Filename: "{app}\check_update.exe"; Tasks: desktopicon; IconFilename: "{app}\bin\application.ico"
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\SRT Adjuster 1.4"; Filename: "{app}\check_update.exe"; Tasks: quicklaunchicon; IconFilename: "{app}\bin\application.ico"
 
 [Run]
-Filename: "{app}\SRTAdjuster.exe"; Description: "{cm:LaunchProgram,SRT Adjuster}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\check_update.exe"; Description: "{cm:LaunchProgram,SRT Adjuster}"; Flags: nowait postinstall skipifsilent
 
