@@ -1,5 +1,4 @@
 import requests
-import base64
 import json
 import os
 import sys
@@ -14,22 +13,12 @@ def get_current_version():
         return sys.argv[1]
     return "0.0"
 
-API_URL = (
-    "https://api.github.com/repos/"
-    "joaoandradegp-wq/SRT-Adjuster/"
-    "contents/update.json"
-)
-
-HEADERS = {
-    "User-Agent": "SRT-Adjuster-Updater/1.2",
-    "Accept": "application/vnd.github.v3+json"
-}
+API_URL = "https://raw.githubusercontent.com/joaoandradegp-wq/SRT-Adjuster/main/update.json"
 
 TEMP_DIR = "temp"
 
 BASE_DIR = os.path.dirname(os.path.abspath(sys.argv[0]))
 APP_NAME = "SRTAdjuster.exe"
-APP_PATH = os.path.join(BASE_DIR, APP_NAME)
 
 # ================= UX =================
 
@@ -47,12 +36,13 @@ def ask_update(version):
 # ================= UPDATE CHECK =================
 
 def check_update(current_version):
-    r = requests.get(API_URL, headers=HEADERS, timeout=10)
+    r = requests.get(API_URL, timeout=10)
     r.raise_for_status()
 
-    data = r.json()
-    content_json = base64.b64decode(data["content"]).decode("utf-8")
-    update_info = json.loads(content_json)
+    update_info = r.json()
+
+    if "version" not in update_info or "url" not in update_info:
+        raise Exception("update.json inválido")
 
     latest_version = update_info["version"].strip()
     download_url = update_info["url"]
@@ -91,27 +81,29 @@ if __name__ == "__main__":
 
         # ================= SEM UPDATE =================
         if not has_update:
-            subprocess.Popen(APP_PATH, creationflags=subprocess.DETACHED_PROCESS)
             sys.exit(0)
 
         # ================= USUÁRIO NÃO QUER =================
         if not ask_update(latest_version):
-            subprocess.Popen(APP_PATH, creationflags=subprocess.DETACHED_PROCESS)
             sys.exit(0)
 
         # ================= ATUALIZAÇÃO =================
 
-        # Fecha o app antes de atualizar
         kill_process(APP_NAME)
 
-        os.makedirs(os.path.join(BASE_DIR, TEMP_DIR), exist_ok=True)
+        temp_path = os.path.join(BASE_DIR, TEMP_DIR)
+        os.makedirs(temp_path, exist_ok=True)
 
         installer_name = f"SRTAdjuster_{latest_version}_Setup.exe"
-        installer_path = os.path.join(BASE_DIR, TEMP_DIR, installer_name)
+        installer_path = os.path.join(temp_path, installer_name)
 
         msgbox("Baixando atualização...\nAguarde.")
 
         download(url, installer_path)
+
+        if not os.path.exists(installer_path):
+            msgbox("Falha ao baixar atualização.", "Erro", 16)
+            sys.exit(1)
 
         subprocess.Popen(
             installer_path,

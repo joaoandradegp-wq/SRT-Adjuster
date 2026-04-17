@@ -1,1 +1,7 @@
-"C:\Users\joaoa\AppData\Local\Programs\Python\Python313\python.exe" -m PyInstaller check_update.py --onefile --noconsole --icon=icon.ico --hidden-import=requests --hidden-import=urllib3 --hidden-import=certifi --hidden-import=charset_normalizer --hidden-import=idna
+"C:\Users\joaoa\AppData\Local\Programs\Python\Python313\python.exe" -m PyInstaller ^
+check_update.py ^
+--onedir ^
+--noconsole ^
+--name check_update ^
+--icon=icon.ico ^
+--clean
