@@ -110,6 +110,8 @@ type
     lsttags: TMenuItem;
     btn_ortografia: TSpeedButton;
     lst_ortografia: TMenuItem;
+    btnclosecaption: TSpeedButton;
+    lstclosecaption: TMenuItem;
     procedure ListBox1Click(Sender: TObject);
     procedure btnsalvarcomoClick(Sender: TObject);
     procedure btnprocurarClick(Sender: TObject);
@@ -170,6 +172,8 @@ type
     procedure Menu_SobreClick(Sender: TObject);
     procedure btntagsClick(Sender: TObject);
     procedure btn_ortografiaClick(Sender: TObject);
+    procedure btnclosecaptionClick(Sender: TObject);
+    procedure lstclosecaptionClick(Sender: TObject);
   private
   { Private declarations }
   //-----------------------------------------------------------------
@@ -581,8 +585,8 @@ RichText1.ReadOnly:=True;
  lstrenomear.Enabled:=True;
  btntags.Enabled:=True;
  lsttags.Enabled:=True;
- btn_ortografia.Enabled:=False;
- lst_ortografia.Enabled:=False;
+ btnclosecaption.Enabled:=True;
+ lstclosecaption.Enabled:=True; 
  //----------------------------
 
  {SOBREPOSIÇÕES}
@@ -730,7 +734,8 @@ begin
         {INÍCIO - SR.Attr}
         if (SR.Attr and faDirectory) <> faDirectory then
         begin
-        nome_arquivo:=LowerCase(SR.Name);
+        //nome_arquivo:=LowerCase(SR.Name);
+        nome_arquivo:=SR.Name;
         extensao_video:=ExtractFileExt(nome_arquivo);
            //-------------------------------------------------------------------------------
            {INÍCIO - EXTENSÃO}
@@ -781,7 +786,9 @@ begin
             {INÍCIO - IF}
             if (FileExists(pasta+'\'+vt_nome_arquivo[i])) then
             begin
-              if (vt_nome_arquivo[i] = LowerCase(vt_nome_arquivo_normal[i])+'.srt') then
+              //if (vt_nome_arquivo[i] = LowerCase(vt_nome_arquivo_normal[i])+'.srt') then
+              //if SameText(vt_nome_arquivo[i], vt_nome_arquivo_normal[i]+'.srt') then
+              if vt_nome_arquivo[i] = vt_nome_arquivo_normal[i]+'.srt' then
               Dec(cont_legenda_global)
               else
               begin
@@ -811,7 +818,7 @@ begin
         if Sim_Encontrados.Count = 1 then
         MessageBox(Application.Handle,pchar('Foi realizado ajuste em 1 legenda com sucesso!'), pchar(Application.Title), MB_ICONINFORMATION+MB_OK)
         else
-        MessageBox(Application.Handle,pchar('Foram realizados ajustes em '+IntToStr(Nao_Encontrados.Count)+' legendas com sucesso!'),pchar(Application.Title),MB_ICONINFORMATION+MB_OK);
+        MessageBox(Application.Handle,pchar('Foram realizados ajustes em '+IntToStr(Sim_Encontrados.Count)+' legendas com sucesso!'),pchar(Application.Title),MB_ICONINFORMATION+MB_OK);
       end;
 
       if (Sim_Encontrados.Count = 0) and (Nao_Encontrados.Count = 0) then
@@ -1398,6 +1405,8 @@ linha_atual:=LinhaAtual(RichText2);
 end;
 
 procedure TForm1.btnsalvarClick(Sender: TObject);
+var
+VideoPath: String;
 begin
 
   //----------------------------------------------------------------------------
@@ -1408,7 +1417,7 @@ begin
      idYes:
           begin
           salvar:=False;  //--> Variável GLOBAL (Salvar Alterações)
-          //---------------------------
+          //------------------------------
           btnsalvar.Enabled    :=False;
           lstsalvar.Enabled    :=False;
           btnsalvarcomo.Enabled:=False;
@@ -1417,9 +1426,9 @@ begin
           lstfraps.Enabled     :=False;
           btnnumeros.Enabled   :=False;
           lstnumeros.Enabled   :=False;
-          btn_editAvancada.Enabled     :=False;
-          lst_editAvancada.Enabled     :=False;
-          //---------------------------
+          btn_editAvancada.Enabled:=False;
+          lst_editAvancada.Enabled:=False;
+          //------------------------------
 
            if RichText2.Visible = True then
            RichText2.Lines.SaveToFile(caminho_arquivo)
@@ -1433,9 +1442,18 @@ begin
           lstsubstituir.Enabled:=False;
           //---------------------------
           Panel1.Visible:=True;
+
+          VideoPath := EncontrarVideoCorrespondente(caminho_arquivo);
+
+            if VideoPath <> '' then
+            begin
+              if MessageBox(Application.Handle,PChar('Deseja agora abrir o vídeo?'),PChar(Application.Title),MB_ICONQUESTION + MB_YESNO) = IDYES then
+              ShellExecute(0, 'open', PChar(VideoPath), nil, nil, SW_SHOWNORMAL);
+            end;
+
+          Close; //Ficou aqui pra não precisar fechar manualmente para testar
           end;
-     idNo:
-         salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
+     idNo: salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
     end;
     //--------------------------------------------------------------------------
   end;
@@ -1595,8 +1613,8 @@ btnsalvarcomo.Enabled:=True;
 lstsalvarcomo.Enabled:=True;
 btnrenomear.Enabled  :=True;
 lstrenomear.Enabled  :=True;
-btn_editAvancada.Enabled     :=True;
-lst_editAvancada.Enabled     :=True;
+btn_editAvancada.Enabled:=True;
+lst_editAvancada.Enabled:=True;
 //--------------------------
 
   if box_edicao.Visible = True then
@@ -1991,10 +2009,16 @@ begin
   if not ColorDialog1.Execute then
   Exit;
 
-SoftResetPreserveText(RichText1);
-HexColor := ColorToHex(ColorDialog1.Color);
+//-----------------------------------------------------
+editar:=True; //--> Variável GLOBAL (Editar)
+salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
+//-----------------------------------------------------
+Panel1.Visible:=True;
 
 BotoesTopo_Off;
+
+SoftResetPreserveText(RichText1);
+HexColor := ColorToHex(ColorDialog1.Color);
 
   FProcessandoLegenda := True;
   Try
@@ -2005,13 +2029,6 @@ BotoesTopo_Off;
   Finally
   FProcessandoLegenda := False;
   end;
-
-SendMessage(RichText1.Handle,WM_VSCROLL,SB_TOP,0);
-
-//-----------------------------------------------------
-editar:=True; //--> Variável GLOBAL (Editar)
-salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
-//-----------------------------------------------------
 
 //--------------------------
 btnabrir.Enabled     :=True;
@@ -2026,6 +2043,10 @@ btntags.Enabled      :=True;
 lsttags.Enabled      :=True;
 //--------------------------
 
+SendMessage(RichText1.Handle, WM_VSCROLL, SB_TOP, 0);
+
+StatusBar1.Panels[0].Text := 'Alteração de cor realizada com sucesso!';
+Panel1.Visible := False;
 end;
 
 
@@ -2102,6 +2123,144 @@ lst_ortografia.Enabled:=False;
 //----------------------------
 end;
 
+
+procedure TForm1.btnclosecaptionClick(Sender: TObject);
+var
+j: Integer;
+Linha,LinhaLimpa: String;
+Bloco, Novo: TStringList;
+TemTextoValido: Boolean;
+ContadorRemocoes: Integer;
+begin
+//-----------------------------------------------------
+editar:=True; //--> Variável GLOBAL (Editar)
+salvar:=True; //--> Variável GLOBAL (Salvar Alterações)
+//-----------------------------------------------------
+
+Panel1.Visible:=True;
+
+BotoesTopo_Off;
+
+ContadorRemocoes:=0;
+
+ProgressBar1.Visible:=True;
+ProgressBar1.Position:=0;
+ProgressBar1.Max:=RichText1.Lines.Count;
+
+Bloco:=TStringList.Create;
+Novo :=TStringList.Create;
+
+  try
+  j := 0;
+
+    while j < RichText1.Lines.Count do
+    begin
+    ProgressBar1.Position := j + 1;
+
+      if (IsNumeric(Trim(RichText1.Lines[j]))) and
+                (j + 1 < RichText1.Lines.Count) and
+        (AnsiContainsStr(RichText1.Lines[j+1], ' --> ')) then
+      begin
+      Bloco.Clear;
+      TemTextoValido:=False;
+      Bloco.Add(RichText1.Lines[j]);
+      Bloco.Add(RichText1.Lines[j+1]);
+      Inc(j, 2);
+
+        while (j < RichText1.Lines.Count) and (Trim(RichText1.Lines[j]) <> '') do
+        begin
+        Linha:=RichText1.Lines[j];
+        LinhaLimpa:=Linha;
+
+          while (Pos('[', LinhaLimpa) > 0) and (Pos(']', LinhaLimpa) > 0) do
+          begin
+          Delete(LinhaLimpa,
+                 Pos('[', LinhaLimpa),
+                 Pos(']', LinhaLimpa) - Pos('[', LinhaLimpa) + 1);
+          Inc(ContadorRemocoes);
+          end;
+
+        LinhaLimpa := Trim(LinhaLimpa);
+
+          if LinhaLimpa <> '' then
+          begin
+          Bloco.Add(LinhaLimpa);
+          TemTextoValido:=True;
+          end;
+
+        Inc(j);
+        end;
+
+        if TemTextoValido then
+        begin
+        Novo.AddStrings(Bloco);
+        Novo.Add('');
+        end;
+      end
+    else
+    Inc(j);
+
+      if (j mod 100 = 0) then
+      begin
+      ProgressBar1.Refresh;
+      Application.ProcessMessages;
+      end;
+
+    end;
+
+  Application.ProcessMessages;
+  RichText1.Lines.BeginUpdate;
+    try
+    RichText1.Lines.Assign(Novo);
+    finally
+    RichText1.Lines.EndUpdate;
+    end;
+
+  finally
+  Bloco.Free;
+  Novo.Free;
+  ProgressBar1.Visible:=False;
+  end;
+
+//----------------------------
+btnabrir.Enabled:=True;
+lstabrir.Enabled:=True;
+lstsalvar.Enabled:=True;
+btnsalvar.Enabled:=True;
+lstsalvarcomo.Enabled:=True;
+btnsalvarcomo.Enabled:=True;
+btn_editAvancada.Enabled:=True;
+lst_editAvancada.Enabled:=True;
+btnnumeros.Enabled:=True;
+lstnumeros.Enabled:=True;
+btnrenomear.Enabled:=True;
+lstrenomear.Enabled:=True;
+btntags.Enabled:=True;
+lsttags.Enabled:=True;
+btn_ortografia.Enabled:=True;
+lst_ortografia.Enabled:=True;
+//----------------------------
+
+SendMessage(RichText1.Handle, WM_VSCROLL, SB_TOP, 0);
+
+  if ContadorRemocoes = 0 then
+  StatusBar1.Panels[0].Text := 'Nenhum closed caption encontrado.'
+  else
+  begin
+  Label1.Caption:=IntToStr(ContadorRemocoes)+' Closed Captions';
+  Label1.Visible:=True;
+  Image2.Left:=Label1.Width+Form1.Width-174;
+  Image2.Visible:=True;
+  StatusBar1.Panels[0].Text := 'Os closed captions foram removidos com sucesso!';
+  end;
+
+Panel1.Visible := False;
+end;
+
+procedure TForm1.lstclosecaptionClick(Sender: TObject);
+begin
+btnclosecaption.Click;
+end;
 
 end.
 

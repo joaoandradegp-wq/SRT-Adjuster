@@ -5,6 +5,8 @@ interface
 Uses Unit1,ComCtrls,StdCtrls,Windows,Messages,IdHTTP,Forms,Wininet,
      SysUtils,Graphics,StrUtils,dialogs;
 
+{VERIFICA SE EXISTE ARQUIVO DE VÍDEO NA PASTA DA LEGENDA}
+function EncontrarVideoCorrespondente(const CaminhoSRT: string): string;
 {REPASSA AS VARIÁVEIS DO ARQUIVO .DPR PARA VARIÁVEIS GLOBAIS}
 procedure VarGlobais(Executavel,Diretorio,Versao,Blog:String);
 {VERIFICA SE UMA STRING É NUMÉRICA}
@@ -42,6 +44,36 @@ procedure Lista_Indices(var Texto1,Texto2:TRichEdit;ListBox1:TListBox;aux:Boolea
 
 implementation
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+function EncontrarVideoCorrespondente(const CaminhoSRT: string): string;
+var
+Pasta, NomeBase: string;
+Extensoes: array[0..5] of string;
+i: Integer;
+begin
+Result := '';
+Pasta := ExtractFilePath(CaminhoSRT);
+NomeBase := ChangeFileExt(ExtractFileName(CaminhoSRT), '');
+
+// Lista de extensões de vídeo mais comuns
+Extensoes[0] := '.mp4';
+Extensoes[1] := '.mkv';
+Extensoes[2] := '.avi';
+Extensoes[3] := '.mov';
+Extensoes[4] := '.wmv';
+Extensoes[5] := '.webm';
+
+  for i := Low(Extensoes) to High(Extensoes) do
+  begin
+    if FileExists(Pasta + NomeBase + Extensoes[i]) then
+    begin
+    Result := Pasta + NomeBase + Extensoes[i];
+    Exit;
+    end;
+  end;
+  
+end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 procedure VarGlobais(Executavel,Diretorio,Versao,Blog:String);
@@ -546,6 +578,17 @@ Form1.lsttags.Enabled:=False;
 {VERIFICAR ORTOGRAFIA}
 Form1.btn_ortografia.Enabled:=False;
 Form1.lst_ortografia.Enabled:=False;
+{REMOVER CLOSE-CAPTION}
+Form1.btnclosecaption.Enabled:=False;
+Form1.lstclosecaption.Enabled:=False;
+
+{INFORMAÇÕES DE PROCESSAMENTO}
+Form1.Label1.Visible:=False;
+Form1.Label3.Visible:=False;
+//--------------------------
+Form1.Image1.Visible:=False;
+Form1.Image2.Visible:=False;
+Form1.Image3.Visible:=False;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

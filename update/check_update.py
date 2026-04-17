@@ -99,7 +99,7 @@ if __name__ == "__main__":
         subprocess.Popen(
             installer_path,
             creationflags=subprocess.DETACHED_PROCESS
-        )
+        ) 
 
         sys.exit(0)
     
