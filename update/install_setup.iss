@@ -43,11 +43,11 @@ Source: "C:\JMBA Softwares\SRT Adjuster\*"; DestDir: "{app}"; Flags: ignoreversi
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\SRT Adjuster 1.4"; Filename: "{app}\check_update.exe"; IconFilename: "{app}\bin\application.ico"
+Name: "{group}\SRT Adjuster 1.4"; Filename: "{app}\SRTAdjuster.exe"; IconFilename: "{app}\bin\application.ico"
 Name: "{group}\Desinstalar"; Filename: "{uninstallexe}"; IconFilename: "{app}\bin\uninstall.ico"
-Name: "{commondesktop}\SRT Adjuster 1.4"; Filename: "{app}\check_update.exe"; Tasks: desktopicon; IconFilename: "{app}\bin\application.ico"
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\SRT Adjuster 1.4"; Filename: "{app}\check_update.exe"; Tasks: quicklaunchicon; IconFilename: "{app}\bin\application.ico"
+Name: "{commondesktop}\SRT Adjuster 1.4"; Filename: "{app}\SRTAdjuster.exe"; Tasks: desktopicon; IconFilename: "{app}\bin\application.ico"
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\SRT Adjuster 1.4"; Filename: "{app}\SRTAdjuster.exe"; Tasks: quicklaunchicon; IconFilename: "{app}\bin\application.ico"
 
 [Run]
-Filename: "{app}\check_update.exe"; Description: "{cm:LaunchProgram,SRT Adjuster}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\SRTAdjuster.exe"; Description: "{cm:LaunchProgram,SRT Adjuster}"; Flags: nowait postinstall skipifsilent
 
