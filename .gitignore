@@ -16,3 +16,4 @@ update/build/check_update/PYZ-00.pyz
 update/build/check_update/PYZ-00.toc
 update/build/check_update/warn-check_update.txt
 update/build/check_update/xref-check_update.html
+*.dcu
