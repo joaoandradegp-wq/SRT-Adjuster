@@ -8,7 +8,7 @@
 AppId={{D9183DB6-28AD-4E5F-BF2C-81D6BC75D33F}
 AppName=SRT Adjuster
 AppVersion=1.4
-;AppVerName=SRT Adjuster 1.3
+;AppVerName=SRT Adjuster 1.4
 AppPublisher=JMBA Softwares
 AppPublisherURL=http://phobosfreeware.blogspot.com.br/
 AppSupportURL=http://phobosfreeware.blogspot.com.br/

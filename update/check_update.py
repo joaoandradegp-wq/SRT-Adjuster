@@ -102,7 +102,7 @@ if __name__ == "__main__":
         ) 
 
         sys.exit(0)
-
+    
     except Exception as e:
         msgbox(f"Erro ao verificar atualização:\n{str(e)}", "Erro", 16)
         sys.exit(1)
