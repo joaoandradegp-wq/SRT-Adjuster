@@ -102,8 +102,18 @@ Caso a legenda, originalmente branca, está atrapalhando a visualização dos di
 <br><br>
 </td>
 
-<td width="50%" valign="top" style="border: none; padding: 15px;"></td>
+<td width="50%" valign="top" style="border: none; padding: 15px;">
+
+### 🧹 REMOÇÃO DE CLOSED CAPTION
+
+Remove automaticamente elementos de Closed Caption (CC), como descrições de sons, músicas e identificações de falas, deixando a legenda mais limpa e focada apenas nos diálogos.
+
+Essa funcionalidade é especialmente útil, pois na maioria dos casos não existe uma versão da legenda sem Closed Caption disponível, tornando o ajuste manual trabalhoso e demorado.
+<br><br>
+</td>
 </tr>
+
+
 </table>
 
 ---
