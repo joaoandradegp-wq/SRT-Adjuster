@@ -137,5 +137,5 @@ Essa funcionalidade é especialmente útil, pois na maioria dos casos não exist
 ---
 
 <p align="center">
-Feito com ❤️ para facilitar o ajuste de legendas
+Feito com ❤️ para facilitar o ajuste de legendas.
 </p>
