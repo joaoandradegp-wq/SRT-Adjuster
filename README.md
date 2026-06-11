@@ -16,8 +16,9 @@ Não requer instalação de dependências externas.
 
 ---
 
-## Funcionalidades
+## ✨ Funcionalidades
 
+<br>
 <table style="border: none; border-collapse: collapse;">
 <tr>
 <td width="50%" valign="top" style="border: none; padding: 15px;">
