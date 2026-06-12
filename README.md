@@ -1,11 +1,7 @@
 <h1 align="center">📝 SRT Adjuster</h1>
 
 <p align="center">
-SRT Adjuster é um aplicativo voltado a usuários que desejam ajustar, editar e sincronizar legendas SRT de forma simples e intuitiva, sem necessidade de conhecimento técnico avançado.
-O software reúne, em uma única ferramenta, funcionalidades inspiradas em diversos editores existentes, com foco em usabilidade, visualização amigável e edição no estilo “Bloco de Notas”.
-Permite correções automáticas de sobreposições e limites de linha, ajustes globais de tempo e duração, edição avançada com destaque de estrutura, pesquisa personalizada e aplicação de efeitos.
-Inclui recursos como renomeação em massa de legendas, sincronia gradativa, conversão de FPS e correção automática da numeração dos diálogos.
-Não requer instalação de dependências externas.
+SRT Adjuster é uma ferramenta para editar, ajustar e sincronizar legendas SRT de forma simples e intuitiva. Reúne recursos de diversos editores em uma interface amigável com edição estilo Bloco de Notas, permitindo correções automáticas, ajustes de tempo e duração, pesquisa avançada, aplicação de efeitos, sincronização gradativa, conversão de FPS, renomeação em massa e correção automática da numeração dos diálogos. Não requer dependências externas.
 </p>
 
 <p align="center">
