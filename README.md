@@ -127,16 +127,6 @@ Essa funcionalidade é especialmente útil, pois na maioria dos casos não exist
 
 ---
 
-## 📥 Download
-
 <p align="center">
-  <a href="#">
-    <img src="https://img.shields.io/badge/Download-SRT%20Adjuster-blue?style=for-the-badge">
-  </a>
-</p>
-
----
-
-<p align="center">
-Feito com ❤️ para facilitar o ajuste de legendas.
+Feito para facilitar o ajuste de legendas baixadas da internet. 🎬
 </p>
