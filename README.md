@@ -8,6 +8,7 @@ SRT Adjuster é uma ferramenta para editar, ajustar e sincronizar legendas SRT d
   <img src="https://img.shields.io/badge/Status-Ativo-success">
   <img src="https://img.shields.io/badge/Plataforma-Windows-blue">
   <img src="https://img.shields.io/badge/Tipo-Editor%20de%20Legenda-orange">
+  <img src="https://img.shields.io/badge/Language-PT--BR%20-purple">
 </p>
 
 ---
