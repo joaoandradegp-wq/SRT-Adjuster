@@ -119,7 +119,7 @@ Essa funcionalidade é especialmente útil, pois na maioria dos casos não exist
 ## 📸 Preview
 
 <p align="center">
-  <img width="350" height="260" alt="image" src="https://github.com/user-attachments/assets/67080672-63e1-4229-a5bf-e41b17e190b6" />
+  <img width="500" alt="image" src="https://github.com/user-attachments/assets/67080672-63e1-4229-a5bf-e41b17e190b6" />
 </p>
 
 ---
