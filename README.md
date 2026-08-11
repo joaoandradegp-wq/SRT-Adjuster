@@ -1,4 +1,6 @@
-<h1 align="center">📝 SRT Adjuster</h1>
+<p align="center">
+<img width="360" alt="ChatGPT Image Aug 11, 2026, 08_20_47 PM" src="https://github.com/user-attachments/assets/e5d7c358-865c-4c4a-9824-5b93ebb752f6" />
+</p>
 
 <p align="center">
 SRT Adjuster é uma ferramenta para editar, ajustar e sincronizar legendas SRT de forma simples e intuitiva. Reúne recursos de diversos editores em uma interface amigável com edição estilo Bloco de Notas, permitindo correções automáticas, ajustes de tempo e duração, pesquisa avançada, aplicação de efeitos, sincronização gradativa, conversão de FPS, renomeação em massa e correção automática da numeração dos diálogos. Não requer dependências externas.
