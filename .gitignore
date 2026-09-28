@@ -1,3 +1,4 @@
 *.ini
 *.dcu
+!MruUnit.dcu
 SRTAdjuster.exe
