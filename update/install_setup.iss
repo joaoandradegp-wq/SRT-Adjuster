@@ -8,21 +8,20 @@
 AppId={{3AEA3DA5-9A0C-423B-878B-E8627502C741}
 AppName=SRT Adjuster
 AppVersion=1.4.1
-;AppVerName=SRT Adjuster 1.4.1
 AppPublisher=JMBA Softwares
 AppPublisherURL=http://phobosfreeware.blogspot.com.br/
 AppSupportURL=http://phobosfreeware.blogspot.com.br/
 AppUpdatesURL=http://phobosfreeware.blogspot.com.br/
-DefaultDirName=C:\JMBA Softwares\SRT Adjuster
-DisableDirPage=yes
+DefaultDirName={autopf}\JMBA Softwares\SRT Adjuster
 DefaultGroupName=SRT Adjuster
+DisableDirPage=yes
 DisableProgramGroupPage=yes
 OutputDir=C:\Users\Phobos\Desktop
 OutputBaseFilename=SRTAdjuster_1.4.1_Setup
 SetupIconFile=C:\JMBA Softwares\SRT Adjuster\bin\subtitle.ico
-Compression=lzma
+Compression=lzma2
 SolidCompression=yes
-ChangesAssociations=yes
+WizardStyle=modern
 
 [Registry]
 Root: HKCR; Subkey: ".srt"; ValueType: string; ValueName: ""; ValueData: "SRT Adjuster"; Flags: uninsdeletevalue
@@ -40,14 +39,12 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Files]
 Source: "C:\JMBA Softwares\SRT Adjuster\SRTAdjuster.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\JMBA Softwares\SRT Adjuster\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "SRTAdjuster.ini,unins000.dat,unins000.exe"
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
 Name: "{group}\SRT Adjuster 1.4"; Filename: "{app}\SRTAdjuster.exe"; IconFilename: "{app}\bin\application.ico"
 Name: "{group}\Desinstalar"; Filename: "{uninstallexe}"; IconFilename: "{app}\bin\uninstall.ico"
-Name: "{commondesktop}\SRT Adjuster 1.4"; Filename: "{app}\SRTAdjuster.exe"; Tasks: desktopicon; IconFilename: "{app}\bin\application.ico"
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\SRT Adjuster 1.4"; Filename: "{app}\SRTAdjuster.exe"; Tasks: quicklaunchicon; IconFilename: "{app}\bin\application.ico"
+Name: "{commondesktop}\SRT Adjuster"; Filename: "{app}\SRTAdjuster.exe"; Tasks: desktopicon; IconFilename: "{app}\bin\application.ico"
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\SRT Adjuster"; Filename: "{app}\SRTAdjuster.exe"; Tasks: quicklaunchicon; IconFilename: "{app}\bin\application.ico"
 
 [Run]
 Filename: "{app}\SRTAdjuster.exe"; Description: "{cm:LaunchProgram,SRT Adjuster}"; Flags: nowait postinstall skipifsilent
-
