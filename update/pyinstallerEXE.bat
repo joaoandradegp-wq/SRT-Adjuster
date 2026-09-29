@@ -3,6 +3,6 @@ check_update.py ^
 --onedir ^
 --noconsole ^
 --name check_update ^
---icon=icon.ico ^
+--icon=check_icon.ico ^
 --clean ^
 --noupx

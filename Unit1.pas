@@ -181,7 +181,6 @@ type
   //-----------------------------------------------------------------
   procedure WMDropFiles(var Msg: TWMDropFiles); message WM_DROPFILES;
   //-----------------------------------------------------------------
-
   public
   { Public declarations }
   //-----------------------------------------------------------------
@@ -243,6 +242,33 @@ implementation
 uses Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, CommCtrl, Funcoes;
 
 //-------------------------------------------------------------------------------------------------
+function RemoverCC(const S: string; var DentroCC: Boolean;
+  var Contador: Integer): string;
+var
+i: Integer;
+begin
+Result := '';
+
+  for i := 1 to Length(S) do
+  begin
+    if DentroCC then
+    begin
+
+      if S[i] = ']' then
+      begin
+      DentroCC := False;
+      Inc(Contador);
+      end;
+
+    end
+    else if S[i] = '[' then
+    DentroCC := True
+    else
+    Result := Result + S[i];
+  end;
+
+end;
+//-------------------------------------------------------------------------------------------------
 {DICIONÁRIO - 03/03}
 //-------------------------------------------------------------------------------------------------
 function IsLetter(C: Char): Boolean;
@@ -260,23 +286,24 @@ end;
 //-------------------------------------------------------------------------------------------------
 function SpellOK(const Palavra: string): Boolean;
 var
-  W: AnsiString;
+W: AnsiString;
 begin
   if Palavra = '' then
-    Exit;
+  Exit;
 
-  W := AnsiString(LowerCase(Palavra));
-  Result := Hunspell_spell(HunHandle, PAnsiChar(W)) <> 0;
+W:=AnsiString(LowerCase(Palavra));
+Result := Hunspell_spell(HunHandle, PAnsiChar(W)) <> 0;
+
 end;
 //-------------------------------------------------------------------------------------------------
 function IsTooShort(const S: string): Boolean;
 begin
-  Result := Length(S) <= 3;
+Result := Length(S) <= 3;
 end;
 //-------------------------------------------------------------------------------------------------
 procedure InitHunspell;
 var
-  AffPath, DicPath: UTF8String;
+AffPath, DicPath: UTF8String;
 begin
   AffPath := UTF8Encode(
     IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) +
@@ -295,7 +322,8 @@ begin
   );
 
   if HunHandle = nil then
-    raise Exception.Create('Erro ao inicializar Hunspell');
+  raise Exception.Create('Erro ao inicializar Hunspell');
+  
 end;
 //-------------------------------------------------------------------------------------------------
 {
@@ -318,157 +346,155 @@ end;
 //------------------------------------------------------------------------------
 procedure SoftResetPreserveText(RE: TRichEdit);
 var
-  Backup: string;
+Backup: string;
 begin
-  Backup := RE.Text;  // ?? salva conteúdo
+Backup := RE.Text;
 
-  SendMessage(RE.Handle, WM_SETREDRAW, 0, 0);
-  SendMessage(RE.Handle, EM_SETTEXTMODE, TM_PLAINTEXT, 0);
-  RE.Clear;
-  SendMessage(RE.Handle, EM_SETTEXTMODE, TM_RICHTEXT, 0);
+SendMessage(RE.Handle, WM_SETREDRAW, 0, 0);
+SendMessage(RE.Handle, EM_SETTEXTMODE, TM_PLAINTEXT, 0);
+RE.Clear;
+SendMessage(RE.Handle, EM_SETTEXTMODE, TM_RICHTEXT, 0);
 
-  RE.Text := Backup;  // ?? restaura conteúdo
-  RE.SelAttributes.Assign(RE.DefAttributes);
+RE.Text := Backup;
+RE.SelAttributes.Assign(RE.DefAttributes);
 
-  SendMessage(RE.Handle, WM_SETREDRAW, 1, 0);
-  RE.Invalidate;
+SendMessage(RE.Handle, WM_SETREDRAW, 1, 0);
+RE.Invalidate;
 end;
 //------------------------------------------------------------------------------
 {ALTERA COR DA LEGENDA - 02/03}
 //------------------------------------------------------------------------------
 procedure AtualizarTextoComFont(Lines: TStrings;const HexColor: string;Progress: TProgressBar);
 var
-  i: Integer;
-  Line, CleanLine: string;
+i: Integer;
+Line, CleanLine: string;
 begin
-  Progress.Visible := True;
-  Progress.Position := 0;
-  Progress.Max := Lines.Count;
+Progress.Visible := True;
+Progress.Position := 0;
+Progress.Max := Lines.Count;
 
   for i := 0 to Lines.Count - 1 do
   begin
-    Line := Lines[i];
+  Line := Lines[i];
 
     if (Trim(Line) <> '') and
        (not IsNumeric(Line)) and
        (Pos('-->', Line) = 0) then
     begin
-      CleanLine := Line;
+    CleanLine := Line;
 
       while Pos('<font', LowerCase(CleanLine)) > 0 do
-        Delete(
+      Delete(
           CleanLine,
           Pos('<font', LowerCase(CleanLine)),
           Pos('>', CleanLine) -
           Pos('<font', LowerCase(CleanLine)) + 1
-        );
-
-      CleanLine := StringReplace(
-        CleanLine, '</font>', '', [rfIgnoreCase]
       );
 
-      Lines[i] :=
-        '<font color="#' + HexColor + '">' +
-        CleanLine +
-        '</font>';
+    CleanLine := StringReplace(CleanLine, '</font>', '', [rfIgnoreCase]);
+    Lines[i] := '<font color="#' + HexColor + '">' + CleanLine + '</font>';
     end;
 
     if (i mod 100 = 0) then
     begin
-      Progress.Position := i + 1;
-      Application.ProcessMessages;
+    Progress.Position := i + 1;
+    Application.ProcessMessages;
     end;
+
   end;
 
-  Progress.Visible := False;
+Progress.Visible := False;
 end;
 //------------------------------------------------------------------------------
 {ALTERA COR DA LEGENDA - 03/03}
 //------------------------------------------------------------------------------
 procedure ColorirVisualLimitado(RE: TRichEdit;AColor: TColor;MaxDialogos: Integer);
 var
-  i, DialogosColoridos, j: Integer;
-  LineStart: Integer;
+i, DialogosColoridos, j: Integer;
+LineStart: Integer;
 begin
-  DialogosColoridos := 0;
 
-  SendMessage(RE.Handle, WM_SETREDRAW, 0, 0);
+  //-----------------------------------------------------------------
+  {BRANCO: Não interpreta a cor no visual, mantém só o código da tag}
+  //-----------------------------------------------------------------
+  if (AColor = RE.Color) then
+  Exit;
+  //-----------------------------------------------------------------
 
-  i := 0;
+DialogosColoridos := 0;
+SendMessage(RE.Handle, WM_SETREDRAW, 0, 0);
+i := 0;
+
   while i < RE.Lines.Count do
   begin
     if Pos(' --> ', RE.Lines[i]) > 0 then
     begin
-      Inc(DialogosColoridos);
+    Inc(DialogosColoridos);
       if DialogosColoridos > MaxDialogos then
-        Break;
+      Break;
 
-      // colore todas as linhas do diálogo
-      j := i + 1;
+    j := i + 1;
+
       while (j < RE.Lines.Count) and (Trim(RE.Lines[j]) <> '') do
       begin
-        LineStart := RE.Perform(EM_LINEINDEX, j, 0);
-        RE.SelStart := LineStart;
-        RE.SelLength := Length(RE.Lines[j]);
-        RE.SelAttributes.Color := AColor;
-        Inc(j);
+      LineStart := RE.Perform(EM_LINEINDEX, j, 0);
+      RE.SelStart := LineStart;
+      RE.SelLength := Length(RE.Lines[j]);
+      RE.SelAttributes.Color := AColor;
+      Inc(j);
       end;
 
-      i := j;
+    i := j;
     end
     else
-      Inc(i);
+    Inc(i);
+
   end;
 
-  SendMessage(RE.Handle, WM_SETREDRAW, 1, 0);
-  RE.Invalidate;
+SendMessage(RE.Handle, WM_SETREDRAW, 1, 0);
+RE.Invalidate;
 end;
 //------------------------------------------------------------------------------
 {ARRASTA E SOLTA - 02/02}
 //------------------------------------------------------------------------------
 procedure TForm1.WMDropFiles(var Msg: TWMDropFiles);
 var
-  Drop: HDROP;
-  FileCount: Integer;
-  BufferSize: Integer;
-  FileName: string;
+Drop: HDROP;
+FileCount: Integer;
+BufferSize: Integer;
+FileName: string;
 begin
-  Drop := Msg.Drop;
+Drop := Msg.Drop;
+
   try
-    // Quantidade de arquivos arrastados
-    FileCount := DragQueryFile(Drop, $FFFFFFFF, nil, 0);
+  FileCount := DragQueryFile(Drop, $FFFFFFFF, nil, 0);
 
     if FileCount = 0 then
-      Exit;
+    Exit;
 
     if FileCount > 1 then
-      MessageBox(Handle,
-        'Será utilizado apenas o primeiro arquivo.',
-        PChar(Application.Title),
-        MB_ICONINFORMATION or MB_OK);
+    MessageBox(Handle,'Será utilizado apenas o primeiro arquivo.',
+      PChar(Application.Title),
+      MB_ICONINFORMATION or MB_OK);
 
-    // Tamanho do nome do arquivo
-    BufferSize := DragQueryFile(Drop, 0, nil, 0);
-    SetLength(FileName, BufferSize);
+  BufferSize := DragQueryFile(Drop, 0, nil, 0);
+  SetLength(FileName, BufferSize);
 
-    // Obtém o nome do primeiro arquivo
-    DragQueryFile(Drop, 0, PChar(FileName), BufferSize + 1);
+  DragQueryFile(Drop, 0, PChar(FileName), BufferSize + 1);
 
-    // Validação da extensão
     if LowerCase(ExtractFileExt(FileName)) <> '.srt' then
     begin
-      MessageBox(Handle,
-        'O arquivo carregado não é um documento SRT.',
-        PChar(Application.Title),
-        MB_ICONSTOP or MB_OK);
-      Exit;
+    MessageBox(Handle,'O arquivo carregado não é um documento SRT.',
+      PChar(Application.Title),
+      MB_ICONSTOP or MB_OK);
+    Exit;
     end;
     Novo_Carregar(FileName);
 
   finally
-    DragFinish(Drop); // OBRIGATÓRIO
+  DragFinish(Drop);
   end;
-  Msg.Result := 0;
+Msg.Result := 0;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -2131,6 +2157,7 @@ Linha,LinhaLimpa: String;
 Bloco, Novo: TStringList;
 TemTextoValido: Boolean;
 ContadorRemocoes: Integer;
+DentroCC: Boolean;
 begin
 //-----------------------------------------------------
 editar:=True; //--> Variável GLOBAL (Editar)
@@ -2158,45 +2185,40 @@ Novo :=TStringList.Create;
     ProgressBar1.Position := j + 1;
 
       if (IsNumeric(Trim(RichText1.Lines[j]))) and
-                (j + 1 < RichText1.Lines.Count) and
-        (AnsiContainsStr(RichText1.Lines[j+1], ' --> ')) then
+         (j + 1 < RichText1.Lines.Count) and
+         (AnsiContainsStr(RichText1.Lines[j+1], ' --> ')) then
       begin
       Bloco.Clear;
-      TemTextoValido:=False;
+      TemTextoValido := False;
+      DentroCC := False;
       Bloco.Add(RichText1.Lines[j]);
       Bloco.Add(RichText1.Lines[j+1]);
       Inc(j, 2);
 
-        while (j < RichText1.Lines.Count) and (Trim(RichText1.Lines[j]) <> '') do
+      while (j < RichText1.Lines.Count) and (Trim(RichText1.Lines[j]) <> '') do
+      begin
+      Linha := RichText1.Lines[j];
+      LinhaLimpa := Trim(RemoverCC(Linha, DentroCC, ContadorRemocoes));
+
+        if (LinhaLimpa = '-') or (LinhaLimpa = '–') then
+        LinhaLimpa := '';
+
+        if LinhaLimpa <> '' then
         begin
-        Linha:=RichText1.Lines[j];
-        LinhaLimpa:=Linha;
-
-          while (Pos('[', LinhaLimpa) > 0) and (Pos(']', LinhaLimpa) > 0) do
-          begin
-          Delete(LinhaLimpa,
-                 Pos('[', LinhaLimpa),
-                 Pos(']', LinhaLimpa) - Pos('[', LinhaLimpa) + 1);
-          Inc(ContadorRemocoes);
-          end;
-
-        LinhaLimpa := Trim(LinhaLimpa);
-
-          if LinhaLimpa <> '' then
-          begin
-          Bloco.Add(LinhaLimpa);
-          TemTextoValido:=True;
-          end;
-
-        Inc(j);
+        Bloco.Add(LinhaLimpa);
+        TemTextoValido := True;
         end;
 
-        if TemTextoValido then
-        begin
-        Novo.AddStrings(Bloco);
-        Novo.Add('');
-        end;
-      end
+      Inc(j);
+      end;
+
+      if TemTextoValido then
+      begin
+      Novo.AddStrings(Bloco);
+      Novo.Add('');
+      end;
+
+    end
     else
     Inc(j);
 

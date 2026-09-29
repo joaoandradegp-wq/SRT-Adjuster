@@ -5,10 +5,10 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{D9183DB6-28AD-4E5F-BF2C-81D6BC75D33F}
+AppId={{3AEA3DA5-9A0C-423B-878B-E8627502C741}
 AppName=SRT Adjuster
-AppVersion=1.4
-;AppVerName=SRT Adjuster 1.4
+AppVersion=1.4.1
+;AppVerName=SRT Adjuster 1.4.1
 AppPublisher=JMBA Softwares
 AppPublisherURL=http://phobosfreeware.blogspot.com.br/
 AppSupportURL=http://phobosfreeware.blogspot.com.br/
@@ -18,7 +18,7 @@ DisableDirPage=yes
 DefaultGroupName=SRT Adjuster
 DisableProgramGroupPage=yes
 OutputDir=C:\Users\Phobos\Desktop
-OutputBaseFilename=SRTAdjuster_1.4_Setup
+OutputBaseFilename=SRTAdjuster_1.4.1_Setup
 SetupIconFile=C:\JMBA Softwares\SRT Adjuster\bin\subtitle.ico
 Compression=lzma
 SolidCompression=yes
@@ -39,7 +39,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 [Files]
 Source: "C:\JMBA Softwares\SRT Adjuster\SRTAdjuster.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\JMBA Softwares\SRT Adjuster\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\JMBA Softwares\SRT Adjuster\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "SRTAdjuster.ini,unins000.dat,unins000.exe"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
