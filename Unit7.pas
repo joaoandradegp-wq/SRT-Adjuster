@@ -30,15 +30,14 @@ var
 
 implementation
 
-uses Unit1;
+uses Unit1, Language;
 
 {$R *.dfm}
 
 procedure TAboutBox.FormCreate(Sender: TObject);
 begin
-Label3.Caption:='Versão '+SRT_VERSAO_Global
-                +#13+
-                'JMBA Softwares 2004, 2026';
+Lang_SRT(5);
+Label3.Caption:=Format(Lang_SRT(86),[SRT_VERSAO_Global]);
 end;
 
 procedure TAboutBox.FormKeyDown(Sender: TObject; var Key: Word;

@@ -17,6 +17,7 @@ object splash_screen: Tsplash_screen
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
+  OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
@@ -5721,7 +5722,7 @@ object splash_screen: Tsplash_screen
     Height = 9
     AsyncDrawing = True
     Animate = True
-    FrameIndex = 5
+    FrameIndex = 3
     Image.Data = {
       8904000047494638396164000900A20400CE3131CE6363CE9C9CCECECEFFFFFF
       FFFFFF000000FFFFFF21FF0B4E45545343415045322E30030100000021F90405

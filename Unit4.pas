@@ -15,6 +15,7 @@ type
     abfImage1: TabfImage;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -39,12 +40,21 @@ end;
 
 procedure Tsplash_screen.FormCreate(Sender: TObject);
 begin
+RxLabel1.Caption:=Lang_SRT(94);
+RxLabel1.Left:=(ClientWidth-RxLabel1.Width) div 2;
+rx_loading.Left:=(ClientWidth-rx_loading.Width) div 2;
+
 if Form1 <> nil then
 rx_loading.Visible:=False;
 
 if FileExists('check_update.exe') then
 ShellExecute(0,'open','check_update.exe',pchar(SRT_VERSAO_Global),nil,SW_HIDE);
 
+end;
+
+procedure Tsplash_screen.FormActivate(Sender: TObject);
+begin
+rx_loading.Visible:=True;
 end;
 
 end.

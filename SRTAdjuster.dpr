@@ -10,6 +10,7 @@ uses
   Unit6 in 'Unit6.pas' {Form6_substituir},
   Unit7 in 'Unit7.pas' {AboutBox},
   Funcoes in 'Funcoes.pas',
+  Language in 'Language.pas',
   SysUtils,
   WinInet,
   ShellAPI;
@@ -48,6 +49,7 @@ begin
 
   Application.CreateForm(TForm1, Form1);
   Application.CreateForm(TForm6_substituir, Form6_substituir);
+  Lang_SRT(4);
   Application.Run;
 
 end.

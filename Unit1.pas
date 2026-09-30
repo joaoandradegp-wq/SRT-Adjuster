@@ -37,6 +37,10 @@ type
     MainMenu1: TMainMenu;
     Menu_Arquivo: TMenuItem;
     Menu_Sobre: TMenuItem;
+    Menu_Idioma: TMenuItem;
+    Idioma_Auto: TMenuItem;
+    Idioma_Por: TMenuItem;
+    Idioma_Eng: TMenuItem;
     lstabrir: TMenuItem;
     lstsalvarcomo: TMenuItem;
     lstprocurar: TMenuItem;
@@ -170,6 +174,9 @@ type
     procedure Localizar1Click(Sender: TObject);
     procedure btnfundoClick(Sender: TObject);
     procedure Menu_SobreClick(Sender: TObject);
+    procedure Idioma_AutoClick(Sender: TObject);
+    procedure Idioma_PorClick(Sender: TObject);
+    procedure Idioma_EngClick(Sender: TObject);
     procedure btntagsClick(Sender: TObject);
     procedure btn_ortografiaClick(Sender: TObject);
     procedure btnclosecaptionClick(Sender: TObject);
@@ -239,7 +246,7 @@ const
 
 implementation
 
-uses Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, CommCtrl, Funcoes;
+uses Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, CommCtrl, Funcoes, Language;
 
 //-------------------------------------------------------------------------------------------------
 function RemoverCC(const S: string; var DentroCC: Boolean;
@@ -314,7 +321,7 @@ begin
     'dict\pt_BR.dic');
 
   if not FileExists(string(AffPath)) or not FileExists(string(DicPath)) then
-    raise Exception.Create('Arquivos do dicionário Hunspell não encontrados.');
+    raise Exception.Create(Lang_SRT(38));
 
   HunHandle := Hunspell_create(
     PAnsiChar(AffPath),
@@ -322,7 +329,7 @@ begin
   );
 
   if HunHandle = nil then
-  raise Exception.Create('Erro ao inicializar Hunspell');
+  raise Exception.Create(Lang_SRT(39));
   
 end;
 //-------------------------------------------------------------------------------------------------
@@ -473,7 +480,7 @@ Drop := Msg.Drop;
     Exit;
 
     if FileCount > 1 then
-    MessageBox(Handle,'Será utilizado apenas o primeiro arquivo.',
+    MessageBox(Handle,PChar(Lang_SRT(10)),
       PChar(Application.Title),
       MB_ICONINFORMATION or MB_OK);
 
@@ -484,7 +491,7 @@ Drop := Msg.Drop;
 
     if LowerCase(ExtractFileExt(FileName)) <> '.srt' then
     begin
-    MessageBox(Handle,'O arquivo carregado não é um documento SRT.',
+    MessageBox(Handle,PChar(Lang_SRT(11)),
       PChar(Application.Title),
       MB_ICONSTOP or MB_OK);
     Exit;
@@ -668,8 +675,8 @@ RichText1.ReadOnly:=True;
  else
  begin
  Panel1.Visible:=True;
- MessageBox(Application.Handle, pchar('O documento carregado não possui diálogos no padrão de uma legenda SRT.'+#13#13+'Error code:  #0102'), pchar(Application.Title), MB_ICONSTOP+MB_OK);
- StatusBar1.Panels[0].Text:='O documento carregado não possui diálogos no padrão de uma legenda SRT.'+#13#13+'Error code:  #0102';
+ MessageBox(Application.Handle, pchar(Lang_SRT(12)+#13#13+'Error code:  #0102'), pchar(Application.Title), MB_ICONSTOP+MB_OK);
+ StatusBar1.Panels[0].Text:=Lang_SRT(12)+#13#13+'Error code:  #0102';
  //------------------------
  btnabrir.Enabled:=True;
  lstabrir.Enabled:=True;
@@ -686,6 +693,10 @@ end;
 //------------------------------------------------------------------------------
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+//---------------------------------------
+{CARREGA O IDIOMA ESCOLHIDO E APLICA NO FORM}
+Lang_Load;
+Lang_SRT(0);
 //---------------------------------------
 {CARREGA A DLL PARA CORREÇÃO ORTOGRÁFICA}
 InitHunspell;
@@ -745,7 +756,7 @@ Nao_Encontrados,Sim_Encontrados:TStringList;
 begin
 
  {INÍCIO - SelectDirectory}                   {shell:MyComputerFolder}
- if SelectDirectory('Certifique-se de que exista apenas um título de Série por diretório para que as legendas sejam ajustadas corretamente.', OpenDialog1.InitialDir ,Pasta) then
+ if SelectDirectory(Lang_SRT(40), OpenDialog1.InitialDir ,Pasta) then
  begin
 
    //---------------------------------------------------
@@ -834,21 +845,21 @@ begin
       if Nao_Encontrados.Count > 0 then
       begin
         if Nao_Encontrados.Count = 1 then
-        MessageBox(Application.Handle,pchar('Foi realizado ajuste em 1 legenda com sucesso!'), pchar(Application.Title), MB_ICONINFORMATION+MB_OK)
+        MessageBox(Application.Handle,pchar(Lang_SRT(14)), pchar(Application.Title), MB_ICONINFORMATION+MB_OK)
         else
-        MessageBox(Application.Handle,pchar('Foram realizados ajustes em '+IntToStr(Nao_Encontrados.Count)+' legendas com sucesso!'),pchar(Application.Title),MB_ICONERROR+MB_OK);
+        MessageBox(Application.Handle,pchar(Format(Lang_SRT(15),[Nao_Encontrados.Count])),pchar(Application.Title),MB_ICONERROR+MB_OK);
       end;
       //----------------------------------------------------------------------------------------------------------------------------------------
       if Sim_Encontrados.Count > 0 then
       begin
         if Sim_Encontrados.Count = 1 then
-        MessageBox(Application.Handle,pchar('Foi realizado ajuste em 1 legenda com sucesso!'), pchar(Application.Title), MB_ICONINFORMATION+MB_OK)
+        MessageBox(Application.Handle,pchar(Lang_SRT(14)), pchar(Application.Title), MB_ICONINFORMATION+MB_OK)
         else
-        MessageBox(Application.Handle,pchar('Foram realizados ajustes em '+IntToStr(Sim_Encontrados.Count)+' legendas com sucesso!'),pchar(Application.Title),MB_ICONINFORMATION+MB_OK);
+        MessageBox(Application.Handle,pchar(Format(Lang_SRT(15),[Sim_Encontrados.Count])),pchar(Application.Title),MB_ICONINFORMATION+MB_OK);
       end;
 
       if (Sim_Encontrados.Count = 0) and (Nao_Encontrados.Count = 0) then
-      MessageBox(Application.Handle, pchar('Não foi necessário realizar ajustes nas legendas encontradas neste diretório!'+#13+#13+pasta), pchar(Application.Title), MB_ICONWARNING+MB_OK);
+      MessageBox(Application.Handle, pchar(Lang_SRT(16)+#13+#13+pasta), pchar(Application.Title), MB_ICONWARNING+MB_OK);
       //----------------------------------------------------------------------------------------------------------------------------------------
 
      Sim_Encontrados.Free;
@@ -904,7 +915,7 @@ SaveDialog1.FileName:=Trim(edit_legenda.Text);
        //----------------------------------------------------------------------------------------------------------------------------------------------------
        {INÍCIO - CASE}
        //----------------------------------------------------------------------------------------------------------------------------------------------------
-       case MessageBox(Application.Handle, pchar('A legenda atual já existe.'+#13+'Deseja substituí-lo?                       '), pchar('Confirmar '+SaveDialog1.Title), MB_ICONWARNING+MB_YESNO+MB_DEFBUTTON2) of
+       case MessageBox(Application.Handle, pchar(Lang_SRT(17)), pchar(Lang_SRT(18)+' '+SaveDialog1.Title), MB_ICONWARNING+MB_YESNO+MB_DEFBUTTON2) of
        idYes :
          Salvar_Como;
        idNo :
@@ -1033,9 +1044,9 @@ ProgressBar1.Refresh;
    if (cont1 > 0) then
    begin
     if (cont1 = 1) then
-    Label3.Caption:='1 Limite de Linha'
+    Label3.Caption:=Lang_SRT(31)
     else
-    Label3.Caption:=IntToStr(cont1)+' Limites de Linha';
+    Label3.Caption:=Format(Lang_SRT(32),[cont1]);
 
    //----------------------------------------
    Image3.Left:=Label3.Width+Form1.Width-174;
@@ -1047,9 +1058,9 @@ ProgressBar1.Refresh;
    //----------------------------------------
 
     if (cont1 = 1) then
-    StatusBar1.Panels[0].Text:='Esta legenda possui 1 ocorrência.'
+    StatusBar1.Panels[0].Text:=Lang_SRT(19)
     else
-    StatusBar1.Panels[0].Text:='Esta legenda possui '+IntToStr(cont1+cont2)+' ocorrências.';
+    StatusBar1.Panels[0].Text:=Format(Lang_SRT(20),[cont1+cont2]);
    end;
                    
    //-----------------------------------------------------------------------
@@ -1058,9 +1069,9 @@ ProgressBar1.Refresh;
    if (cont2 > 0) then
    begin
       if (cont2 = 1) then
-      Label1.Caption:='1 Sobreposição'
+      Label1.Caption:=Lang_SRT(33)
       else
-      Label1.Caption:=IntToStr(cont2)+' Sobreposições';
+      Label1.Caption:=Format(Lang_SRT(34),[cont2]);
 
    //----------------------------------------
    Image1.Left:=Label1.Width+Form1.Width-174;
@@ -1073,9 +1084,9 @@ ProgressBar1.Refresh;
    lstconsertar.Enabled:=True;
 
      if (cont2 = 1) then
-     StatusBar1.Panels[0].Text:='Esta legenda possui 1 ocorrência.'
+     StatusBar1.Panels[0].Text:=Lang_SRT(19)
      else
-     StatusBar1.Panels[0].Text:='Esta legenda possui '+IntToStr(cont1+cont2)+' ocorrências.';
+     StatusBar1.Panels[0].Text:=Format(Lang_SRT(20),[cont1+cont2]);
    end;
    //-----------------------------------------------------------------------
 
@@ -1093,7 +1104,7 @@ ProgressBar1.Refresh;
      btn_editAvancada.Enabled  :=True;
      lst_editAvancada.Enabled  :=True;
      //-----------------------
-     StatusBar1.Panels[0].Text:='Esta legenda não possui nenhum tipo de ocorrência.';
+     StatusBar1.Panels[0].Text:=Lang_SRT(21);
      end;
 
  if Label1.Visible = True then
@@ -1181,7 +1192,7 @@ RichText2.SetFocus;
 ProgressBar1.Visible:=False;
 
 //--------------------------------------------------
-StatusBar1.Panels[0].Text:='Sobreposições corrigidas com sucesso!';
+StatusBar1.Panels[0].Text:=Lang_SRT(22);
 Label1.Font.Color:=clBlue; //LETRA AZUL
 Image1.Visible:=False;
 Image2.Visible:=True;
@@ -1224,7 +1235,7 @@ begin
  end
  else
  begin
-  case MessageBox(Application.Handle,pchar('Deseja salvar as alterações realizadas para esta legenda antes de sair?'),pchar(Application.Title),MB_ICONWARNING+MB_YESNOCANCEL+MB_DEFBUTTON2) of
+  case MessageBox(Application.Handle,pchar(Lang_SRT(23)),pchar(Application.Title),MB_ICONWARNING+MB_YESNOCANCEL+MB_DEFBUTTON2) of
   idYes:
        begin
        btnsalvarcomo.Click;
@@ -1439,7 +1450,7 @@ begin
   if (salvar = True) then
   begin
     //--------------------------------------------------------------------------
-    case MessageBox(Application.Handle,pchar('Tem certeza que deseja sobrescrever a legenda original?'),pchar(Application.Title),MB_ICONWARNING+MB_YESNO+MB_DEFBUTTON2) of
+    case MessageBox(Application.Handle,pchar(Lang_SRT(24)),pchar(Application.Title),MB_ICONWARNING+MB_YESNO+MB_DEFBUTTON2) of
      idYes:
           begin
           salvar:=False;  //--> Variável GLOBAL (Salvar Alterações)
@@ -1473,7 +1484,7 @@ begin
 
             if VideoPath <> '' then
             begin
-              if MessageBox(Application.Handle,PChar('Deseja agora abrir o vídeo?'),PChar(Application.Title),MB_ICONQUESTION + MB_YESNO) = IDYES then
+              if MessageBox(Application.Handle,PChar(Lang_SRT(25)),PChar(Application.Title),MB_ICONQUESTION + MB_YESNO) = IDYES then
               ShellExecute(0, 'open', PChar(VideoPath), nil, nil, SW_SHOWNORMAL);
             end;
 
@@ -1495,7 +1506,7 @@ begin
 
 if (salvar = True) then
 begin
- case MessageBox(Application.Handle,pchar('Deseja salvar as alterações realizadas para esta legenda antes de sair?'),pchar(Application.Title),MB_ICONWARNING+MB_YESNOCANCEL+MB_DEFBUTTON2) of
+ case MessageBox(Application.Handle,pchar(Lang_SRT(23)),pchar(Application.Title),MB_ICONWARNING+MB_YESNOCANCEL+MB_DEFBUTTON2) of
  idYes:btnsalvarcomo.Click;
  idNo:
      begin
@@ -1666,7 +1677,7 @@ lst_editAvancada.Enabled:=True;
   Label8.Visible:=True;
   end;
 
-StatusBar1.Panels[0].Text:='Correção numérica realizada com sucesso!';
+StatusBar1.Panels[0].Text:=Lang_SRT(26);
 Panel1.Visible:=False;
 end;
 
@@ -1796,7 +1807,7 @@ begin
 if ParamCount = 1 then
 begin
  if (ExtractFileExt(LowerCase(ParamStr(1))) <> '.srt') then
- MessageBox(Application.Handle, pchar('O arquivo carregado não é um documento de legenda no formato SRT.'+#13#13+'Error code:  #0103'), pchar(Application.Title), MB_ICONSTOP+MB_OK)
+ MessageBox(Application.Handle, pchar(Lang_SRT(27)+#13#13+'Error code:  #0103'), pchar(Application.Title), MB_ICONSTOP+MB_OK)
  else
  Novo_Carregar(ParamStr(1));
 end;
@@ -1813,7 +1824,7 @@ posicionar_inicio(RichText2);
 //------------------------------
 
 //--------------------------------------------------
-Form6_substituir.Caption:='Localizar';
+Form6_substituir.Caption:=Lang_SRT(36);
 Form6_substituir.Label2.Visible:=False;
 Form6_substituir.Edit2.Visible:=False;
 Form6_substituir.btn_substituir.Visible:=False;
@@ -1842,7 +1853,7 @@ posicionar_inicio(RichText2);
 //------------------------------
 
 //-------------------------------------------------
-Form6_substituir.Caption:='Substituir';
+Form6_substituir.Caption:=Lang_SRT(37);
 Form6_substituir.Label2.Visible:=True;
 Form6_substituir.Edit2.Visible:=True;
 Form6_substituir.btn_substituir.Visible:=True;
@@ -2071,7 +2082,7 @@ lsttags.Enabled      :=True;
 
 SendMessage(RichText1.Handle, WM_VSCROLL, SB_TOP, 0);
 
-StatusBar1.Panels[0].Text := 'Alteração de cor realizada com sucesso!';
+StatusBar1.Panels[0].Text := Lang_SRT(28);
 Panel1.Visible := False;
 end;
 
@@ -2266,14 +2277,14 @@ lst_ortografia.Enabled:=True;
 SendMessage(RichText1.Handle, WM_VSCROLL, SB_TOP, 0);
 
   if ContadorRemocoes = 0 then
-  StatusBar1.Panels[0].Text := 'Nenhum closed caption encontrado.'
+  StatusBar1.Panels[0].Text := Lang_SRT(29)
   else
   begin
-  Label1.Caption:=IntToStr(ContadorRemocoes)+' Closed Captions';
+  Label1.Caption:=Format(Lang_SRT(35),[ContadorRemocoes]);
   Label1.Visible:=True;
   Image2.Left:=Label1.Width+Form1.Width-174;
   Image2.Visible:=True;
-  StatusBar1.Panels[0].Text := 'Os closed captions foram removidos com sucesso!';
+  StatusBar1.Panels[0].Text := Lang_SRT(30);
   end;
 
 Panel1.Visible := False;
@@ -2282,6 +2293,21 @@ end;
 procedure TForm1.lstclosecaptionClick(Sender: TObject);
 begin
 btnclosecaption.Click;
+end;
+
+procedure TForm1.Idioma_AutoClick(Sender: TObject);
+begin
+Lang_Apply(0);
+end;
+
+procedure TForm1.Idioma_PorClick(Sender: TObject);
+begin
+Lang_Apply(1);
+end;
+
+procedure TForm1.Idioma_EngClick(Sender: TObject);
+begin
+Lang_Apply(2);
 end;
 
 end.

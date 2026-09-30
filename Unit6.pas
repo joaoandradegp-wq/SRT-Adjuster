@@ -49,7 +49,7 @@ var
 
 implementation
 
-uses Unit1;
+uses Unit1, Language;
 
 //----------------------------------------------------------
 
@@ -122,8 +122,8 @@ ocorrencias:=0;
 
     end;
 
- palavra_singular:='marcação';
- palavra_plural  :='marcações';
+ palavra_singular:=Lang_SRT(74);
+ palavra_plural  :=Lang_SRT(75);
  end
  //---------------------------------------------------------------------
  else
@@ -178,18 +178,18 @@ ocorrencias:=0;
 
     end;
 
- palavra_singular:='substituição';
- palavra_plural  :='substituições';
+ palavra_singular:=Lang_SRT(76);
+ palavra_plural  :=Lang_SRT(77);
  end;
 
       if ocorrencias = 0 then
-      MessageBox(Application.Handle,pchar('Não foi possível encontrar "'+encontra_string+'"'),pchar(Application.Title), MB_ICONINFORMATION+MB_OK)
+      MessageBox(Application.Handle,pchar(Format(Lang_SRT(78),[encontra_string])),pchar(Application.Title), MB_ICONINFORMATION+MB_OK)
       else
       begin
         if ocorrencias = 1 then
-        MessageBox(Application.Handle,pchar('Foi realizada '+IntToStr(ocorrencias)+' '+palavra_singular+' em toda a legenda.'),pchar(Application.Title), MB_ICONINFORMATION+MB_OK)
+        MessageBox(Application.Handle,pchar(Format(Lang_SRT(79),[ocorrencias,palavra_singular])),pchar(Application.Title), MB_ICONINFORMATION+MB_OK)
         else
-        MessageBox(Application.Handle,pchar('Foram realizadas '+IntToStr(ocorrencias)+' '+palavra_plural+' em toda a legenda.'),pchar(Application.Title), MB_ICONINFORMATION+MB_OK);
+        MessageBox(Application.Handle,pchar(Format(Lang_SRT(80),[ocorrencias,palavra_plural])),pchar(Application.Title), MB_ICONINFORMATION+MB_OK);
       end;
 
 end;
@@ -229,7 +229,7 @@ Options:=[];
   begin
      if Localiza_ou_Substitui = True then
      begin
-     Botao.Caption:='&Localizar Próxima';
+     Botao.Caption:=Lang_SRT(81);
      //-------------------------------------------
      Legenda.SelStart:=FoundPos;
      Legenda.Perform(EM_SCROLLCARET, FoundPos, 0);
@@ -239,7 +239,7 @@ Options:=[];
      end
      else
      begin
-     Botao.Caption:='&Substituir Próxima';
+     Botao.Caption:=Lang_SRT(82);
      //-----------------------------------------------------
      linha:=Legenda.Perform(EM_LINEFROMCHAR,FoundPos,0);
      coluna:=FoundPos-Legenda.Perform(EM_LINEINDEX,linha,0);
@@ -262,11 +262,11 @@ Options:=[];
   end
   else
   begin
-  MessageBox(Application.Handle, pchar('Não foi possível encontrar "'+palavra_original+'"'), pchar(Application.Title), MB_ICONINFORMATION+MB_OK);
+  MessageBox(Application.Handle, pchar(Format(Lang_SRT(78),[palavra_original])), pchar(Application.Title), MB_ICONINFORMATION+MB_OK);
     if Localiza_ou_Substitui = True then
-    Botao.Caption:='&Localizar'
+    Botao.Caption:=Lang_SRT(83)
     else
-    Botao.Caption:='&Substituir';
+    Botao.Caption:=Lang_SRT(84);
   end;
 
 end;
@@ -436,8 +436,8 @@ CheckBox1.Checked:=False;
 CheckBox2.Checked:=False;
 CheckBox3.Checked:=False;
 Edit1.SetFocus;
-btn_localizar.Caption:='&Localizar';
-btn_substituir.Caption:='&Substituir';
+btn_localizar.Caption:=Lang_SRT(83);
+btn_substituir.Caption:=Lang_SRT(84);
 //-----------------------
 
 end;
@@ -451,7 +451,7 @@ Edit2.Clear;
  if CheckBox2.Checked = True then
  begin
  //-------------------------------------------
- btn_localizar.Caption:='Localizar e &Marcar';
+ btn_localizar.Caption:=Lang_SRT(85);
  btn_substituir.Enabled:=False;
  btn_substituir_tudo.Enabled:=False;
  Edit2.Clear;
@@ -460,7 +460,7 @@ Edit2.Clear;
  end
  else
  begin
- btn_localizar.Caption:='&Localizar';
+ btn_localizar.Caption:=Lang_SRT(83);
  Edit2.Enabled:=True
  end;
 
