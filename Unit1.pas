@@ -13,14 +13,13 @@ type
   {DICIONÁRIO - 01/03}
   //-------------------------------------------------------------------------------------------------
   PHunspell = Pointer;
-
   function Hunspell_create(affpath, dicpath: PAnsiChar): Pointer; cdecl; external 'hunspell.dll';
   function Hunspell_destroy(handle: Pointer): Integer; cdecl; external 'hunspell.dll';
   function Hunspell_spell(handle: Pointer; word: PAnsiChar): Integer; cdecl; external 'hunspell.dll';
   function SpellOK(const Palavra: string): Boolean;
   function CleanWord(const S: string): string;
   function IsLetter(C: Char): Boolean;
-  procedure InitHunspell;
+  procedure InitHunspell(const DictName: string);
 //procedure FinalizeHunspell;
   //-------------------------------------------------------------------------------------------------
 
@@ -202,6 +201,7 @@ var
    {DICIONÁRIO - 02/03}
    //-------------------------
    HunHandle: Pointer;
+   HunDictAtual: string;
    //-------------------------
 
   //---------------------------------
@@ -308,17 +308,41 @@ begin
 Result := Length(S) <= 3;
 end;
 //-------------------------------------------------------------------------------------------------
-procedure InitHunspell;
+function DictNameForLang(Idioma: Integer): string;
+begin
+  case Idioma of
+    1: Result := 'pt_BR';
+    2: Result := 'en_US';
+  else
+    if GetLanguageWin = 'pt' then
+    Result := 'pt_BR'
+    else
+    Result := 'en_US';
+  end;
+end;
+//-------------------------------------------------------------------------------------------------
+procedure InitHunspell(const DictName: string);
 var
 AffPath, DicPath: UTF8String;
 begin
-  AffPath := UTF8Encode(
-    IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) +
-    'dict\pt_BR.aff');
 
-  DicPath := UTF8Encode(
-    IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) +
-    'dict\pt_BR.dic');
+if (HunHandle <> nil) and SameText(HunDictAtual, DictName) then
+Exit;
+
+  if HunHandle <> nil then
+  begin
+  Hunspell_destroy(HunHandle);
+  HunHandle := nil;
+  HunDictAtual := '';
+  end;
+
+AffPath := UTF8Encode(
+  IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) +
+  'dict\' + DictName + '.aff');
+
+DicPath := UTF8Encode(
+  IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) +
+  'dict\' + DictName + '.dic');
 
   if not FileExists(string(AffPath)) or not FileExists(string(DicPath)) then
     raise Exception.Create(Lang_SRT(38));
@@ -330,7 +354,8 @@ begin
 
   if HunHandle = nil then
   raise Exception.Create(Lang_SRT(39));
-  
+
+HunDictAtual := DictName;
 end;
 //-------------------------------------------------------------------------------------------------
 {
@@ -693,14 +718,11 @@ end;
 //------------------------------------------------------------------------------
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-//---------------------------------------
+//-------------------------------------------
 {CARREGA O IDIOMA ESCOLHIDO E APLICA NO FORM}
 Lang_Load;
 Lang_SRT(0);
-//---------------------------------------
-{CARREGA A DLL PARA CORREÇÃO ORTOGRÁFICA}
-InitHunspell;
-//---------------------------------------
+//-------------------------------------------
 
 //----------------------------
 {ARRASTAR E SOLTAR - ATIVANDO}
@@ -2092,6 +2114,14 @@ var
   Texto, Palavra: string;
   I, InicioPalavra: Integer;
 begin
+
+Screen.Cursor := crHourGlass;
+
+  try
+  InitHunspell(DictNameForLang(Language_Global));
+  finally
+  Screen.Cursor := crDefault;
+  end;
 
   FProcessandoLegenda := True;
   try
