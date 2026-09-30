@@ -12,7 +12,6 @@ type
     Image1: TImage;
     rx_loading: TRxGIFAnimator;
     RxLabel1: TRxLabel;
-    abfImage1: TabfImage;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormActivate(Sender: TObject);
@@ -27,7 +26,7 @@ Splash_Screen: TSplash_Screen;
 
 implementation
 
-uses Unit1;
+uses Unit1, Language;
 
 {$R *.dfm}
 

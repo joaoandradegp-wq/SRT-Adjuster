@@ -19,7 +19,7 @@ uses
 
 const
 //-------------------------------------------------------
-SRT_VERSAO_Global = '1.4.1';
+SRT_VERSAO_Global = '1.5';
 SRT_VERSAO     = SRT_VERSAO_Global;
 SRT_BLOG       = 'http://phobosfreeware.blogspot.com.br';
 //-------------------------------------------------------
@@ -31,7 +31,7 @@ SRT_RAIZ:String;
 
 begin
   Application.Initialize;
-  Application.Title := 'SRT Adjuster 1.4.1';
+  Application.Title := 'SRT Adjuster 1.5';
   SRT_EXE  := Copy(ExtractFileName(Application.ExeName), 1,
                    Length(ExtractFileName(Application.ExeName)) - 4);
   SRT_RAIZ := ExtractFilePath(Application.ExeName);
