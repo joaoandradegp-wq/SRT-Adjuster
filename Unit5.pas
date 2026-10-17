@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, WinSkinData, ExtCtrls, Buttons, StdCtrls, StrUtils, ComCtrls;
+  Dialogs, ExtCtrls, Buttons, StdCtrls, StrUtils, ComCtrls;
 
 type
   TForm5 = class(TForm)
@@ -13,7 +13,6 @@ type
     btnOK: TSpeedButton;
     btnCancelar: TSpeedButton;
     Bevel1: TBevel;
-    SkinData1: TSkinData;
     combo_fps_legenda: TComboBox;
     combo_fps_video: TComboBox;
     duvida_fps_atual: TSpeedButton;

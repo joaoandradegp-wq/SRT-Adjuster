@@ -3,7 +3,7 @@ unit Unit7;
 interface
 
 uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
-  Buttons, ExtCtrls, registry, pngimage, abfControls, WinSkinData;
+  Buttons, ExtCtrls, registry, pngimage;
 
 type
   TAboutBox = class(TForm)
@@ -11,9 +11,8 @@ type
     Bevel1: TBevel;
     Button1: TButton;
     Panel1: TPanel;
-    abfImage1: TabfImage;
     Image1: TImage;
-    SkinData1: TSkinData;
+    Image2: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);

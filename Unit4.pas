@@ -4,14 +4,14 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, pngimage, ExtCtrls, StdCtrls, RxGIF, abfControls, Animate,
-  GIFCtrl, OleCtrls, SHDocVw, RXCtrls, ShellAPI;
+  Dialogs, pngimage, ExtCtrls, StdCtrls,
+  OleCtrls, SHDocVw, ShellAPI, Vcl.Imaging.GIFImg;
 
 type
   Tsplash_screen = class(TForm)
     Image1: TImage;
-    rx_loading: TRxGIFAnimator;
-    RxLabel1: TRxLabel;
+    Label1: TLabel;
+    loading: TImage;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormActivate(Sender: TObject);
@@ -39,21 +39,27 @@ end;
 
 procedure Tsplash_screen.FormCreate(Sender: TObject);
 begin
-RxLabel1.Caption:=Lang_SRT(94);
-RxLabel1.Left:=(ClientWidth-RxLabel1.Width) div 2;
-rx_loading.Left:=(ClientWidth-rx_loading.Width) div 2;
+Label1.Caption:=Lang_SRT(94);
+Label1.Left :=(ClientWidth-Label1.Width ) div 2;
+loading.Left:=(ClientWidth-loading.Width) div 2;
 
 if Form1 <> nil then
-rx_loading.Visible:=False;
+loading.Visible:=False;
 
-if FileExists('check_update.exe') then
-ShellExecute(0,'open','check_update.exe',pchar(SRT_VERSAO_Global),nil,SW_HIDE);
+  if FileExists('check_update.exe') then
+  ShellExecute(0,'open','check_update.exe',pchar(SRT_VERSAO_Global),nil,SW_HIDE);
 
 end;
 
 procedure Tsplash_screen.FormActivate(Sender: TObject);
 begin
-rx_loading.Visible:=True;
+
+  if loading.Picture.Graphic is TGIFImage then
+  begin
+    TGIFImage(loading.Picture.Graphic).Animate     := True;
+    TGIFImage(loading.Picture.Graphic).AnimateLoop := glEnabled;
+  end;
+
 end;
 
 end.

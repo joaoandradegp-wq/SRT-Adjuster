@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Buttons, StdCtrls, Mask, StrUtils, WinSkinData;
+  Dialogs, Buttons, StdCtrls, Mask, StrUtils;
 
 type
   TForm2 = class(TForm)
@@ -24,7 +24,6 @@ type
     MaskEdit1: TMaskEdit;
     Label5: TLabel;
     ScrollBar4: TScrollBar;
-    SkinData1: TSkinData;
     GroupBox3: TGroupBox;
     RadioTempo: TRadioButton;
     RadioDuracao: TRadioButton;

@@ -5,8 +5,10 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, StrUtils, ShellAPI, Buttons, ComCtrls, ToolWin,
-  ExtCtrls, Menus, WinSkinData, Gauges, ClipBrd, RxGIF, pngextra, pngimage,
-  MruUnit,FileCtrl, RxCombos, OleCtrls, Animate, GIFCtrl;
+  ExtCtrls, Menus, Gauges, ClipBrd, pngimage,
+  MruUnit,FileCtrl, OleCtrls, System.ImageList,
+  Vcl.ImgList, Vcl.VirtualImageList, Vcl.BaseImageCollection,
+  Vcl.ImageCollection;
 
 type
   //-------------------------------------------------------------------------------------------------
@@ -48,7 +50,6 @@ type
     btnconsertar: TSpeedButton;
     ToolButton1: TToolButton;
     ToolButton2: TToolButton;
-    SkinData1: TSkinData;
     StatusBar1: TStatusBar;
     PopupMenu1: TPopupMenu;
     Selecionar1: TMenuItem;
@@ -115,6 +116,10 @@ type
     lst_ortografia: TMenuItem;
     btnclosecaption: TSpeedButton;
     lstclosecaption: TMenuItem;
+    Imagem_Grande: TImageCollection;
+    Imagem_Pequena: TImageCollection;
+    VirtualImageList1: TVirtualImageList;
+    VirtualImageList2: TVirtualImageList;
     procedure ListBox1Click(Sender: TObject);
     procedure btnsalvarcomoClick(Sender: TObject);
     procedure btnprocurarClick(Sender: TObject);
