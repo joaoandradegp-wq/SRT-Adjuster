@@ -55,13 +55,14 @@ var
 
 implementation
 
-uses Unit1, Funcoes;
+uses Unit1, Funcoes, Language;
 
 {$R *.dfm}
 
 procedure TForm2.FormCreate(Sender: TObject);
 begin
-Form2.Caption:=Application.Title+' - Ajuste de Tempo';
+Lang_SRT(1);
+Form2.Caption:=Application.Title+' - '+Lang_SRT(45);
 end;
 
 procedure TForm2.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -295,15 +296,12 @@ SetLength(new_legenda,Form1.RichText1.Lines.Count); //--> Define o tamanho do Ve
               end;
 
               if (aux > 0) and (Form1.ProgressBar1.Position < 3)  then
-              MessageBox(Application.Handle,'Você está tentando fazer o texto aparecer cedo demais.'+#13
-                           +'Algumas linhas de texto (normalmente as primeiras) podem ter valores de tempo NEGATIVOS!'+#13#13
-                           +'Isto só pode ser feito APAGANDO estas linhas do arquivo de destino...',
+              MessageBox(Application.Handle,PChar(Lang_SRT(55)),
                            pchar(Application.Title), MB_ICONWARNING+MB_OK);
 
               if (cont_duracao > 0) then
               begin
-              MessageBox(Application.Handle,'A duração que você definiu está negativando algums diálogos.'+#13
-                           +#13+'Defina uma duração maior que a definida atualmente...'+#13#13+'Error code:  #0201',
+              MessageBox(Application.Handle,PChar(Lang_SRT(56)+#13#13+Lang_SRT(57)+#13#13+'Error code:  #0201'),
                            pchar(Application.Title), MB_ICONERROR+MB_OK);
               break;
               end;
@@ -320,24 +318,24 @@ SetLength(new_legenda,Form1.RichText1.Lines.Count); //--> Define o tamanho do Ve
              Form1.RichText2.Lines.Delete(0);
              end;
            linha:=linha-aux; //--> Variável GLOBAL
-           Form1.Label4.Caption:=IntToStr(linha)+' Linhas';
-           Form1.Label8.Caption:=IntToStr(dialogo)+' Diálogos';
+           Form1.Label4.Caption:=Format(Lang_SRT(41),[linha]);
+           Form1.Label8.Caption:=Format(Lang_SRT(42),[dialogo]);
 
              if (cont_negativo = 1) then
-             Form1.StatusBar1.Panels[0].Text:='Ajuste de tempo realizado com sucesso, porém foi apagado 1 diálogo.'
+             Form1.StatusBar1.Panels[0].Text:=Lang_SRT(58)
              else
-             Form1.StatusBar1.Panels[0].Text:='Ajuste de tempo realizado com sucesso, porém foram apagados '+IntToStr(cont_negativo)+' diálogos.';
+             Form1.StatusBar1.Panels[0].Text:=Format(Lang_SRT(59),[cont_negativo]);
            end
            else
            begin
              if cont_duracao > 0 then
-             Form1.StatusBar1.Panels[0].Text:='A duração que você definiu está negativando algums diálogos.'
+             Form1.StatusBar1.Panels[0].Text:=Lang_SRT(56)
              else
              begin
                if RadioTempo.Checked = True then
-               Form1.StatusBar1.Panels[0].Text:='Ajuste de tempo realizado com sucesso!'
+               Form1.StatusBar1.Panels[0].Text:=Lang_SRT(60)
                else
-               Form1.StatusBar1.Panels[0].Text:='Ajuste de duração dos diálogos realizada com sucesso!';
+               Form1.StatusBar1.Panels[0].Text:=Lang_SRT(61);
              end
            end;
 
@@ -401,12 +399,12 @@ end;
 
 procedure TForm2.RadioDuracaoClick(Sender: TObject);
 begin
-Form2.Caption:=Application.Title+' - Ajuste de Duração';
+Form2.Caption:=Application.Title+' - '+Lang_SRT(46);
 MaskEdit1.Text:='00:00:00,000';
-RadioDepois.Caption:='Aumentar a duração';
-RadioAntes.Caption:='Diminuir a duração';
-GroupBox2.Caption:=' Ajuste da duração: ';
-GroupBox1.Caption:=' Sobre o diálogo ';
+RadioDepois.Caption:=Lang_SRT(47);
+RadioAntes.Caption:=Lang_SRT(48);
+GroupBox2.Caption:=Lang_SRT(49);
+GroupBox1.Caption:=Lang_SRT(50);
 Label1.Enabled:=False;
 ScrollBar2.Position:=0;
 ScrollBar2.Enabled:=False;
@@ -419,12 +417,12 @@ end;
 
 procedure TForm2.RadioTempoClick(Sender: TObject);
 begin
-Form2.Caption:=Application.Title+' - Ajuste de Tempo';
+Form2.Caption:=Application.Title+' - '+Lang_SRT(45);
 MaskEdit1.Text:='00:00:00,000';
-RadioDepois.Caption:='O texto virá depois';
-RadioAntes.Caption:='O texto virá antes';
-GroupBox2.Caption:=' Ajuste do tempo: ';
-GroupBox1.Caption:=' Sobre o texto ';
+RadioDepois.Caption:=Lang_SRT(51);
+RadioAntes.Caption:=Lang_SRT(52);
+GroupBox2.Caption:=Lang_SRT(53);
+GroupBox1.Caption:=Lang_SRT(54);
 Label1.Enabled:=True;
 ScrollBar2.Position:=0;
 ScrollBar2.Enabled:=True;

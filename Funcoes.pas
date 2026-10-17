@@ -44,6 +44,8 @@ procedure Lista_Indices(var Texto1,Texto2:TRichEdit;ListBox1:TListBox;aux:Boolea
 
 implementation
 
+uses Language;
+
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 function EncontrarVideoCorrespondente(const CaminhoSRT: string): string;
@@ -244,8 +246,7 @@ end;
 
 if  (cont_legenda_global+cont_video > 0) and (cont_video = cont_legenda_global) and (repetiu = False) then
 begin
-   case MessageBox(Application.Handle, pchar('Foram localizados '+IntToStr(cont_legenda_global+cont_video)+
-                                                  ' arquivos de legenda e video de uma Série.'+#13#13+'Deseja ajustar as legendas?')
+   case MessageBox(Application.Handle, pchar(Format(Lang_SRT(87),[cont_legenda_global+cont_video]))
                                           , pchar(Application.Title), MB_ICONQUESTION+MB_YESNO+MB_DEFBUTTON2) of
    idYes:
         Result:=True;
@@ -261,28 +262,21 @@ begin
 Result:=False;
 
    if (repetiu = True) then
-   MessageBox(Application.Handle, pchar('Foi localizado uma legenda com repetição de temporada e episódio neste diretório.'+#13#13+
-                                         'Verifique as legendas com '+UpperCase(repetido)+' antes de prosseguir.'+#13#13+
+   MessageBox(Application.Handle, pchar(Format(Lang_SRT(88),[UpperCase(repetido)])+#13#13+
                                          'Error code:  #0107')
                                  , pchar(Application.Title), MB_ICONERROR+MB_OK)
    else
    begin
 
        if cont_video > cont_legenda_global then
-       MessageBox(Application.Handle, pchar('A quantidade de EPISÓDIOS está superior ao de seus arquivos de legenda.'+
-                                             #13+'Verifique antes de prosseguir.'+
-                                             #13#13+'Episódios: '+IntToStr(cont_video)+' arquivos'+
-                                             #13+'Legendas: '+IntToStr(cont_legenda_global)+' arquivos'), pchar(Application.Title), MB_ICONWARNING+MB_OK);
+       MessageBox(Application.Handle, pchar(Format(Lang_SRT(89),[cont_video,cont_legenda_global])), pchar(Application.Title), MB_ICONWARNING+MB_OK);
 
 
        if cont_legenda_global > cont_video then
-       MessageBox(Application.Handle, pchar('A quantidade de LEGENDAS está superior ao de seus arquivos de video.'+
-                                             #13+'Verifique antes de prosseguir.'+
-                                             #13#13+'Episódios: '+IntToStr(cont_video)+' arquivos'+
-                                             #13+'Legendas: '+IntToStr(cont_legenda_global)+' arquivos'), pchar(Application.Title), MB_ICONWARNING+MB_OK);
+       MessageBox(Application.Handle, pchar(Format(Lang_SRT(90),[cont_video,cont_legenda_global])), pchar(Application.Title), MB_ICONWARNING+MB_OK);
 
        if (cont_video = 0) and (cont_legenda_global = 0) then
-       MessageBox(Application.Handle, pchar('Não foi possível localizar nenhum arquivo de legenda ou video de uma Série no formato padrão neste diretório.'+#13#13+'Error code:  #0105')
+       MessageBox(Application.Handle, pchar(Lang_SRT(91)+#13#13+'Error code:  #0105')
                                       , pchar(Application.Title), MB_ICONERROR+MB_OK);
 
 
@@ -366,7 +360,7 @@ begin
     //----------------------------------------------------------
  end
  else
- MessageBox(Application.Handle, pchar('Não foi possível aplicar a formatação de texto desejada.'+#13+'Remova a atual antes de adicionar outra ou verifique se selecionou corretamente o texto desejado.'), pchar(Application.Title), MB_ICONWARNING+MB_OK);
+ MessageBox(Application.Handle, pchar(Lang_SRT(92)), pchar(Application.Title), MB_ICONWARNING+MB_OK);
 
 end;
 //------------------------------------------------------------------------------
@@ -393,7 +387,7 @@ begin
    //-----------------------------------------------------------------------------------------------
  end
  else
- MessageBox(Application.Handle, pchar('Não foi possível aplicar a formatação de cores no texto desejado.'+#13+'Remova a atual antes de adicionar outra ou verifique se selecionou corretamente o texto desejado.'), pchar(Application.Title), MB_ICONWARNING+MB_OK);
+ MessageBox(Application.Handle, pchar(Lang_SRT(93)), pchar(Application.Title), MB_ICONWARNING+MB_OK);
 
 end;
 //------------------------------------------------------------------------------
@@ -482,14 +476,14 @@ begin
 {MONTA O TEXTO PARA EXIBIR LINHAS E DIÁLOGOS APÓS CONTABILIZAR}
 
  if linha_aux = 1 then
- Label_Linha.Caption:='1 Linha'
+ Label_Linha.Caption:=Lang_SRT(43)
  else
- Label_Linha.Caption:=IntToStr(linha_aux)+' Linhas';
+ Label_Linha.Caption:=Format(Lang_SRT(41),[linha_aux]);
 
  if dialogo_aux = 1 then
- Label_Dialogo.Caption:='1 Diálogo'
+ Label_Dialogo.Caption:=Lang_SRT(44)
  else
- Label_Dialogo.Caption:=IntToStr(dialogo_aux)+' Diálogos';
+ Label_Dialogo.Caption:=Format(Lang_SRT(42),[dialogo_aux]);
 
 end;
 //------------------------------------------------------------------------------

@@ -39,13 +39,14 @@ var
 
 implementation
 
-uses Unit1,Funcoes;
+uses Unit1,Funcoes,Language;
 
 {$R *.dfm}
 
 procedure TForm5.FormCreate(Sender: TObject);
 begin
-Form5.Caption:=Application.Title+' - Sincronia de Frame Rate - FPS';
+Lang_SRT(3);
+Form5.Caption:=Application.Title+' - '+Lang_SRT(70);
 end;
 
 procedure TForm5.btnCancelarClick(Sender: TObject);
@@ -155,7 +156,7 @@ SendMessage(Form1.RichText2.Handle, WM_VSCROLL, SB_TOP, 0);
   //--------------------------------
 
  Form1.ProgressBar1.Visible:=False;
- Form1.StatusBar1.Panels[0].Text:='Sincronia de Frame Rate realizada com sucesso!';
+ Form1.StatusBar1.Panels[0].Text:=Lang_SRT(71);
 
 Form1.Panel1.Visible:=False;
 Close;
@@ -163,14 +164,13 @@ end;
 
 procedure TForm5.duvida_fps_atualClick(Sender: TObject);
 begin
-MessageBox(Application.Handle,'Neste campo você deverá informar a TAXA DE QUADROS do video que deseja sincronizar.'
-          +#13+#13+'Verifique as propriedades do arquivo de video para conseguir esta informação.'
+MessageBox(Application.Handle,PChar(Lang_SRT(72))
           ,pchar(Application.Title), MB_ICONINFORMATION+MB_OK);
 end;
 
 procedure TForm5.duvida_fps_desejadoClick(Sender: TObject);
 begin
-MessageBox(Application.Handle,'Neste campo você deverá informar para qual TAXA DE QUADROS que deseja converter, após informar anteriormente o Frame Rate Atual do arquivo de video.'
+MessageBox(Application.Handle,PChar(Lang_SRT(73))
           ,pchar(Application.Title), MB_ICONINFORMATION+MB_OK);
 end;
 

@@ -10,6 +10,7 @@ uses
   Unit6 in 'Unit6.pas' {Form6_substituir},
   Unit7 in 'Unit7.pas' {AboutBox},
   Funcoes in 'Funcoes.pas',
+  Language in 'Language.pas',
   SysUtils,
   WinInet,
   ShellAPI;
@@ -18,7 +19,7 @@ uses
 
 const
 //-------------------------------------------------------
-SRT_VERSAO_Global = '1.4.1';
+SRT_VERSAO_Global = '1.5';
 SRT_VERSAO     = SRT_VERSAO_Global;
 SRT_BLOG       = 'http://phobosfreeware.blogspot.com.br';
 //-------------------------------------------------------
@@ -30,7 +31,7 @@ SRT_RAIZ:String;
 
 begin
   Application.Initialize;
-  Application.Title := 'SRT Adjuster 1.4.1';
+  Application.Title := 'SRT Adjuster 1.5';
   SRT_EXE  := Copy(ExtractFileName(Application.ExeName), 1,
                    Length(ExtractFileName(Application.ExeName)) - 4);
   SRT_RAIZ := ExtractFilePath(Application.ExeName);
@@ -48,6 +49,7 @@ begin
 
   Application.CreateForm(TForm1, Form1);
   Application.CreateForm(TForm6_substituir, Form6_substituir);
+  Lang_SRT(4);
   Application.Run;
 
 end.

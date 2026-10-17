@@ -10,7 +10,7 @@ SRT Adjuster é uma ferramenta para editar, ajustar e sincronizar legendas SRT d
   <img src="https://img.shields.io/badge/Status-Ativo-success">
   <img src="https://img.shields.io/badge/Plataforma-Windows-blue">
   <img src="https://img.shields.io/badge/Tipo-Editor%20de%20Legenda-orange">
-  <img src="https://img.shields.io/badge/Language-PT--BR%20-purple">
+  <img src="https://img.shields.io/badge/Languages-PT--BR%20%7C%20EN-purple">
 </p>
 
 ---
@@ -88,7 +88,7 @@ Em caso de se adicionar ou subtrair diálogos manualmente, é possível corrigir
 
 ### 📝 VERIFICAÇÃO ORTOGRÁFICA
 
-Utilização da biblioteca hunspell.dll, verifica erros ortográficos em diálogos PT-BR e demonstra em tela para facilitar a identificação e correção.
+Utilização da biblioteca hunspell.dll, verifica erros ortográficos em diálogos PT-BR ou EN-US e demonstra em tela para facilitar a identificação e correção.
 <br>
 </td>
 </tr>

@@ -42,33 +42,7 @@ var
 
 implementation
 
-uses Unit1,Funcoes;
-
-resourceString
-
-mensagem_ajuda_01 = 'Neste campo você deverá informar o tempo inicial do PRIMEIRO diálogo da legenda.'+#13+#13+
-                    'ATENÇÃO:'+#13+
-                    'Não confunda o diálogo com informações de créditos em cima de criação/sincronia da legenda.';
-
-mensagem_ajuda_02 = 'Neste campo você deverá informar o tempo inicial do ÚLTIMO diálogo da legenda.'+#13+#13+
-                    'ATENÇÃO:'+#13+
-                    'Não confunda o diálogo com informações de créditos em cima de criação/sincronia da legenda.';
-
-mensagem_erro_0301 = 'O valor de tempo informado em PRIMEIRO DIÁLOGO é inválido!'+#13+
-                     'Defina um valor inferior ao formato máximo de 24h.'+#13#13+
-                     'Error code:  #0301';
-
-mensagem_erro_0302 = 'O valor de tempo informado em ÚLTIMO DIÁLOGO é inválido!'+#13+
-                     'Defina um valor inferior ao formato máximo de 24h.'+#13#13+
-                     'Error code:  #0302';
-
-mensagem_erro_0303 = 'O valor de tempo informado em PRIMEIRO DIÁLOGO é inválido!'+#13+
-                     'Defina um valor de tempo INFERIOR ao do ÚLTIMO DIÁLOGO.'+#13#13+
-                     'Error code:  #0303';
-
-mensagem_erro_0304 = 'O valor de tempo informado em ÚLTIMO DIÁLOGO é inválido!'+#13+
-                     'Defina um valor de tempo SUPERIOR ao do PRIMEIRO DIÁLOGO.'+#13#13+
-                     'Error code:  #0304';
+uses Unit1,Funcoes,Language;
 
 //----------------------------------------------------------
 
@@ -134,7 +108,8 @@ end;
 
 procedure TForm3.FormCreate(Sender: TObject);
 begin
-Form3.Caption:=Application.Title+' - Sincronia Gradativa - Stretch/Shrink';
+Lang_SRT(2);
+Form3.Caption:=Application.Title+' - '+Lang_SRT(68);
 end;
 
 procedure TForm3.btnCancelarClick(Sender: TObject);
@@ -255,7 +230,7 @@ Form1.RichText2.Visible:=True;
   //--------------------------------
 
  Form1.ProgressBar1.Visible:=False;
- Form1.StatusBar1.Panels[0].Text:='Sincronia gradativa realizada com sucesso!';
+ Form1.StatusBar1.Panels[0].Text:=Lang_SRT(69);
 
 Form1.Panel1.Visible:=False;
 Close;
@@ -278,22 +253,22 @@ end;
 
 procedure TForm3.MaskEdit1Change(Sender: TObject);
 begin
-consistencia_tempo(MaskEdit1,MaskEdit2,mensagem_erro_0301,mensagem_erro_0303,Image1,MaskEdit1,btnOK,True);
+consistencia_tempo(MaskEdit1,MaskEdit2,Lang_SRT(64),Lang_SRT(66),Image1,MaskEdit1,btnOK,True);
 end;
 
 procedure TForm3.MaskEdit2Change(Sender: TObject);
 begin
-consistencia_tempo(MaskEdit2,MaskEdit1,mensagem_erro_0302,mensagem_erro_0304,Image2,MaskEdit2,btnOK,False);
+consistencia_tempo(MaskEdit2,MaskEdit1,Lang_SRT(65),Lang_SRT(67),Image2,MaskEdit2,btnOK,False);
 end;
 
 procedure TForm3.duvida_pri_dialogoClick(Sender: TObject);
 begin
-MessageBox(Application.Handle,pchar(mensagem_ajuda_01),pchar(Application.Title), MB_ICONINFORMATION+MB_OK);
+MessageBox(Application.Handle,pchar(Lang_SRT(62)),pchar(Application.Title), MB_ICONINFORMATION+MB_OK);
 end;
 
 procedure TForm3.duvida_ult_dialogoClick(Sender: TObject);
 begin
-MessageBox(Application.Handle,pchar(mensagem_ajuda_02),pchar(Application.Title), MB_ICONINFORMATION+MB_OK);
+MessageBox(Application.Handle,pchar(Lang_SRT(63)),pchar(Application.Title), MB_ICONINFORMATION+MB_OK);
 end;
 
 end.
