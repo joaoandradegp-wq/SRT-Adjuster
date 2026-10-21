@@ -26,8 +26,8 @@ object Form5: TForm5
   object Label1: TLabel
     Left = 156
     Top = 105
-    Width = 329
-    Height = 44
+    Width = 280
+    Height = 48
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -36,15 +36,15 @@ object Form5: TForm5
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -36
-    Font.Name = 'Verdana'
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
   end
   object Label2: TLabel
-    Left = 72
-    Top = 198
-    Width = 403
-    Height = 44
+    Left = 91
+    Top = 201
+    Width = 345
+    Height = 48
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -53,7 +53,7 @@ object Form5: TForm5
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -36
-    Font.Name = 'Verdana'
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
   end
@@ -68,6 +68,12 @@ object Form5: TForm5
     Margins.Bottom = 9
     Caption = 'OK'
     Enabled = False
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -32
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
     OnClick = btnOKClick
   end
   object btnCancelar: TSpeedButton
@@ -80,11 +86,17 @@ object Form5: TForm5
     Margins.Right = 9
     Margins.Bottom = 9
     Caption = 'Cancelar'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -32
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
     OnClick = btnCancelarClick
   end
   object Bevel1: TBevel
-    Left = 6
-    Top = 327
+    Left = 24
+    Top = 336
     Width = 981
     Height = 30
     Margins.Left = 9
@@ -95,8 +107,8 @@ object Form5: TForm5
     Style = bsRaised
   end
   object duvida_fps_atual: TSpeedButton
-    Left = 825
-    Top = 99
+    Left = 775
+    Top = 100
     Width = 69
     Height = 66
     Margins.Left = 9
@@ -109,8 +121,8 @@ object Form5: TForm5
     OnClick = duvida_fps_atualClick
   end
   object duvida_fps_desejado: TSpeedButton
-    Left = 825
-    Top = 195
+    Left = 775
+    Top = 193
     Width = 69
     Height = 66
     Margins.Left = 9
@@ -123,10 +135,10 @@ object Form5: TForm5
     OnClick = duvida_fps_desejadoClick
   end
   object combo_fps_legenda: TComboBox
-    Left = 504
-    Top = 99
+    Left = 454
+    Top = 104
     Width = 315
-    Height = 52
+    Height = 56
     Hint = 'Selecione qual o FPS original da legenda'
     Margins.Left = 9
     Margins.Top = 9
@@ -136,7 +148,7 @@ object Form5: TForm5
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -36
-    Font.Name = 'Verdana'
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ItemIndex = 0
     ParentFont = False
@@ -159,10 +171,10 @@ object Form5: TForm5
       '30')
   end
   object combo_fps_video: TComboBox
-    Left = 504
-    Top = 195
+    Left = 454
+    Top = 200
     Width = 315
-    Height = 52
+    Height = 56
     Hint = 'Selecione o FPS para o qual deseja converter'
     Margins.Left = 9
     Margins.Top = 9
@@ -172,7 +184,7 @@ object Form5: TForm5
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -36
-    Font.Name = 'Verdana'
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ItemIndex = 0
     ParentFont = False

@@ -1,7 +1,7 @@
 program SRTAdjuster;
 
 uses
-  Forms,
+  Forms,Windows,
   Unit1 in 'Unit1.pas' {Form1},
   Unit2 in 'Unit2.pas' {Form2},
   Unit3 in 'Unit3.pas' {Form3},
@@ -27,6 +27,7 @@ var
 //------------------------------------------------------
 SRT_EXE,
 SRT_RAIZ:String;
+T: UInt64;
 //------------------------------------------------------
 
 begin
@@ -42,7 +43,14 @@ begin
   try
     Splash_Screen.Show;
     Splash_Screen.Update;
-    Sleep(3000);
+    T := GetTickCount64;
+
+      while GetTickCount64 - T < 3000 do
+      begin
+      Application.ProcessMessages;
+      Sleep(10);
+      end;
+
   finally
     Splash_Screen.Free;
   end;

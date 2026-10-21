@@ -26,10 +26,10 @@ object Form1: TForm1
   PixelsPerInch = 288
   TextHeight = 37
   object Label3: TLabel
-    Left = 1776
-    Top = 504
-    Width = 338
-    Height = 40
+    Left = 1787
+    Top = 480
+    Width = 328
+    Height = 38
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -38,7 +38,7 @@ object Form1: TForm1
     Color = clBtnFace
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -33
+    Font.Height = -32
     Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ParentColor = False
@@ -47,10 +47,10 @@ object Form1: TForm1
     OnClick = Label3Click
   end
   object Label8: TLabel
-    Left = 1776
-    Top = 384
-    Width = 194
-    Height = 40
+    Left = 1787
+    Top = 360
+    Width = 189
+    Height = 38
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -58,16 +58,17 @@ object Form1: TForm1
     Caption = '0 Di'#225'logos'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -33
+    Font.Height = -32
     Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ParentFont = False
+    Visible = False
   end
   object Label4: TLabel
-    Left = 1776
-    Top = 336
-    Width = 156
-    Height = 40
+    Left = 1787
+    Top = 312
+    Width = 151
+    Height = 38
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -75,16 +76,17 @@ object Form1: TForm1
     Caption = '0 Linhas'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -33
+    Font.Height = -32
     Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ParentFont = False
+    Visible = False
   end
   object Label1: TLabel
-    Left = 1776
-    Top = 456
-    Width = 302
-    Height = 40
+    Left = 1787
+    Top = 432
+    Width = 293
+    Height = 38
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -93,7 +95,7 @@ object Form1: TForm1
     Color = clBtnFace
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -33
+    Font.Height = -32
     Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ParentColor = False
@@ -102,8 +104,8 @@ object Form1: TForm1
     OnClick = Label1Click
   end
   object Image1: TImage
-    Left = 2070
-    Top = 453
+    Left = 2081
+    Top = 428
     Width = 48
     Height = 48
     Margins.Left = 9
@@ -248,12 +250,13 @@ object Form1: TForm1
       B7CFACBC880851F8E1BE5670167C91354086236B800C47D600198EAC01321C59
       036438B206C870640D90E1C81A20C391354086236B800C47D600198EFF01B068
       7D356AEE38130000000049454E44AE426082}
+    Proportional = True
     Stretch = True
     Visible = False
   end
   object Image3: TImage
-    Left = 2118
-    Top = 501
+    Left = 2133
+    Top = 475
     Width = 48
     Height = 48
     Margins.Left = 9
@@ -564,12 +567,13 @@ object Form1: TForm1
       6C9211F4054619162E330AB6D6CC42AD52A1A861CDE317C5D6DBFFA6E35B4980
       EB701CD709708DE33A01AE715C27C0358EEB04B8C6F1FF015829B3536CEFE48B
       0000000049454E44AE426082}
+    Proportional = True
     Stretch = True
     Visible = False
   end
   object Image2: TImage
-    Left = 2118
-    Top = 453
+    Left = 2129
+    Top = 428
     Width = 48
     Height = 48
     Margins.Left = 9
@@ -691,12 +695,13 @@ object Form1: TForm1
       4DC90880410726009BC304607398006C0E1380CD6102B0394C00368709C0E630
       01D81C26009BC304607398006C0E1380CDF91FFD90DC08C70289F70000000049
       454E44AE426082}
+    Proportional = True
     Stretch = True
     Visible = False
   end
   object Bevel1: TBevel
-    Left = 0
-    Top = 180
+    Left = 11
+    Top = 156
     Width = 2280
     Height = 27
     Margins.Left = 9
@@ -706,10 +711,10 @@ object Form1: TForm1
     Shape = bsTopLine
   end
   object Label5: TLabel
-    Left = 1776
-    Top = 288
-    Width = 160
-    Height = 40
+    Left = 1787
+    Top = 264
+    Width = 157
+    Height = 38
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -717,25 +722,28 @@ object Form1: TForm1
     Caption = '0 Kbytes'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -33
+    Font.Height = -32
     Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ParentFont = False
+    Visible = False
   end
   object RichText2: TRichEdit
-    Left = 0
-    Top = 888
+    Left = 11
+    Top = 864
     Width = 1755
     Height = 603
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
     Margins.Bottom = 9
+    Ctl3D = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -33
     Font.Name = 'Verdana'
     Font.Style = []
+    ParentCtl3D = False
     ParentFont = False
     PlainText = True
     PopupMenu = PopupMenu1
@@ -748,15 +756,17 @@ object Form1: TForm1
     OnMouseDown = RichText2MouseDown
   end
   object RichText1: TRichEdit
-    Left = 3
-    Top = 267
+    Left = 14
+    Top = 240
     Width = 1755
     Height = 603
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
     Margins.Bottom = 9
-    Ctl3D = True
+    BevelInner = bvNone
+    BevelOuter = bvNone
+    Ctl3D = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -33
@@ -776,9 +786,9 @@ object Form1: TForm1
     OnMouseDown = RichText1MouseDown
   end
   object box_edicao: TGroupBox
-    Left = 1749
-    Top = 834
-    Width = 534
+    Left = 1784
+    Top = 621
+    Width = 508
     Height = 273
     Margins.Left = 9
     Margins.Top = 9
@@ -850,7 +860,7 @@ object Form1: TForm1
       Left = 60
       Top = 51
       Width = 351
-      Height = 48
+      Height = 56
       Margins.Left = 9
       Margins.Top = 9
       Margins.Right = 9
@@ -859,8 +869,8 @@ object Form1: TForm1
       Style = csDropDownList
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -33
-      Font.Name = 'Verdana'
+      Font.Height = -36
+      Font.Name = 'Segoe UI'
       Font.Style = []
       ItemIndex = 0
       ParentFont = False
@@ -892,28 +902,29 @@ object Form1: TForm1
       end>
   end
   object edit_legenda: TEdit
-    Left = 0
-    Top = 192
+    Left = 11
+    Top = 168
     Width = 2280
-    Height = 52
+    Height = 54
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
     Margins.Bottom = 9
-    Ctl3D = True
+    Ctl3D = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -36
-    Font.Name = 'Verdana'
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ParentCtl3D = False
     ParentFont = False
+    ReadOnly = True
     TabOrder = 8
     OnEnter = edit_legendaEnter
   end
   object ListBox2: TListBox
-    Left = 1944
-    Top = 552
+    Left = 1955
+    Top = 528
     Width = 147
     Height = 75
     Margins.Left = 9
@@ -925,8 +936,8 @@ object Form1: TForm1
     Ctl3D = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -33
-    Font.Name = 'Verdana'
+    Font.Height = -32
+    Font.Name = 'Segoe UI'
     Font.Style = [fsBold]
     ItemHeight = 39
     ParentCtl3D = False
@@ -936,8 +947,8 @@ object Form1: TForm1
     OnClick = ListBox2Click
   end
   object ListBox1: TListBox
-    Left = 1785
-    Top = 552
+    Left = 1796
+    Top = 528
     Width = 147
     Height = 75
     Margins.Left = 9
@@ -949,8 +960,8 @@ object Form1: TForm1
     Ctl3D = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -33
-    Font.Name = 'Verdana'
+    Font.Height = -32
+    Font.Name = 'Segoe UI'
     Font.Style = [fsBold]
     ItemHeight = 39
     ParentCtl3D = False
@@ -963,14 +974,14 @@ object Form1: TForm1
     Left = 0
     Top = 0
     Width = 2292
-    Height = 177
+    Height = 160
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
     Margins.Bottom = 9
     BorderWidth = 2
     ButtonHeight = 135
-    ButtonWidth = 138
+    ButtonWidth = 15
     Caption = 'ToolBar1'
     EdgeOuter = esRaised
     TabOrder = 1
@@ -1031,17 +1042,12 @@ object Form1: TForm1
     object ToolButton2: TToolButton
       Left = 423
       Top = 0
-      Width = 24
-      Margins.Left = 9
-      Margins.Top = 9
-      Margins.Right = 9
-      Margins.Bottom = 9
       Caption = 'ToolButton2'
+      Enabled = False
       ImageIndex = 0
-      Style = tbsSeparator
     end
     object btnprocurar: TSpeedButton
-      Left = 447
+      Left = 438
       Top = 0
       Width = 138
       Height = 135
@@ -1059,7 +1065,7 @@ object Form1: TForm1
       OnClick = btnprocurarClick
     end
     object btnconsertar: TSpeedButton
-      Left = 585
+      Left = 576
       Top = 0
       Width = 138
       Height = 135
@@ -1077,7 +1083,7 @@ object Form1: TForm1
       OnClick = btnconsertarClick
     end
     object btneditar: TSpeedButton
-      Left = 723
+      Left = 714
       Top = 0
       Width = 138
       Height = 135
@@ -1095,7 +1101,7 @@ object Form1: TForm1
       OnClick = btneditarClick
     end
     object btn_editAvancada: TSpeedButton
-      Left = 861
+      Left = 852
       Top = 0
       Width = 138
       Height = 135
@@ -1113,7 +1119,7 @@ object Form1: TForm1
       OnClick = btn_editAvancadaClick
     end
     object btn_ortografia: TSpeedButton
-      Left = 999
+      Left = 990
       Top = 0
       Width = 138
       Height = 135
@@ -1131,7 +1137,7 @@ object Form1: TForm1
       OnClick = btn_ortografiaClick
     end
     object btntags: TSpeedButton
-      Left = 1137
+      Left = 1128
       Top = 0
       Width = 138
       Height = 135
@@ -1149,18 +1155,14 @@ object Form1: TForm1
       OnClick = btntagsClick
     end
     object ToolButton1: TToolButton
-      Left = 1275
+      Left = 1266
       Top = 0
-      Width = 24
-      Margins.Left = 9
-      Margins.Top = 9
-      Margins.Right = 9
-      Margins.Bottom = 9
       Caption = 'ToolButton1'
-      Style = tbsSeparator
+      Enabled = False
+      ImageIndex = 0
     end
     object btntempo: TSpeedButton
-      Left = 1299
+      Left = 1281
       Top = 0
       Width = 138
       Height = 135
@@ -1178,7 +1180,7 @@ object Form1: TForm1
       OnClick = btntempoClick
     end
     object btnstretch: TSpeedButton
-      Left = 1437
+      Left = 1419
       Top = 0
       Width = 138
       Height = 135
@@ -1196,7 +1198,7 @@ object Form1: TForm1
       OnClick = btnstretchClick
     end
     object btnfraps: TSpeedButton
-      Left = 1575
+      Left = 1557
       Top = 0
       Width = 138
       Height = 135
@@ -1214,7 +1216,7 @@ object Form1: TForm1
       OnClick = btnfrapsClick
     end
     object btnclosecaption: TSpeedButton
-      Left = 1713
+      Left = 1695
       Top = 0
       Width = 138
       Height = 135
@@ -1229,11 +1231,10 @@ object Form1: TForm1
       Enabled = False
       ParentShowHint = False
       ShowHint = True
-      Transparent = False
       OnClick = btnclosecaptionClick
     end
     object btnnumeros: TSpeedButton
-      Left = 1851
+      Left = 1833
       Top = 0
       Width = 138
       Height = 135
@@ -1251,19 +1252,13 @@ object Form1: TForm1
       OnClick = btnnumerosClick
     end
     object ToolButton4: TToolButton
-      Left = 1989
+      Left = 1971
       Top = 0
-      Width = 24
-      Margins.Left = 9
-      Margins.Top = 9
-      Margins.Right = 9
-      Margins.Bottom = 9
       Caption = 'ToolButton4'
-      ImageIndex = 0
-      Style = tbsSeparator
+      Enabled = False
     end
     object btnrenomear: TSpeedButton
-      Left = 2013
+      Left = 1986
       Top = 0
       Width = 138
       Height = 135
@@ -1277,13 +1272,12 @@ object Form1: TForm1
       Images = VirtualImageList1
       ParentShowHint = False
       ShowHint = True
-      Transparent = False
       OnClick = btnrenomearClick
     end
   end
   object panel_icone_legenda: TPanel
     Left = 21
-    Top = 192
+    Top = 170
     Width = 48
     Height = 48
     Margins.Left = 9
@@ -1292,7 +1286,8 @@ object Form1: TForm1
     Margins.Bottom = 9
     AutoSize = True
     BevelOuter = bvNone
-    Color = clWhite
+    Color = clWindow
+    ParentBackground = False
     TabOrder = 9
     object Image4: TImage
       Left = 0
@@ -1304,7 +1299,6 @@ object Form1: TForm1
       Margins.Right = 9
       Margins.Bottom = 9
       Align = alCustom
-      AutoSize = True
       Center = True
       Picture.Data = {
         0954506E67496D61676589504E470D0A1A0A0000000D49484452000000800000
@@ -1556,12 +1550,14 @@ object Form1: TForm1
         124084234A00118E28014438A20410E1F87F298916DAE09C3959000000004945
         4E44AE426082}
       Proportional = True
+      Stretch = True
+      Transparent = True
     end
   end
   object Panel1: TPanel
-    Left = 1749
-    Top = 1128
-    Width = 531
+    Left = 1764
+    Top = 957
+    Width = 528
     Height = 99
     Margins.Left = 9
     Margins.Top = 9
@@ -1569,26 +1565,28 @@ object Form1: TForm1
     Margins.Bottom = 9
     BevelOuter = bvLowered
     BorderStyle = bsSingle
-    Color = clBtnShadow
+    Color = clMedGray
+    ParentBackground = False
     TabOrder = 4
   end
   object ProgressBar1: TProgressBar
     Left = 0
-    Top = 1497
-    Width = 2289
-    Height = 48
+    Top = 1464
+    Width = 2292
+    Height = 40
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
     Margins.Bottom = 9
+    Align = alBottom
     TabOrder = 2
     Visible = False
   end
   object MainMenu1: TMainMenu
     BiDiMode = bdLeftToRight
     ParentBiDiMode = False
-    Left = 2096
-    Top = 344
+    Left = 67
+    Top = 488
     object Menu_Arquivo: TMenuItem
       Caption = '&Arquivo'
       object lstabrir: TMenuItem
@@ -1757,8 +1755,8 @@ object Form1: TForm1
     end
   end
   object PopupMenu1: TPopupMenu
-    Left = 2176
-    Top = 344
+    Left = 291
+    Top = 488
     object Abrir1: TMenuItem
       Caption = '&Abrir...'
       OnClick = Abrir1Click
@@ -1783,13 +1781,13 @@ object Form1: TForm1
     DefaultExt = '.srt'
     Filter = 'Documento de Legenda (*.srt)|*.srt'
     Title = 'Salvar como'
-    Left = 2000
-    Top = 264
+    Left = 67
+    Top = 288
   end
   object OpenDialog1: TOpenDialog
     Filter = 'Documento de Legenda (*.srt)|*.srt'
-    Left = 2088
-    Top = 264
+    Left = 299
+    Top = 288
   end
   object ColorDialog1: TColorDialog
     CustomColors.Strings = (
@@ -1809,8 +1807,8 @@ object Form1: TForm1
       'ColorN=FFFFFFFF'
       'ColorO=FFFFFFFF'
       'ColorP=FFFFFFFF')
-    Left = 2176
-    Top = 264
+    Left = 531
+    Top = 288
   end
   object Imagem_Grande: TImageCollection
     Images = <
@@ -3886,8 +3884,8 @@ object Form1: TForm1
               99BF4F550000000049454E44AE426082}
           end>
       end>
-    Left = 1800
-    Top = 1248
+    Left = 1811
+    Top = 1224
   end
   object Imagem_Pequena: TImageCollection
     Images = <
@@ -5300,8 +5298,8 @@ object Form1: TForm1
               070F1E9A81FF07E9A931D164A26F6B0000000049454E44AE426082}
           end>
       end>
-    Left = 2088
-    Top = 1248
+    Left = 2099
+    Top = 1224
   end
   object VirtualImageList1: TVirtualImageList
     Images = <
@@ -5381,10 +5379,10 @@ object Form1: TForm1
         Name = 'Varinha_Magica'
       end>
     ImageCollection = Imagem_Grande
-    Width = 65
-    Height = 65
-    Left = 1800
-    Top = 1080
+    Width = 70
+    Height = 70
+    Left = 1811
+    Top = 1056
   end
   object VirtualImageList2: TVirtualImageList
     Images = <
@@ -5436,7 +5434,7 @@ object Form1: TForm1
     ImageCollection = Imagem_Pequena
     Width = 45
     Height = 45
-    Left = 2088
-    Top = 1080
+    Left = 2099
+    Top = 1056
   end
 end

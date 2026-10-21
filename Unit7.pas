@@ -11,8 +11,9 @@ type
     Bevel1: TBevel;
     Button1: TButton;
     Panel1: TPanel;
-    Image1: TImage;
     Image2: TImage;
+    Label1: TLabel;
+    Label2: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);

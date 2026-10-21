@@ -22,7 +22,6 @@ type
   function CleanWord(const S: string): string;
   function IsLetter(C: Char): Boolean;
   procedure InitHunspell(const DictName: string);
-//procedure FinalizeHunspell;
   //-------------------------------------------------------------------------------------------------
 
 type
@@ -48,8 +47,6 @@ type
     lstsair: TMenuItem;
     N1: TMenuItem;
     btnconsertar: TSpeedButton;
-    ToolButton1: TToolButton;
-    ToolButton2: TToolButton;
     StatusBar1: TStatusBar;
     PopupMenu1: TPopupMenu;
     Selecionar1: TMenuItem;
@@ -81,7 +78,6 @@ type
     N3: TMenuItem;
     btnnumeros: TSpeedButton;
     lstnumeros: TMenuItem;
-    ToolButton4: TToolButton;
     Menu_Caracter: TMenuItem;
     lstitalic: TMenuItem;
     lstunderline: TMenuItem;
@@ -120,6 +116,9 @@ type
     Imagem_Pequena: TImageCollection;
     VirtualImageList1: TVirtualImageList;
     VirtualImageList2: TVirtualImageList;
+    ToolButton4: TToolButton;
+    ToolButton1: TToolButton;
+    ToolButton2: TToolButton;
     procedure ListBox1Click(Sender: TObject);
     procedure btnsalvarcomoClick(Sender: TObject);
     procedure btnprocurarClick(Sender: TObject);
@@ -192,6 +191,11 @@ type
   //-----------------------------------------------------------------
   procedure WMDropFiles(var Msg: TWMDropFiles); message WM_DROPFILES;
   //-----------------------------------------------------------------
+  {ESCALA DE DPI - posições em pixels}
+  //-----------------------------------------------------------------
+  function S(v: Integer): Integer;
+  procedure AjustarAlturas;
+  //-----------------------------------------------------------------
   public
   { Public declarations }
   //-----------------------------------------------------------------
@@ -251,8 +255,42 @@ const
 
 implementation
 
-uses Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, CommCtrl, Funcoes, Language;
+uses Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, CommCtrl, Funcoes, Language, System.IOUtils;
 
+//-------------------------------------------------------------------------------------------------
+{ESCALA DE DPI}
+//-------------------------------------------------------------------------------------------------
+{Converte um valor em pixels (pensado para 96 DPI) para o DPI atual do form}
+function TForm1.S(v: Integer): Integer;
+begin
+Result := MulDiv(v, CurrentPPI, 96);
+end;
+//-------------------------------------------------------------------------------------------------
+{Ajusta a altura dos RichEdit (1 ou 2 visíveis) até a barra de status}
+procedure TForm1.AjustarAlturas;
+var
+area: Integer;
+begin
+area := StatusBar1.Top - RichText1.Top - S(4); //--> espaço útil até a barra de status
+
+  if RichText2.Visible then
+  begin
+    if RichText1.Visible then
+    begin
+    RichText1.Height := (area - S(5)) div 2;
+    RichText2.Height := RichText1.Height;
+    RichText2.Top    := RichText1.Top + RichText1.Height + S(5);
+    end
+    else
+    begin
+    RichText2.Top    := RichText1.Top;
+    RichText2.Height := area;
+    end;
+  end
+  else
+  RichText1.Height := area;
+
+end;
 //-------------------------------------------------------------------------------------------------
 function RemoverCC(const S: string; var DentroCC: Boolean;
   var Contador: Integer): string;
@@ -363,21 +401,35 @@ DicPath := UTF8Encode(
 HunDictAtual := DictName;
 end;
 //-------------------------------------------------------------------------------------------------
-{
-procedure FinalizeHunspell;
-begin
-  if HunHandle <> nil then
-  begin
-    Hunspell_destroy(HunHandle);
-    HunHandle := nil;
-  end;
-end;
-}
-//-------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------
 
 {$R *.dfm}
 
+//------------------------------------------------------------------------------
+function LerArquivoTexto(const Arq: string): string;
+var
+  Bytes: TBytes;
+  Enc: TEncoding;
+  Off: Integer;
+begin
+  Result := '';
+  Bytes := TFile.ReadAllBytes(Arq);
+  if Length(Bytes) = 0 then
+  Exit;
+
+  Enc := nil;
+  Off := TEncoding.GetBufferEncoding(Bytes, Enc, TEncoding.ANSI);
+
+  if (Off = 0) and
+     (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, @Bytes[0], Length(Bytes), nil, 0) > 0) then
+  Enc := TEncoding.UTF8;
+
+  Result := Enc.GetString(Bytes, Off, Length(Bytes) - Off);
+
+  Result := StringReplace(Result, #$0085, '...', [rfReplaceAll]);
+  Result := StringReplace(Result, #$2028, ' ',   [rfReplaceAll]);
+  Result := StringReplace(Result, #$2029, ' ',   [rfReplaceAll]);
+end;
 //------------------------------------------------------------------------------
 {RESETAR DA MEMÓRIA O CAMPO RICHTEXT}
 //------------------------------------------------------------------------------
@@ -543,6 +595,7 @@ MB = 1024 * KB; // Megabyte
 GB = 1024 * MB; // Gigabyte
 var
 SR: TSearchRec;
+SS: TStringStream;
 begin
 Form1.Caption:=Application.Title;
 RichText1.Color:=clWhite;
@@ -586,8 +639,9 @@ RichText1.ReadOnly:=True;
  Reset(arquivo);
  //-----------------------------------------------------------------------
  ProgressBar1.Position:=0;
- ProgressBar1.Max:=(Round(FileSize(arquivo) * 1.7))+RichText1.Lines.Count;
+ ProgressBar1.Visible:=True;
  ProgressBar1.Refresh;
+ Application.ProcessMessages;
  //-----------------------------------------------------------------------
 
    while not eof (arquivo) do
@@ -597,11 +651,19 @@ RichText1.ReadOnly:=True;
    end;
 
  CloseFile(arquivo);
- RichText1.Lines.LoadFromFile(String(PChar(parametro)));
+
+ SS := TStringStream.Create(LerArquivoTexto(parametro), TEncoding.UTF8);
+   try
+   RichText1.Lines.LoadFromStream(SS, TEncoding.UTF8);
+   finally
+   SS.Free;
+   end;
+
  FindFirst(parametro,faArchive,SR);
 
  //-------------------------------------------------------------------------------------
  Label5.Caption:=Copy(FloatToStr(SR.Size/KB),0,pos(',',FloatToStr(SR.Size/KB))+1)+' KB';
+ FindClose(SR);                 //--> libera o handle do FindFirst
  Contar_Linhas_Dialogos(RichText1,ProgressBar1,Label4,Label8);
  //-------------------------------------------------------------------------------------
 
@@ -618,8 +680,8 @@ RichText1.ReadOnly:=True;
  StatusBar1.Panels[0].Text:='';
  lstlocalizar.Enabled:=True;
 
- RichText1.Height:=Form1.Height-164;
  RichText1.Visible:=True;
+ AjustarAlturas;
 
    {LINHAS, DIÁLOGOS e TAMANHO}
    if (Label4.Visible = False) then
@@ -649,7 +711,7 @@ RichText1.ReadOnly:=True;
  btntags.Enabled:=True;
  lsttags.Enabled:=True;
  btnclosecaption.Enabled:=True;
- lstclosecaption.Enabled:=True; 
+ lstclosecaption.Enabled:=True;
  //----------------------------
 
  {SOBREPOSIÇÕES}
@@ -660,7 +722,7 @@ RichText1.ReadOnly:=True;
 
  {LIMITES DE LINHA}
  Label3.Caption:='';
- Label3.Top:=Label1.Top+16;;
+ Label3.Top:=Label1.Top+S(16);
  ListBox2.Clear;
  ListBox2.Visible:=False;
 
@@ -700,6 +762,7 @@ RichText1.ReadOnly:=True;
  SendMessage(RichText1.Handle, WM_VSCROLL, SB_TOP, 0);
 
  RichText1.SelStart:=0;
+ salvar:=False;
  Panel1.Visible:=False;
  end
  else
@@ -951,7 +1014,7 @@ SaveDialog1.FileName:=Trim(edit_legenda.Text);
          btnsalvarcomo.Click;
          end;
        end;
-       //----------------------------------------------------------------------------------------------------------------------------------------------------       
+       //----------------------------------------------------------------------------------------------------------------------------------------------------
        {FIM - CASE}
        //----------------------------------------------------------------------------------------------------------------------------------------------------
     end
@@ -1028,7 +1091,7 @@ ProgressBar1.Refresh;
                    vt_limitelinha[cont1]:=j+1;        //--> Preenche o Vetor com as linhas de LIMITES DE LINHA
                    break;
                    end;
-                   
+
                end;
                {Memo3.Lines.Add('---');}
                //---------------------------------------
@@ -1076,7 +1139,7 @@ ProgressBar1.Refresh;
     Label3.Caption:=Format(Lang_SRT(32),[cont1]);
 
    //----------------------------------------
-   Image3.Left:=Label3.Width+Form1.Width-174;
+   Image3.Left:=Label3.Left+Label3.Width+S(3);
    Label3.Visible:=True;
    Image3.Visible:=True;
    //----------------------------------------
@@ -1089,7 +1152,7 @@ ProgressBar1.Refresh;
     else
     StatusBar1.Panels[0].Text:=Format(Lang_SRT(20),[cont1+cont2]);
    end;
-                   
+
    //-----------------------------------------------------------------------
    //SOBREPOSIÇÕES - TEXTOS
    //-----------------------------------------------------------------------
@@ -1101,7 +1164,7 @@ ProgressBar1.Refresh;
       Label1.Caption:=Format(Lang_SRT(34),[cont2]);
 
    //----------------------------------------
-   Image1.Left:=Label1.Width+Form1.Width-174;
+   Image1.Left:=Label1.Left+Label1.Width+S(3);
    Label1.Font.Color:=clRed; //LETRA VERMELHA
    Label1.Visible:=True;
    Image1.Visible:=True;
@@ -1136,8 +1199,8 @@ ProgressBar1.Refresh;
 
  if Label1.Visible = True then
  begin
- Label3.Top:=Label1.Top+16;
- Image3.Top:=Image1.Top+16;
+ Label3.Top:=Label1.Top+S(16);
+ Image3.Top:=Image1.Top+S(16);
  end
  else
  begin
@@ -1189,7 +1252,7 @@ begin
 //------------------------------------------------------
 salvar:=True;  //--> Variável GLOBAL (Salvar Alterações)
 //------------------------------------------------------
-                     
+
 //-------------
 BotoesTopo_Off;
 //-------------
@@ -1211,10 +1274,8 @@ RichText2.Text:=RichText1.Text;
     RichText2.Text:=(StringReplace(RichText2.Text,tempo1,tempo2,[rfReplaceAll, rfIgnoreCase]));
   end;
 
-RichText1.Height:=Trunc(Form1.Height/2)-84;
-RichText2.Height:=RichText1.Height;
-RichText2.Top:=RichText1.Top+RichText1.Height+5;
 RichText2.Visible:=True;
+AjustarAlturas;
 RichText2.SetFocus;
 ProgressBar1.Visible:=False;
 
@@ -1283,7 +1344,7 @@ begin
   end;
  end;
  //-----------------------------------------------------------------------------
- 
+
 end;
 
 procedure TForm1.Label1Click(Sender: TObject);
@@ -1294,23 +1355,23 @@ begin
 if (ListBox1.Items.Text <> '') and (ListBox1.Visible = False) then
 begin
 ListBox1.Visible:=True;
-ListBox1.Left:=Label1.Left+11;
-ListBox1.Width:=94;
+ListBox1.Left:=Label1.Left+S(11);
+ListBox1.Width:=S(94);
   if ListBox1.Items.Count < 11 then
-  ListBox1.Height:=ListBox1.Items.Count*14+1
+  ListBox1.Height:=ListBox1.Items.Count*S(14)+S(1)
   else
-  ListBox1.Height:=145;
-ListBox1.Top:=Label1.Top+16;
-Label3.Top:=ListBox1.Top+ListBox1.Height+4;
-ListBox2.Top:=Label3.Top+16;
+  ListBox1.Height:=S(145);
+ListBox1.Top:=Label1.Top+S(16);
+Label3.Top:=ListBox1.Top+ListBox1.Height+S(4);
+ListBox2.Top:=Label3.Top+S(16);
 end
 else
 begin
 ListBox1.Visible:=False;
-Label3.Top:=Label1.Top+16;
-ListBox2.Top:=Label3.Top+16;
+Label3.Top:=Label1.Top+S(16);
+ListBox2.Top:=Label3.Top+S(16);
 end;
-Image3.Top:=Label3.Top-1;
+Image3.Top:=Label3.Top-S(1);
 //----------------------------------------------------------------
 end;
 
@@ -1322,13 +1383,13 @@ begin
 if (ListBox2.Items.Text <> '') and (ListBox2.Visible = False) then
 begin
 ListBox2.Visible:=True;
-ListBox2.Left:=Label3.Left+11;
-ListBox2.Width:=94;
+ListBox2.Left:=Label3.Left+S(11);
+ListBox2.Width:=S(94);
   if ListBox2.Items.Count < 11 then
-  ListBox2.Height:=ListBox2.Items.Count*14+1
+  ListBox2.Height:=ListBox2.Items.Count*S(14)+S(1)
   else
-  ListBox2.Height:=145;
-ListBox2.Top:=Label3.Top+16;
+  ListBox2.Height:=S(145);
+ListBox2.Top:=Label3.Top+S(16);
 end
 else
 ListBox2.Visible:=False;
@@ -1386,12 +1447,12 @@ begin
  if (editar = False) then
  begin
  {CRIAR MARGEM}
- MargenIzquierdo:=10;
- MargenDerecho:=10;
+ MargenIzquierdo:=S(10);
+ MargenDerecho:=S(10);
  R := RichText1.ClientRect;
  R.Left:=R.Left + MargenIzquierdo;
- R.Top:=R.Top + 2;
- R.Bottom:=R.Bottom - 2;
+ R.Top:=R.Top + S(2);
+ R.Bottom:=R.Bottom - S(2);
  R.Right:=R.Right-MargenDerecho;
  SendMessage(RichText1.Handle, EM_SETRECT, 0, Longint(@R));
  SendMessage(RichText2.Handle, EM_SETRECT, 0, Longint(@R));
@@ -1495,9 +1556,9 @@ begin
           //------------------------------
 
            if RichText2.Visible = True then
-           RichText2.Lines.SaveToFile(caminho_arquivo)
+           RichText2.Lines.SaveToFile(caminho_arquivo, TEncoding.UTF8)
            else
-           RichText1.Lines.SaveToFile(caminho_arquivo);
+           RichText1.Lines.SaveToFile(caminho_arquivo, TEncoding.UTF8);
 
           Form1.Caption:=Application.Title;
           StatusBar1.Panels[0].Text:=Trim(edit_legenda.text);
@@ -1557,53 +1618,40 @@ end;
 end;
 
 procedure TForm1.FormResize(Sender: TObject);
+var
+col: Integer; //--> posição (Left) da coluna da direita
 begin
 //----------------------------------------------------------------------------
-{ ALTURA MÍNIMA  = 574 }
-{ LARGURA MÍNIMA = 776 }
+{ ALTURA MÍNIMA  = 574 (em 96 DPI) }
+{ LARGURA MÍNIMA = 776 (em 96 DPI) }
 //----------------------------------------------------------------------------
-if (Form1 <> nil) and (Form1.Height >= 574) and (Form1.Width >= 776) then
+if (Form1 <> nil) and (Height >= S(574)) and (Width >= S(776)) then
 begin
-  Bevel1.Width:=Form1.Width-16;
-  edit_legenda.Width:=Form1.Width-16;
-  
-  RichText1.Width:=Form1.Width-184;
-  RichText2.Width:=RichText1.Width;
-    //------------------------------------------------
-    if RichText2.Visible = False then
-    RichText1.Height:=Form1.Height-164
-    else
-    begin
-      if RichText1.Visible = True then
-      begin
-      RichText1.Height:=Trunc(Form1.Height/2)-84;
-      RichText2.Height:=RichText1.Height;
-      RichText2.Top:=RichText1.Top+RichText1.Height+5;
-      end
-      else
-      begin
-      RichText2.Top:=RichText1.Top;
-      RichText2.Height:=Form1.Height-164;
-      end
-    end;
-    //------------------------------------------------
-    
-  ProgressBar1.Width:=StatusBar1.Width;
-  ProgressBar1.Top:=StatusBar1.Top+2;
+col := ClientWidth - S(169);
 
-  box_edicao.Left:=Form1.Width-185;
-  //----------------------------------------
-  Label1.Left:=Form1.Width-177;
-  Label3.Left:=Form1.Width-177;
-  Label4.Left:=Form1.Width-177;
-  Label5.Left:=Form1.Width-177;
-  Label8.Left:=Form1.Width-177;
-  Image1.Left:=Label1.Width+Form1.Width-174;
-  Image2.Left:=Label1.Width+Form1.Width-174;
-  Image3.Left:=Label3.Width+Form1.Width-174;
-  ListBox1.Left:=Label1.Left+11;
-  ListBox2.Left:=Label3.Left+11;
-  //----------------------------------------
+Bevel1.Width:=ClientWidth;
+edit_legenda.Width:=ClientWidth;
+
+RichText1.Width:=ClientWidth - S(176);
+RichText2.Width:=RichText1.Width;
+AjustarAlturas;
+
+ProgressBar1.Width:=StatusBar1.Width;
+ProgressBar1.Top:=StatusBar1.Top+S(2);
+
+box_edicao.Left:=col - S(8);
+//----------------------------------------
+Label1.Left:=col;
+Label3.Left:=col;
+Label4.Left:=col;
+Label5.Left:=col;
+Label8.Left:=col;
+Image1.Left:=col+Label1.Width+S(3);
+Image2.Left:=Image1.Left;
+Image3.Left:=col+Label3.Width+S(3);
+ListBox1.Left:=col+S(11);
+ListBox2.Left:=col+S(11);
+//----------------------------------------
 end;
 //----------------------------------------------------------------------------
 
@@ -1744,7 +1792,7 @@ lstsubstituir.Enabled:=True;
   end;
 
 //------------------------------
-box_edicao.Top:=RichText1.Top-5;
+box_edicao.Top:=RichText1.Top-S(5);
 box_edicao.Visible:=True;
 //------------------------------
 lstitalic.Enabled:=True;
@@ -1897,7 +1945,7 @@ Form6_substituir.Height:=190;
 //-----------------------------
 Form6_substituir.Visible:=True;
 //-----------------------------
- 
+
 end;
 
 procedure TForm1.edit_legendaEnter(Sender: TObject);
@@ -2067,7 +2115,7 @@ end;
 
 procedure TForm1.btntagsClick(Sender: TObject);
 var
-HexColor: string;  
+HexColor: string;
 begin
 
   if not ColorDialog1.Execute then
@@ -2317,7 +2365,7 @@ SendMessage(RichText1.Handle, WM_VSCROLL, SB_TOP, 0);
   begin
   Label1.Caption:=Format(Lang_SRT(35),[ContadorRemocoes]);
   Label1.Visible:=True;
-  Image2.Left:=Label1.Width+Form1.Width-174;
+  Image2.Left:=Label1.Left+Label1.Width+S(3);
   Image2.Visible:=True;
   StatusBar1.Panels[0].Text := Lang_SRT(30);
   end;
@@ -2346,4 +2394,3 @@ Lang_Apply(2);
 end;
 
 end.
-

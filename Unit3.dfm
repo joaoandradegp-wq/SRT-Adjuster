@@ -23,10 +23,10 @@ object Form3: TForm3
   PixelsPerInch = 288
   TextHeight = 37
   object Label1: TLabel
-    Left = 168
-    Top = 105
-    Width = 311
-    Height = 44
+    Left = 155
+    Top = 152
+    Width = 277
+    Height = 48
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -35,15 +35,15 @@ object Form3: TForm3
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -36
-    Font.Name = 'Verdana'
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
   end
   object Label2: TLabel
-    Left = 201
-    Top = 198
-    Width = 278
-    Height = 44
+    Left = 183
+    Top = 222
+    Width = 249
+    Height = 48
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -52,7 +52,7 @@ object Form3: TForm3
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -36
-    Font.Name = 'Verdana'
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
   end
@@ -67,6 +67,12 @@ object Form3: TForm3
     Margins.Bottom = 9
     Caption = 'OK'
     Enabled = False
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -32
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
     OnClick = btnOKClick
   end
   object btnCancelar: TSpeedButton
@@ -79,6 +85,12 @@ object Form3: TForm3
     Margins.Right = 9
     Margins.Bottom = 9
     Caption = 'Cancelar'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -32
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
     OnClick = btnCancelarClick
   end
   object Bevel1: TBevel
@@ -94,8 +106,8 @@ object Form3: TForm3
     Style = bsRaised
   end
   object Image1: TImage
-    Left = 888
-    Top = 108
+    Left = 838
+    Top = 155
     Width = 48
     Height = 48
     Margins.Left = 9
@@ -244,8 +256,8 @@ object Form3: TForm3
     Visible = False
   end
   object Image2: TImage
-    Left = 888
-    Top = 204
+    Left = 838
+    Top = 230
     Width = 48
     Height = 48
     Margins.Left = 9
@@ -394,8 +406,8 @@ object Form3: TForm3
     Visible = False
   end
   object duvida_pri_dialogo: TSpeedButton
-    Left = 807
-    Top = 99
+    Left = 753
+    Top = 146
     Width = 69
     Height = 66
     Margins.Left = 9
@@ -414,8 +426,8 @@ object Form3: TForm3
     OnClick = duvida_pri_dialogoClick
   end
   object duvida_ult_dialogo: TSpeedButton
-    Left = 807
-    Top = 195
+    Left = 753
+    Top = 221
     Width = 69
     Height = 66
     Margins.Left = 9
@@ -434,8 +446,8 @@ object Form3: TForm3
     OnClick = duvida_ult_dialogoClick
   end
   object MaskEdit1: TMaskEdit
-    Left = 504
-    Top = 99
+    Left = 450
+    Top = 151
     Width = 297
     Height = 52
     Margins.Left = 9
@@ -455,8 +467,8 @@ object Form3: TForm3
     OnChange = MaskEdit1Change
   end
   object MaskEdit2: TMaskEdit
-    Left = 504
-    Top = 195
+    Left = 450
+    Top = 221
     Width = 297
     Height = 52
     Margins.Left = 9

@@ -5,18 +5,17 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, pngimage, ExtCtrls, StdCtrls,
-  OleCtrls, SHDocVw, ShellAPI, Vcl.Imaging.GIFImg;
+  ShellAPI, Vcl.Buttons, Vcl.WinXCtrls;
 
 type
   Tsplash_screen = class(TForm)
     Image1: TImage;
     Label1: TLabel;
-    loading: TImage;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
-    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
+     FIndicator: TActivityIndicator;
   public
     { Public declarations }
   end;
@@ -41,24 +40,16 @@ procedure Tsplash_screen.FormCreate(Sender: TObject);
 begin
 Label1.Caption:=Lang_SRT(94);
 Label1.Left :=(ClientWidth-Label1.Width ) div 2;
-loading.Left:=(ClientWidth-loading.Width) div 2;
 
-if Form1 <> nil then
-loading.Visible:=False;
+FIndicator := TActivityIndicator.Create(Self);
+FIndicator.Parent := Self;
+FIndicator.IndicatorSize := aisMedium;
+FIndicator.Left := (ClientWidth - FIndicator.Width) div 2;
+FIndicator.Top  := ClientHeight - FIndicator.Height - MulDiv(50, CurrentPPI, 96);
+FIndicator.Animate := True;
 
   if FileExists('check_update.exe') then
   ShellExecute(0,'open','check_update.exe',pchar(SRT_VERSAO_Global),nil,SW_HIDE);
-
-end;
-
-procedure Tsplash_screen.FormActivate(Sender: TObject);
-begin
-
-  if loading.Picture.Graphic is TGIFImage then
-  begin
-    TGIFImage(loading.Picture.Graphic).Animate     := True;
-    TGIFImage(loading.Picture.Graphic).AnimateLoop := glEnabled;
-  end;
 
 end;
 

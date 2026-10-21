@@ -26,8 +26,8 @@ object Form2: TForm2
   object Label2: TLabel
     Left = 27
     Top = 555
-    Width = 230
-    Height = 47
+    Width = 164
+    Height = 48
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -35,16 +35,16 @@ object Form2: TForm2
     Caption = 'Segundos:'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -39
-    Font.Name = 'Verdana'
-    Font.Style = [fsBold]
+    Font.Height = -36
+    Font.Name = 'Segoe UI'
+    Font.Style = []
     ParentFont = False
   end
   object Label1: TLabel
     Left = 27
     Top = 732
-    Width = 190
-    Height = 47
+    Width = 137
+    Height = 48
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -52,16 +52,16 @@ object Form2: TForm2
     Caption = 'Minutos:'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -39
-    Font.Name = 'Verdana'
-    Font.Style = [fsBold]
+    Font.Height = -36
+    Font.Name = 'Segoe UI'
+    Font.Style = []
     ParentFont = False
   end
   object Label3: TLabel
     Left = 27
     Top = 912
-    Width = 144
-    Height = 47
+    Width = 101
+    Height = 48
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -69,14 +69,14 @@ object Form2: TForm2
     Caption = 'Horas:'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -39
-    Font.Name = 'Verdana'
-    Font.Style = [fsBold]
+    Font.Height = -36
+    Font.Name = 'Segoe UI'
+    Font.Style = []
     ParentFont = False
   end
   object btnOK: TSpeedButton
-    Left = 27
-    Top = 1326
+    Left = 30
+    Top = 1342
     Width = 870
     Height = 105
     Margins.Left = 9
@@ -87,15 +87,15 @@ object Form2: TForm2
     Enabled = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -36
-    Font.Name = 'MS Sans Serif'
+    Font.Height = -32
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
     OnClick = btnOKClick
   end
   object btnCancelar: TSpeedButton
     Left = 918
-    Top = 1326
+    Top = 1342
     Width = 309
     Height = 105
     Margins.Left = 9
@@ -105,8 +105,8 @@ object Form2: TForm2
     Caption = 'Cancelar'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -36
-    Font.Name = 'MS Sans Serif'
+    Font.Height = -32
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
     OnClick = btnCancelarClick
@@ -114,8 +114,8 @@ object Form2: TForm2
   object Label5: TLabel
     Left = 27
     Top = 1089
-    Width = 324
-    Height = 47
+    Width = 234
+    Height = 48
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -123,14 +123,14 @@ object Form2: TForm2
     Caption = 'Milissegundos:'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -39
-    Font.Name = 'Verdana'
-    Font.Style = [fsBold]
+    Font.Height = -36
+    Font.Name = 'Segoe UI'
+    Font.Style = []
     ParentFont = False
   end
   object ScrollBar1: TScrollBar
-    Left = 27
-    Top = 612
+    Left = 40
+    Top = 621
     Width = 1200
     Height = 81
     Margins.Left = 9
@@ -182,13 +182,13 @@ object Form2: TForm2
     Caption = ' Sobre o texto '
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -39
-    Font.Name = 'Verdana'
+    Font.Height = -36
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
     TabOrder = 0
     object RadioDepois: TRadioButton
-      Left = 27
+      Left = 9
       Top = 78
       Width = 486
       Height = 54
@@ -200,8 +200,8 @@ object Form2: TForm2
       Checked = True
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -39
-      Font.Name = 'Verdana'
+      Font.Height = -36
+      Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
       TabOrder = 0
@@ -209,7 +209,7 @@ object Form2: TForm2
       OnClick = RadioDepoisClick
     end
     object RadioAntes: TRadioButton
-      Left = 27
+      Left = 9
       Top = 153
       Width = 462
       Height = 54
@@ -220,8 +220,8 @@ object Form2: TForm2
       Caption = 'O texto vir'#225' antes'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -39
-      Font.Name = 'Verdana'
+      Font.Height = -36
+      Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
       TabOrder = 1
@@ -241,8 +241,8 @@ object Form2: TForm2
     Enabled = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -39
-    Font.Name = 'Verdana'
+    Font.Height = -36
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
     TabOrder = 5
@@ -264,8 +264,8 @@ object Form2: TForm2
       ParentFont = False
     end
     object MaskEdit1: TMaskEdit
-      Left = 96
-      Top = 96
+      Left = 107
+      Top = 105
       Width = 435
       Height = 66
       Margins.Left = 9
@@ -277,7 +277,7 @@ object Form2: TForm2
       EditMask = '!90:00:00,000;1;_'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -60
+      Font.Height = -56
       Font.Name = 'Verdana'
       Font.Style = []
       MaxLength = 12
@@ -316,8 +316,8 @@ object Form2: TForm2
     Caption = ' Ajustar '
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -39
-    Font.Name = 'Verdana'
+    Font.Height = -36
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
     TabOrder = 6
@@ -334,8 +334,8 @@ object Form2: TForm2
       Checked = True
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -39
-      Font.Name = 'Verdana'
+      Font.Height = -36
+      Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
       TabOrder = 0
@@ -354,8 +354,8 @@ object Form2: TForm2
       Caption = 'Dura'#231#227'o dos Di'#225'logos'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -39
-      Font.Name = 'Verdana'
+      Font.Height = -36
+      Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
       TabOrder = 1

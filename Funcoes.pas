@@ -2,7 +2,7 @@ unit Funcoes;
 
 interface
 
-Uses Unit1,ComCtrls,StdCtrls,Windows,Messages,IdHTTP,Forms,Wininet,
+Uses Unit1,Classes,ComCtrls,StdCtrls,Windows,Messages,IdHTTP,Forms,Wininet,
      SysUtils,Graphics,StrUtils,dialogs;
 
 {VERIFICA SE EXISTE ARQUIVO DE VÍDEO NA PASTA DA LEGENDA}
@@ -452,18 +452,28 @@ end;
 //------------------------------------------------------------------------------
 procedure Contar_Linhas_Dialogos (var Legenda:TRichEdit;ProgressBar1:TProgressBar;Label_Linha,Label_Dialogo:TLabel);
 var
-i:integer;
+i: Integer;
+Lista: TStringList;
 begin
 dialogo:=0;  //--> Variável GLOBAL
-linha  :=0;  //--> Variável GLOBAL
+linha  :=Legenda.Lines.Count;  //--> Variável GLOBAL (mesma contagem de antes)
 
- for i:= 0 to Legenda.Lines.Count -1 do
- begin
- ProgressBar1.Position := ProgressBar1.Position + 1;
-   if (IsNumeric(Legenda.lines[i])) and (AnsiContainsStr(Legenda.Lines[i+1],' --> ')) and ((Trim(Legenda.Lines[i-1])) = '') then
-   dialogo:=dialogo+1;
- linha:=linha+1;
- end;
+Lista:=TStringList.Create;
+  try
+  Lista.Text:=Legenda.Text;    //--> uma única chamada ao RichEdit
+
+    for i:=0 to Lista.Count-1 do
+    begin
+      if IsNumeric(Lista[i]) and
+         (i+1 < Lista.Count) and
+         AnsiContainsStr(Lista[i+1],' --> ') and
+         ((i = 0) or (Trim(Lista[i-1]) = '')) then
+      Inc(dialogo);
+    end;
+
+  finally
+  Lista.Free;
+  end;
 
 //-------------------------------------------------------------------
 Mensagem_Texto_LinhaDialogo(linha,dialogo,Label_Linha,Label_Dialogo);
@@ -512,9 +522,9 @@ Form1.lstnumeros.Enabled:=False;
 //---------------------------------
 
    if Form1.RichText2.Visible = True then
-   Form1.RichText2.Lines.SaveToFile(Form1.SaveDialog1.FileName)
+   Form1.RichText2.Lines.SaveToFile(caminho_arquivo, TEncoding.UTF8)
    else
-   Form1.RichText1.Lines.SaveToFile(Form1.SaveDialog1.FileName);
+   Form1.RichText1.Lines.SaveToFile(caminho_arquivo, TEncoding.UTF8);
 
 Form1.Caption:=Application.Title;
 Form1.StatusBar1.Panels[0].Text:=Trim(ExtractFileName(Form1.SaveDialog1.FileName));
