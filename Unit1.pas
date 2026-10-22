@@ -119,6 +119,8 @@ type
     ToolButton4: TToolButton;
     ToolButton1: TToolButton;
     ToolButton2: TToolButton;
+    Label2: TLabel;
+    ListBox3: TListBox;
     procedure ListBox1Click(Sender: TObject);
     procedure btnsalvarcomoClick(Sender: TObject);
     procedure btnprocurarClick(Sender: TObject);
@@ -1191,8 +1193,8 @@ ProgressBar1.Refresh;
      lstfraps.Enabled  :=True;
      btnnumeros.Enabled:=True;
      lstnumeros.Enabled:=True;
-     btn_editAvancada.Enabled  :=True;
-     lst_editAvancada.Enabled  :=True;
+     btn_editAvancada.Enabled:=True;
+     lst_editAvancada.Enabled:=True;
      //-----------------------
      StatusBar1.Panels[0].Text:=Lang_SRT(21);
      end;

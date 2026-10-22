@@ -48,7 +48,7 @@ object Form1: TForm1
   end
   object Label8: TLabel
     Left = 1787
-    Top = 360
+    Top = 368
     Width = 189
     Height = 38
     Margins.Left = 9
@@ -728,6 +728,27 @@ object Form1: TForm1
     ParentFont = False
     Visible = False
   end
+  object Label2: TLabel
+    Left = 1787
+    Top = 621
+    Width = 319
+    Height = 38
+    Margins.Left = 9
+    Margins.Top = 9
+    Margins.Right = 9
+    Margins.Bottom = 9
+    Caption = '0 Closed Captions'
+    Color = clBtnFace
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -32
+    Font.Name = 'Verdana'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    Visible = False
+    OnClick = Label3Click
+  end
   object RichText2: TRichEdit
     Left = 11
     Top = 864
@@ -786,8 +807,8 @@ object Form1: TForm1
     OnMouseDown = RichText1MouseDown
   end
   object box_edicao: TGroupBox
-    Left = 1784
-    Top = 621
+    Left = 1770
+    Top = 861
     Width = 508
     Height = 273
     Margins.Left = 9
@@ -1277,9 +1298,9 @@ object Form1: TForm1
   end
   object panel_icone_legenda: TPanel
     Left = 21
-    Top = 170
-    Width = 48
-    Height = 48
+    Top = 172
+    Width = 45
+    Height = 45
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -1292,8 +1313,8 @@ object Form1: TForm1
     object Image4: TImage
       Left = 0
       Top = 0
-      Width = 48
-      Height = 48
+      Width = 45
+      Height = 45
       Margins.Left = 9
       Margins.Top = 9
       Margins.Right = 9
@@ -1555,8 +1576,8 @@ object Form1: TForm1
     end
   end
   object Panel1: TPanel
-    Left = 1764
-    Top = 957
+    Left = 1763
+    Top = 1197
     Width = 528
     Height = 99
     Margins.Left = 9
@@ -1580,6 +1601,29 @@ object Form1: TForm1
     Margins.Bottom = 9
     Align = alBottom
     TabOrder = 2
+    Visible = False
+  end
+  object ListBox3: TListBox
+    Left = 2120
+    Top = 528
+    Width = 147
+    Height = 75
+    Margins.Left = 9
+    Margins.Top = 9
+    Margins.Right = 9
+    Margins.Bottom = 9
+    Style = lbOwnerDrawFixed
+    Color = clBtnFace
+    Ctl3D = False
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -32
+    Font.Name = 'Segoe UI'
+    Font.Style = [fsBold]
+    ItemHeight = 39
+    ParentCtl3D = False
+    ParentFont = False
+    TabOrder = 11
     Visible = False
   end
   object MainMenu1: TMainMenu
