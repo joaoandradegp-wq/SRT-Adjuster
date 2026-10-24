@@ -39,7 +39,7 @@ procedure Salvar_Como;
 procedure BotoesTopo_Off;
 {EXIBIR O NÚMERO DA LINHA QUANDO FOR POSICIONADO COM O MOUSE OU TECLADO}
 function LinhaAtual(TextoLegenda:TRichEdit):Longint;
-{MOSTRAR LISTAGEM DE SOBREPOSIÇÕES E LIMITES DE LINHA - LISTBOX1 E LISTBOX2}
+{MOSTRAR LISTAGEM DE SOBREPOSIÇÕES, LIMITES DE LINHA E CLOSED CAPTION - LISTBOX1, 2 E 3}
 procedure Lista_Indices(var Texto1,Texto2:TRichEdit;ListBox1:TListBox;aux:Boolean;vetor: Array of Integer);
 
 implementation
@@ -588,11 +588,17 @@ Form1.lstclosecaption.Enabled:=False;
 
 {INFORMAÇÕES DE PROCESSAMENTO}
 Form1.Label1.Visible:=False;
+Form1.Label2.Visible:=False;
 Form1.Label3.Visible:=False;
+//--------------------------
+Form1.ListBox1.Visible:=False;
+Form1.ListBox2.Visible:=False;
+Form1.ListBox3.Visible:=False;
 //--------------------------
 Form1.Image1.Visible:=False;
 Form1.Image2.Visible:=False;
 Form1.Image3.Visible:=False;
+Form1.Image5.Visible:=False;
 end;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -643,4 +649,3 @@ end;
 
 end.
 
- 

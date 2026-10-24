@@ -244,6 +244,8 @@ begin
  92: Result:='Não foi possível aplicar a formatação de texto desejada.'+#13+'Remova a atual antes de adicionar outra ou verifique se selecionou corretamente o texto desejado.';
  93: Result:='Não foi possível aplicar a formatação de cores no texto desejado.'+#13+'Remova a atual antes de adicionar outra ou verifique se selecionou corretamente o texto desejado.';
  94: Result:='© 2026 JMBA Softwares. Todos os direitos reservados.';
+ 95: Result:='1 Closed Caption';
+ 96: Result:='%d Closed Captions';
     end;
 
   end
@@ -441,6 +443,8 @@ begin
  92: Result:='Could not apply the desired text formatting.'+#13+'Remove the current one before adding another, or check that you selected the desired text correctly.';
  93: Result:='Could not apply the color formatting to the desired text.'+#13+'Remove the current one before adding another, or check that you selected the desired text correctly.';
  94: Result:='© 2026 JMBA Softwares. All rights reserved.';
+ 95: Result:='1 Closed Caption';
+ 96: Result:='%d Closed Captions';
     end;
 
   end;

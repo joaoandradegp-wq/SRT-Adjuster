@@ -121,6 +121,7 @@ type
     ToolButton2: TToolButton;
     Label2: TLabel;
     ListBox3: TListBox;
+    Image5: TImage;
     procedure ListBox1Click(Sender: TObject);
     procedure btnsalvarcomoClick(Sender: TObject);
     procedure btnprocurarClick(Sender: TObject);
@@ -186,23 +187,28 @@ type
     procedure btn_ortografiaClick(Sender: TObject);
     procedure btnclosecaptionClick(Sender: TObject);
     procedure lstclosecaptionClick(Sender: TObject);
+    procedure Label2Click(Sender: TObject);
+    procedure ListBox3Click(Sender: TObject);
   private
   { Private declarations }
-  //-----------------------------------------------------------------
-  {ARRASTA E SOLTA - 01/02}
-  //-----------------------------------------------------------------
-  procedure WMDropFiles(var Msg: TWMDropFiles); message WM_DROPFILES;
-  //-----------------------------------------------------------------
-  {ESCALA DE DPI - posições em pixels}
-  //-----------------------------------------------------------------
-  function S(v: Integer): Integer;
-  procedure AjustarAlturas;
-  //-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+    {ARRASTA E SOLTA - 01/02}
+    //-----------------------------------------------------------------
+    procedure WMDropFiles(var Msg: TWMDropFiles); message WM_DROPFILES;
+    //-----------------------------------------------------------------
+    {ESCALA DE DPI - posições em pixels}
+    //-----------------------------------------------------------------
+    function S(v: Integer): Integer;
+    procedure AjustarAlturas;
+    //-----------------------------------------------------------------
+    procedure OrganizarListas;
+    procedure ToggleLista(LB: TListBox; Lbl: TLabel);
+    //-----------------------------------------------------------------
   public
   { Public declarations }
-  //-----------------------------------------------------------------
-  function Novo_Carregar(parametro: String): Boolean;
-  //-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+    function Novo_Carregar(parametro: String): Boolean;
+    //-----------------------------------------------------------------
   end;
 
 var
@@ -233,7 +239,7 @@ var
   salvar,editar: Boolean;
   caminho_arquivo, tempo, entrada: String;
 
-  vt_sobreposicao,vt_limitelinha: Array of Integer;
+  vt_sobreposicao,vt_limitelinha,vt_closecaption: Array of Integer;
   vt_tempo,vt_id,vt_linha,vt_linha_localizar,vt_seriado,vt_nome_arquivo,vt_nome_arquivo_normal: Array of String;
   arquivo:TextFile;
   Flags : Cardinal;
@@ -259,6 +265,57 @@ implementation
 
 uses Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, CommCtrl, Funcoes, Language, System.IOUtils;
 
+//-------------------------------------------------------------------------------------------------
+{Empilha Label1/ListBox1, Label3/ListBox2 e Label2/ListBox3 sem sobrepor}
+//-------------------------------------------------------------------------------------------------
+procedure TForm1.OrganizarListas;
+var
+y: Integer;
+
+  procedure Empilha(Lbl: TLabel; LB: TListBox);
+  begin
+    if not Lbl.Visible then
+    begin
+    LB.Visible := False;
+    Exit;
+    end;
+
+  Lbl.Top := y;
+  Inc(y, S(16));
+
+    if LB.Visible then
+    begin
+    LB.Top := y;
+    Inc(y, LB.Height + S(4));
+    end;
+  end;
+
+begin
+y := Label1.Top;
+Empilha(Label1, ListBox1);
+Empilha(Label3, ListBox2);
+Empilha(Label2, ListBox3);
+Image3.Top := Label3.Top - S(1);
+Image5.Top := Label2.Top - S(1);
+end;
+//-------------------------------------------------------------------------------------------------
+procedure TForm1.ToggleLista(LB: TListBox; Lbl: TLabel);
+begin
+  if (LB.Items.Count > 0) and (not LB.Visible) then
+  begin
+  LB.Left  := Lbl.Left + S(11);
+  LB.Width := S(94);
+    if LB.Items.Count < 11 then
+    LB.Height := LB.Items.Count * S(14) + S(1)
+    else
+    LB.Height := S(145);
+  LB.Visible := True;
+  end
+  else
+  LB.Visible := False;
+
+OrganizarListas;
+end;
 //-------------------------------------------------------------------------------------------------
 {ESCALA DE DPI}
 //-------------------------------------------------------------------------------------------------
@@ -597,8 +654,13 @@ MB = 1024 * KB; // Megabyte
 GB = 1024 * MB; // Gigabyte
 var
 SR: TSearchRec;
-SS: TStringStream;
+Bytes: TBytes;
+MS: TBytesStream;
 begin
+
+
+
+
 Form1.Caption:=Application.Title;
 RichText1.Color:=clWhite;
 Panel1.Visible:=True;
@@ -615,13 +677,6 @@ lstfonte.Enabled:=False;
 lstlocalizar.Enabled:=False;
 lstsubstituir.Enabled:=False;
 //---------------------------
-//--------------------
-Label1.Visible:=False;
-Image1.Visible:=False;
-Image2.Visible:=False;
-Label3.Visible:=False;
-Image3.Visible:=False;
-//--------------------
 //-----------------------
 RichText1.Clear;
 RichText2.Clear;
@@ -654,18 +709,19 @@ RichText1.ReadOnly:=True;
 
  CloseFile(arquivo);
 
- SS := TStringStream.Create(LerArquivoTexto(parametro), TEncoding.UTF8);
-   try
-   RichText1.Lines.LoadFromStream(SS, TEncoding.UTF8);
-   finally
-   SS.Free;
-   end;
+ Bytes := TEncoding.Unicode.GetPreamble + TEncoding.Unicode.GetBytes(LerArquivoTexto(parametro));
+ MS := TBytesStream.Create(Bytes);
+  try
+  RichText1.Lines.LoadFromStream(MS);
+  finally
+  MS.Free;
+  end;
 
  FindFirst(parametro,faArchive,SR);
 
  //-------------------------------------------------------------------------------------
  Label5.Caption:=Copy(FloatToStr(SR.Size/KB),0,pos(',',FloatToStr(SR.Size/KB))+1)+' KB';
- FindClose(SR);                 //--> libera o handle do FindFirst
+ FindClose(SR);
  Contar_Linhas_Dialogos(RichText1,ProgressBar1,Label4,Label8);
  //-------------------------------------------------------------------------------------
 
@@ -712,8 +768,8 @@ RichText1.ReadOnly:=True;
  lstrenomear.Enabled:=True;
  btntags.Enabled:=True;
  lsttags.Enabled:=True;
- btnclosecaption.Enabled:=True;
- lstclosecaption.Enabled:=True;
+ btnclosecaption.Enabled:=False;
+ lstclosecaption.Enabled:=False;
  //----------------------------
 
  {SOBREPOSIÇÕES}
@@ -724,9 +780,13 @@ RichText1.ReadOnly:=True;
 
  {LIMITES DE LINHA}
  Label3.Caption:='';
- Label3.Top:=Label1.Top+S(16);
  ListBox2.Clear;
  ListBox2.Visible:=False;
+
+{CLOSED CAPTION}
+Label2.Caption:='';
+ListBox3.Clear;
+ListBox3.Visible:=False;
 
   //--------------------------------------------------------------------
   if (RichText1.SelAttributes.Style = [fsBold]) then
@@ -812,11 +872,9 @@ Panel1.Align:=alClient;
 SendMessage(ProgressBar1.Handle, PBM_SETBARCOLOR, 0, rgb(255,140,0));
 //-------------------------------------------------------------------
 
-  //------------------------
+  //----------------------------------
   ProgressBar1.Brush.Color:=clBtnFace;
-  Label1.Color:=Form1.Color;
-  Label3.Color:=Form1.Color;
-  //------------------------
+  //----------------------------------
 
   //---------------------------------------------------------------------
   {LISTA DAS ÚLTIMAS LEGENDAS ABERTAS}
@@ -966,6 +1024,7 @@ end;
 
 procedure TForm1.ListBox1Click(Sender: TObject);
 begin
+//---------------------------------------------------------------
 {SOBREPOSIÇÕES}
 //----------------------------------------------------------------
 if RichText2.Visible = False then
@@ -977,12 +1036,25 @@ end;
 
 procedure TForm1.ListBox2Click(Sender: TObject);
 begin
+//---------------------------------------------------------------
 {LIMITES DE LINHA}
 //---------------------------------------------------------------
 if RichText2.Visible = False then
 Lista_Indices(RichText1,RichText2,ListBox2,False,vt_limitelinha)
 else
 Lista_Indices(RichText2,RichText1,ListBox2,True, vt_limitelinha);
+//---------------------------------------------------------------
+end;
+
+procedure TForm1.ListBox3Click(Sender: TObject);
+begin
+//---------------------------------------------------------------
+{CLOSED CAPTION}
+//---------------------------------------------------------------
+  if RichText2.Visible = False then
+  Lista_Indices(RichText1,RichText2,ListBox3,False,vt_closecaption)
+  else
+  Lista_Indices(RichText2,RichText1,ListBox3,True, vt_closecaption);
 //---------------------------------------------------------------
 end;
 
@@ -1036,10 +1108,14 @@ procedure TForm1.btnprocurarClick(Sender: TObject);
 var
 cont1,cont2,i,j,k: Integer;
 tempo1,tempo2: String;
+cont3,ContCC,AntesCC,idLinha: Integer;
+DentroCC: Boolean;
 begin
 cont1:=0;
 cont2:=0;
 k:=0;
+cont3:=0;
+ContCC:=0;
 
 //-------------
 BotoesTopo_Off;
@@ -1130,6 +1206,61 @@ ProgressBar1.Refresh;
            //VERIFICA SOBREPOSIÇÕES - FIM
            //----------------------------------------------------
 
+   //----------------------------------------------------
+   //VERIFICA CLOSED CAPTION - INÍCIO
+   //----------------------------------------------------
+   SetLength(vt_closecaption,1);
+   j:=0;
+
+     while j < RichText1.Lines.Count do
+     begin
+       if (IsNumeric(Trim(RichText1.Lines[j]))) and
+          (j + 1 < RichText1.Lines.Count) and
+          (AnsiContainsStr(RichText1.Lines[j+1], ' --> ')) then
+       begin
+       idLinha:=j;
+       DentroCC:=False;
+       AntesCC:=ContCC;
+       Inc(j, 2);
+
+         while (j < RichText1.Lines.Count) and (Trim(RichText1.Lines[j]) <> '') do
+         begin
+         RemoverCC(RichText1.Lines[j], DentroCC, ContCC);
+         Inc(j);
+         end;
+
+         if ContCC > AntesCC then
+         begin
+         Inc(cont3);
+         ListBox3.Items.Add(IntToStr(cont3)+' - '+RichText1.Lines[idLinha]);
+         SetLength(vt_closecaption,cont3+1);
+         vt_closecaption[cont3]:=idLinha+1;   //--> nº da linha (1-based), igual aos outros
+         end;
+       end
+       else
+       Inc(j);
+     end;
+   //----------------------------------------------------
+   //VERIFICA CLOSED CAPTION - FIM
+   //----------------------------------------------------
+
+   //-----------------------------------------------------------------------
+   //CLOSED CAPTION - TEXTOS
+   //-----------------------------------------------------------------------
+   if (cont3 > 0) then
+   begin
+     if (cont3 = 1) then
+     Label2.Caption:=Lang_SRT(95)
+     else
+     Label2.Caption:=Format(Lang_SRT(96),[cont3]);
+
+   Image5.Left:=Label2.Left+Label2.Width+S(3);
+   Label2.Visible:=True;
+   Image5.Visible:=True;
+   btnclosecaption.Enabled:=True;
+   lstclosecaption.Enabled:=True;
+   end;
+
    //-----------------------------------------------------------------------
    //LIMITES DE LINHA - TEXTOS
    //-----------------------------------------------------------------------
@@ -1199,16 +1330,7 @@ ProgressBar1.Refresh;
      StatusBar1.Panels[0].Text:=Lang_SRT(21);
      end;
 
- if Label1.Visible = True then
- begin
- Label3.Top:=Label1.Top+S(16);
- Image3.Top:=Image1.Top+S(16);
- end
- else
- begin
- Label3.Top:=Label1.Top;
- Image3.Top:=Image1.Top;
- end;
+OrganizarListas;
 
 ProgressBar1.Visible:=False;
 //------------------------
@@ -1351,51 +1473,17 @@ end;
 
 procedure TForm1.Label1Click(Sender: TObject);
 begin
-//----------------------------------------------------------------
-{EXIBIR LISTBOX1 - Sobreposições}
-//----------------------------------------------------------------
-if (ListBox1.Items.Text <> '') and (ListBox1.Visible = False) then
-begin
-ListBox1.Visible:=True;
-ListBox1.Left:=Label1.Left+S(11);
-ListBox1.Width:=S(94);
-  if ListBox1.Items.Count < 11 then
-  ListBox1.Height:=ListBox1.Items.Count*S(14)+S(1)
-  else
-  ListBox1.Height:=S(145);
-ListBox1.Top:=Label1.Top+S(16);
-Label3.Top:=ListBox1.Top+ListBox1.Height+S(4);
-ListBox2.Top:=Label3.Top+S(16);
-end
-else
-begin
-ListBox1.Visible:=False;
-Label3.Top:=Label1.Top+S(16);
-ListBox2.Top:=Label3.Top+S(16);
-end;
-Image3.Top:=Label3.Top-S(1);
-//----------------------------------------------------------------
+ToggleLista(ListBox1, Label1);   {Sobreposições}
 end;
 
 procedure TForm1.Label3Click(Sender: TObject);
 begin
-//----------------------------------------------------------------
-{EXIBIR LISTBOX2 - Limites de Linha}
-//----------------------------------------------------------------
-if (ListBox2.Items.Text <> '') and (ListBox2.Visible = False) then
+ToggleLista(ListBox2, Label3);   {Limites de linha}
+end;
+
+procedure TForm1.Label2Click(Sender: TObject);
 begin
-ListBox2.Visible:=True;
-ListBox2.Left:=Label3.Left+S(11);
-ListBox2.Width:=S(94);
-  if ListBox2.Items.Count < 11 then
-  ListBox2.Height:=ListBox2.Items.Count*S(14)+S(1)
-  else
-  ListBox2.Height:=S(145);
-ListBox2.Top:=Label3.Top+S(16);
-end
-else
-ListBox2.Visible:=False;
-//----------------------------------------------------------------
+ToggleLista(ListBox3, Label2);   {Closed Caption}
 end;
 
 procedure TForm1.btneditarClick(Sender: TObject);
@@ -1644,6 +1732,7 @@ ProgressBar1.Top:=StatusBar1.Top+S(2);
 box_edicao.Left:=col - S(8);
 //----------------------------------------
 Label1.Left:=col;
+Label2.Left:=col;
 Label3.Left:=col;
 Label4.Left:=col;
 Label5.Left:=col;
@@ -1651,8 +1740,10 @@ Label8.Left:=col;
 Image1.Left:=col+Label1.Width+S(3);
 Image2.Left:=Image1.Left;
 Image3.Left:=col+Label3.Width+S(3);
+Image5.Left:=col+Label2.Width+S(3);
 ListBox1.Left:=col+S(11);
 ListBox2.Left:=col+S(11);
+ListBox3.Left:=col+S(11);
 //----------------------------------------
 end;
 //----------------------------------------------------------------------------
@@ -1766,16 +1857,9 @@ SoftResetPreserveText(RichText1);
 StatusBar1.Panels[0].Text:='';
 
 //----------------------
-Label1.Visible:=False;
-Label3.Visible:=False;
 Label4.Visible:=False;
 Label5.Visible:=False;
 Label8.Visible:=False;
-Image1.Visible:=False;
-Image2.Visible:=False;
-Image3.Visible:=False;
-ListBox1.Visible:=False;
-ListBox2.Visible:=False;
 //----------------------
 
 //--------------------------
@@ -2371,6 +2455,11 @@ SendMessage(RichText1.Handle, WM_VSCROLL, SB_TOP, 0);
   Image2.Visible:=True;
   StatusBar1.Panels[0].Text := Lang_SRT(30);
   end;
+
+ListBox3.Clear;
+
+OrganizarListas;
+Contar_Linhas_Dialogos(RichText1,ProgressBar1,Label4,Label8);
 
 Panel1.Visible := False;
 end;
