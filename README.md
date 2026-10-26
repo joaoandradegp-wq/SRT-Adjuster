@@ -15,14 +15,14 @@ SRT Adjuster é uma ferramenta para editar, ajustar e sincronizar legendas SRT d
 
 ---
 
-## ✨ Funcionalidades
+### ✨ Funcionalidades
 
 <br>
 <table style="border: none; border-collapse: collapse;">
 <tr>
 <td width="50%" valign="top" style="border: none; padding: 15px;">
 
-### ⚡ CORREÇÕES AUTOMÁTICAS
+#### ⚡ CORREÇÕES AUTOMÁTICAS
 
 Identifica sobreposições de diálogo e limites excedentes de linha oferecendo correção automática para as sobreposições e fácil localização dos limites excedentes de linha.
 <br><br>
@@ -30,7 +30,7 @@ Identifica sobreposições de diálogo e limites excedentes de linha oferecendo 
 
 <td width="50%" valign="top" style="border: none; padding: 15px;">
 
-### ⏱️ AJUSTE DE TEMPO OU DURAÇÃO
+#### ⏱️ AJUSTE DE TEMPO OU DURAÇÃO
 
 Ajusta o tempo ou a duração dos diálogos em toda a legenda por horas, minutos, segundos e milissegundos.
 <br>
@@ -40,7 +40,7 @@ Ajusta o tempo ou a duração dos diálogos em toda a legenda por horas, minutos
 <tr>
 <td width="50%" valign="top" style="border: none; padding: 15px;">
 
-### ✏️ EDIÇÃO AVANÇADA
+#### ✏️ EDIÇÃO AVANÇADA
 
 Realiza um highlight de toda a estrutura da legenda para melhor visualização, além de permitir a inserção de efeitos de itálico/sublinhado e cores no diálogo que desejar (utilizado para criar créditos de criação).
 
@@ -50,7 +50,7 @@ Pesquisa/Substituição/Marcação: Foi implementado um novo método de pesquisa
 
 <td width="50%" valign="top" style="border: none; padding: 15px;">
 
-### 🗂️ RENOMEAR MÚLTIPLAS LEGENDAS
+#### 🗂️ RENOMEAR MÚLTIPLAS LEGENDAS
 
 Caso o release das legendas seja diferente ao dos vídeos, poderá ser realizado o ajuste automático em todos os arquivos de legenda para que assim seja possível a visualização correta das mesmas em seu player padrão, evitando assim o desgaste em renomear arquivo por arquivo de toda uma temporada.
 <br>
@@ -60,7 +60,7 @@ Caso o release das legendas seja diferente ao dos vídeos, poderá ser realizado
 <tr>
 <td width="50%" valign="top" style="border: none; padding: 15px;">
 
-### 🔄 SINCRONIA GRADATIVA
+#### 🔄 SINCRONIA GRADATIVA
 
 Em caso de perda de sincronia gradativa do vídeo, será necessário informar o tempo correto de início e fim do áudio (na maioria dos casos, dos diálogos) para o ajuste automático.
 <br><br>
@@ -68,7 +68,7 @@ Em caso de perda de sincronia gradativa do vídeo, será necessário informar o 
 
 <td width="50%" valign="top" style="border: none; padding: 15px;">
 
-### 🎞️ FRAME RATE - FPS
+#### 🎞️ FRAME RATE - FPS
 
 Necessita informar o FPS (frame por segundo) atual da legenda (normalmente informado no site de onde foi feito o download) e logo após a desejada (localizado nas propriedades do vídeo).
 <br>
@@ -78,7 +78,7 @@ Necessita informar o FPS (frame por segundo) atual da legenda (normalmente infor
 <tr>
 <td width="50%" valign="top" style="border: none; padding: 15px;">
 
-### 🔢 CORREÇÃO NUMÉRICA DE ÍNDICE
+#### 🔢 CORREÇÃO NUMÉRICA DE ÍNDICE
 
 Em caso de se adicionar ou subtrair diálogos manualmente, é possível corrigir automaticamente a numeração de cada diálogo em ordem crescente.
 <br><br>
@@ -86,7 +86,7 @@ Em caso de se adicionar ou subtrair diálogos manualmente, é possível corrigir
 
 <td width="50%" valign="top" style="border: none; padding: 15px;">
 
-### 📝 VERIFICAÇÃO ORTOGRÁFICA
+#### 📝 VERIFICAÇÃO ORTOGRÁFICA
 
 Utilização da biblioteca hunspell.dll, verifica erros ortográficos em diálogos PT-BR ou EN-US e demonstra em tela para facilitar a identificação e correção.
 <br>
@@ -96,7 +96,7 @@ Utilização da biblioteca hunspell.dll, verifica erros ortográficos em diálog
 <tr>
 <td width="50%" valign="top" style="border: none; padding: 15px;">
 
-### 🎨 ALTERAR COR DA LEGENDA
+#### 🎨 ALTERAR COR DA LEGENDA
 
 Caso a legenda, originalmente branca, está atrapalhando a visualização dos diálogos, agora você poderá alterar para a cor que desejar. Seja ela amarela ou qualquer outra.
 <br><br>
@@ -104,7 +104,7 @@ Caso a legenda, originalmente branca, está atrapalhando a visualização dos di
 
 <td width="50%" valign="top" style="border: none; padding: 15px;">
 
-### 🧹 REMOÇÃO DE CLOSED CAPTION
+#### 🧹 REMOÇÃO DE CLOSED CAPTION
 
 Remove automaticamente elementos de Closed Caption (CC), como descrições de sons, músicas e identificações de falas, deixando a legenda mais limpa e focada apenas nos diálogos.
 
@@ -118,7 +118,7 @@ Essa funcionalidade é especialmente útil, pois na maioria dos casos não exist
 
 ---
 
-## 📸 Preview
+### 📸 Preview
 
 <p align="center">
   <img width="500" alt="image" src="https://github.com/user-attachments/assets/67080672-63e1-4229-a5bf-e41b17e190b6" />
