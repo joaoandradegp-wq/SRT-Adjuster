@@ -15,7 +15,7 @@ SRT Adjuster é uma ferramenta para editar, ajustar e sincronizar legendas SRT d
 
 ---
 
-### ✨ Funcionalidades
+## ✨ Funcionalidades
 
 <table style="border: none; border-collapse: collapse;">
 <tr>
@@ -117,7 +117,7 @@ Essa funcionalidade é especialmente útil, pois na maioria dos casos não exist
 
 ---
 
-### 📸 Preview
+## 📸 Preview
 
 <p align="center">
   <img width="500" alt="image" src="https://github.com/user-attachments/assets/67080672-63e1-4229-a5bf-e41b17e190b6" />
