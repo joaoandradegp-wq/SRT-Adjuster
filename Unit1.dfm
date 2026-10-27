@@ -257,8 +257,8 @@ object Form1: TForm1
   object Image3: TImage
     Left = 2129
     Top = 476
-    Width = 48
-    Height = 48
+    Width = 46
+    Height = 46
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -752,8 +752,8 @@ object Form1: TForm1
   object Image5: TImage
     Left = 2125
     Top = 619
-    Width = 48
-    Height = 48
+    Width = 49
+    Height = 49
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9

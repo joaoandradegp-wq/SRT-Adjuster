@@ -204,6 +204,7 @@ type
     procedure OrganizarListas;
     procedure ToggleLista(LB: TListBox; Lbl: TLabel);
     //-----------------------------------------------------------------
+    procedure TraduzirContagem;
   public
   { Public declarations }
     //-----------------------------------------------------------------
@@ -265,6 +266,43 @@ implementation
 
 uses Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, CommCtrl, Funcoes, Language, System.IOUtils;
 
+//-------------------------------------------------------------------------------------------------
+function NumeroDoCaption(const S: string): Integer;
+var
+i: Integer;
+N: string;
+begin
+N:='';
+  for i:=1 to Length(S) do
+    if CharInSet(S[i], ['0'..'9']) then
+    N:=N+S[i];
+Result:=StrToIntDef(N,0);
+end;
+//-------------------------------------------------------------------------------------------------
+procedure TForm1.TraduzirContagem;
+var
+nLinhas, nDialogos: Integer;
+begin
+  if not Label4.Visible then
+  Exit;
+
+nLinhas  :=NumeroDoCaption(Label4.Caption);
+nDialogos:=NumeroDoCaption(Label8.Caption);
+
+Label4.Caption:=Format(Lang_SRT(41),[nLinhas]);
+Label8.Caption:=Format(Lang_SRT(42),[nDialogos]);
+end;
+//-------------------------------------------------------------------------------------------------
+{Rola o Destino para a mesma primeira linha visível da Origem}
+//-------------------------------------------------------------------------------------------------
+procedure SincronizarRolagem(Origem, Destino: TRichEdit);
+var
+PrimOrigem, PrimDestino: Integer;
+begin
+PrimOrigem :=SendMessage(Origem.Handle, EM_GETFIRSTVISIBLELINE, 0, 0);
+PrimDestino:=SendMessage(Destino.Handle, EM_GETFIRSTVISIBLELINE, 0, 0);
+SendMessage(Destino.Handle, EM_LINESCROLL, 0, PrimOrigem - PrimDestino);
+end;
 //-------------------------------------------------------------------------------------------------
 {Empilha Label1/ListBox1, Label3/ListBox2 e Label2/ListBox3 sem sobrepor}
 //-------------------------------------------------------------------------------------------------
@@ -1027,10 +1065,13 @@ begin
 //---------------------------------------------------------------
 {SOBREPOSIÇÕES}
 //----------------------------------------------------------------
-if RichText2.Visible = False then
-Lista_Indices(RichText1,RichText2,ListBox1,False,vt_sobreposicao)
-else
-Lista_Indices(RichText2,RichText1,ListBox1,True, vt_sobreposicao);
+  if RichText2.Visible = False then
+  Lista_Indices(RichText1,RichText2,ListBox1,False,vt_sobreposicao)
+  else
+  begin
+  Lista_Indices(RichText2,RichText1,ListBox1,True, vt_sobreposicao);
+  SincronizarRolagem(RichText2,RichText1); //--> RichText1 acompanha o RichText2
+  end;
 //----------------------------------------------------------------
 end;
 
@@ -1370,32 +1411,81 @@ end;
 
 procedure TForm1.btnconsertarClick(Sender: TObject);
 var
-i: Integer;
-tempo1,tempo2: String;
+  i, k, ln: Integer;
+  tempo1, tempo2: String;
+  SL: TStringList;
+  Rot: array[1..3] of TLabel;
+  Lst: array[1..3] of TListBox;
+  RotVis, LstVis: array[1..3] of Boolean;
+  RotCap: array[1..3] of String;
+  Itens: array[1..3] of TStringList;
+  Img3Vis, Img5Vis: Boolean;
 begin
-//------------------------------------------------------
 salvar:=True;  //--> Variável GLOBAL (Salvar Alterações)
-//------------------------------------------------------
 
-//-------------
-BotoesTopo_Off;
-//-------------
+Rot[1]:=Label1; Lst[1]:=ListBox1;
+Rot[2]:=Label3; Lst[2]:=ListBox2;
+Rot[3]:=Label2; Lst[3]:=ListBox3;
 
-ProgressBar1.Visible:=True;
-ProgressBar1.Position:=0;
-ProgressBar1.Max:=Length(vt_tempo)-1;
-ProgressBar1.Refresh;
-RichText2.Text:=RichText1.Text;
-
-  for i:=0 to Length(vt_tempo)-2 do
+  for k:=1 to 3 do
   begin
-  ProgressBar1.Position:=ProgressBar1.Position+1;
-  //--------------------------------
-  tempo1:=copy(vt_tempo[i]  ,18,12);
-  tempo2:=copy(vt_tempo[i+1],1 ,12);
-  //--------------------------------
-    if StrToTime(tempo1) > StrToTime(tempo2) then
-    RichText2.Text:=(StringReplace(RichText2.Text,tempo1,tempo2,[rfReplaceAll, rfIgnoreCase]));
+  RotVis[k]:=Rot[k].Visible;
+  LstVis[k]:=Lst[k].Visible;
+  RotCap[k]:=Rot[k].Caption;
+  Itens[k]:=TStringList.Create;
+  Itens[k].Assign(Lst[k].Items);
+  end;
+
+Img3Vis:=Image3.Visible;
+Img5Vis:=Image5.Visible;
+
+  try
+  //-------------
+  BotoesTopo_Off;
+  //-------------
+
+    for k:=1 to 3 do
+    begin
+    Rot[k].Caption:=RotCap[k];
+      if Lst[k].Items.Count <> Itens[k].Count then
+      Lst[k].Items.Assign(Itens[k]);
+    Rot[k].Visible:=RotVis[k];
+    Lst[k].Visible:=LstVis[k];
+    end;
+
+  Image3.Visible:=Img3Vis;
+  Image5.Visible:=Img5Vis;
+
+  ProgressBar1.Visible:=True;
+  ProgressBar1.Position:=0;
+  ProgressBar1.Max:=Length(vt_tempo)-1;
+  ProgressBar1.Refresh;
+
+  SL:=TStringList.Create;
+    try
+    SL.Assign(RichText1.Lines);
+
+      for i:=0 to Length(vt_tempo)-2 do
+      begin
+      ProgressBar1.Position:=i+1;
+      tempo1:=Copy(vt_tempo[i]  ,18,12);
+      tempo2:=Copy(vt_tempo[i+1],1 ,12);
+
+        if StrToTime(tempo1) > StrToTime(tempo2) then
+        begin
+        ln:=StrToInt(vt_linha[i]);
+          if (ln < SL.Count) and (Copy(SL[ln],18,12) = tempo1) then
+          SL[ln]:=Copy(SL[ln],1,17) + tempo2 + Copy(SL[ln],30,MaxInt);
+        end;
+      end;
+
+    RichText2.Lines.Assign(SL);
+    finally
+    SL.Free;
+    end;
+  finally
+    for k:=1 to 3 do
+    Itens[k].Free;
   end;
 
 RichText2.Visible:=True;
@@ -1405,15 +1495,18 @@ ProgressBar1.Visible:=False;
 
 //--------------------------------------------------
 StatusBar1.Panels[0].Text:=Lang_SRT(22);
-Label1.Font.Color:=clBlue; //LETRA AZUL
-Image1.Visible:=False;
-Image2.Visible:=True;
+Label1.Font.Color:=clBlue;                  //LETRA AZUL
+Image1.Visible:=False;                      //ALERTA
+Image2.Left:=Label1.Left+Label1.Width+S(3);
+Image2.Visible:=True;                       //SUCESSO
+Image3.Left:=Label3.Left+Label3.Width+S(3);
+Image5.Left:=Label2.Left+Label2.Width+S(3);
 //--------------------------------------------------
 
-//------------------------------------------------
+OrganizarListas;
+
 SendMessage(RichText1.Handle,WM_VSCROLL,SB_TOP,0);
 SendMessage(RichText2.Handle,WM_VSCROLL,SB_TOP,0);
-//------------------------------------------------
 
 //--------------------------
 btnabrir.Enabled     :=True;
@@ -1425,10 +1518,11 @@ lstsalvarcomo.Enabled:=True;
 btnrenomear.Enabled  :=True;
 lstrenomear.Enabled  :=True;
 lstlocalizar.Enabled :=False;
+//--- CC continua disponível se houver ocorrências
+btnclosecaption.Enabled:=ListBox3.Items.Count > 0;
+lstclosecaption.Enabled:=btnclosecaption.Enabled;
 //--------------------------
-
 end;
-
 
 procedure TForm1.lstconsertarClick(Sender: TObject);
 begin
@@ -2338,6 +2432,8 @@ Bloco, Novo: TStringList;
 TemTextoValido: Boolean;
 ContadorRemocoes: Integer;
 DentroCC: Boolean;
+Fonte: TRichEdit;
+AntesCC, DialogosComCC: Integer;
 begin
 //-----------------------------------------------------
 editar:=True; //--> Variável GLOBAL (Editar)
@@ -2349,10 +2445,16 @@ Panel1.Visible:=True;
 BotoesTopo_Off;
 
 ContadorRemocoes:=0;
+DialogosComCC := 0;
+
+  if RichText2.Visible then
+  Fonte:=RichText2
+  else
+  Fonte:=RichText1;
 
 ProgressBar1.Visible:=True;
 ProgressBar1.Position:=0;
-ProgressBar1.Max:=RichText1.Lines.Count;
+ProgressBar1.Max:=Fonte.Lines.Count;
 
 Bloco:=TStringList.Create;
 Novo :=TStringList.Create;
@@ -2360,47 +2462,51 @@ Novo :=TStringList.Create;
   try
   j := 0;
 
-    while j < RichText1.Lines.Count do
+    while j < Fonte.Lines.Count do
     begin
     ProgressBar1.Position := j + 1;
 
-      if (IsNumeric(Trim(RichText1.Lines[j]))) and
-         (j + 1 < RichText1.Lines.Count) and
-         (AnsiContainsStr(RichText1.Lines[j+1], ' --> ')) then
+      if (IsNumeric(Trim(Fonte.Lines[j]))) and
+         (j + 1 < Fonte.Lines.Count) and
+         (AnsiContainsStr(Fonte.Lines[j+1], ' --> ')) then
       begin
       Bloco.Clear;
       TemTextoValido := False;
       DentroCC := False;
-      Bloco.Add(RichText1.Lines[j]);
-      Bloco.Add(RichText1.Lines[j+1]);
+      Bloco.Add(Fonte.Lines[j]);
+      Bloco.Add(Fonte.Lines[j+1]);
+      AntesCC := ContadorRemocoes;
       Inc(j, 2);
 
-      while (j < RichText1.Lines.Count) and (Trim(RichText1.Lines[j]) <> '') do
-      begin
-      Linha := RichText1.Lines[j];
-      LinhaLimpa := Trim(RemoverCC(Linha, DentroCC, ContadorRemocoes));
-
-        if (LinhaLimpa = '-') or (LinhaLimpa = '–') then
-        LinhaLimpa := '';
-
-        if LinhaLimpa <> '' then
+        while (j < Fonte.Lines.Count) and (Trim(Fonte.Lines[j]) <> '') do
         begin
-        Bloco.Add(LinhaLimpa);
-        TemTextoValido := True;
+        Linha := Fonte.Lines[j];
+        LinhaLimpa := Trim(RemoverCC(Linha, DentroCC, ContadorRemocoes));
+
+          if (LinhaLimpa = '-') or (LinhaLimpa = '–') then
+          LinhaLimpa := '';
+
+          if LinhaLimpa <> '' then
+          begin
+          Bloco.Add(LinhaLimpa);
+          TemTextoValido := True;
+          end;
+
+        Inc(j);
         end;
 
+        if ContadorRemocoes > AntesCC then
+        Inc(DialogosComCC);
+
+        if TemTextoValido then
+        begin
+        Novo.AddStrings(Bloco);
+        Novo.Add('');
+        end;
+
+      end
+      else
       Inc(j);
-      end;
-
-      if TemTextoValido then
-      begin
-      Novo.AddStrings(Bloco);
-      Novo.Add('');
-      end;
-
-    end
-    else
-    Inc(j);
 
       if (j mod 100 = 0) then
       begin
@@ -2411,6 +2517,8 @@ Novo :=TStringList.Create;
     end;
 
   Application.ProcessMessages;
+
+  //O resultado SEMPRE vai para o RichText1
   RichText1.Lines.BeginUpdate;
     try
     RichText1.Lines.Assign(Novo);
@@ -2423,6 +2531,30 @@ Novo :=TStringList.Create;
   Novo.Free;
   ProgressBar1.Visible:=False;
   end;
+
+  if RichText2.Visible then
+  begin
+  RichText2.Clear;
+  RichText2.Visible:=False;
+  AjustarAlturas;
+  end;
+
+SendMessage(RichText1.Handle, WM_VSCROLL, SB_TOP, 0);
+Contar_Linhas_Dialogos(RichText1,ProgressBar1,Label4,Label8);
+
+ListBox1.Clear;
+ListBox1.Visible:=False;
+ListBox2.Clear;
+ListBox2.Visible:=False;
+ListBox3.Clear;
+ListBox3.Visible:=False;
+Label2.Caption:='';
+Label2.Visible:=False;
+Label3.Caption:='';
+Label3.Visible:=False;
+Image1.Visible:=False;
+Image3.Visible:=False;
+Image5.Visible:=False;
 
 //----------------------------
 btnabrir.Enabled:=True;
@@ -2443,24 +2575,24 @@ btn_ortografia.Enabled:=True;
 lst_ortografia.Enabled:=True;
 //----------------------------
 
-SendMessage(RichText1.Handle, WM_VSCROLL, SB_TOP, 0);
-
   if ContadorRemocoes = 0 then
-  StatusBar1.Panels[0].Text := Lang_SRT(29)
+  begin
+  Label1.Caption:='';
+  Label1.Visible:=False;
+  Image2.Visible:=False;
+  StatusBar1.Panels[0].Text := Lang_SRT(29);
+  end
   else
   begin
-  Label1.Caption:=Format(Lang_SRT(35),[ContadorRemocoes]);
+  Label1.Caption:=Format(Lang_SRT(35),[DialogosComCC]);
+  Label1.Font.Color:=clBlue;
   Label1.Visible:=True;
   Image2.Left:=Label1.Left+Label1.Width+S(3);
   Image2.Visible:=True;
   StatusBar1.Panels[0].Text := Lang_SRT(30);
   end;
 
-ListBox3.Clear;
-
 OrganizarListas;
-Contar_Linhas_Dialogos(RichText1,ProgressBar1,Label4,Label8);
-
 Panel1.Visible := False;
 end;
 
@@ -2472,16 +2604,19 @@ end;
 procedure TForm1.Idioma_AutoClick(Sender: TObject);
 begin
 Lang_Apply(0);
+TraduzirContagem;
 end;
 
 procedure TForm1.Idioma_PorClick(Sender: TObject);
 begin
 Lang_Apply(1);
+TraduzirContagem;
 end;
 
 procedure TForm1.Idioma_EngClick(Sender: TObject);
 begin
 Lang_Apply(2);
+TraduzirContagem;
 end;
 
 end.
