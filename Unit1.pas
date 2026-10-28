@@ -2640,16 +2640,17 @@ Lang_Apply(3);
 TraduzirContagem;
 end;
 
-procedure TForm1.Idioma_FraClick(Sender: TObject);
+procedure TForm1.Idioma_ItaClick(Sender: TObject);
 begin
 Lang_Apply(4);
 TraduzirContagem;
 end;
 
-procedure TForm1.Idioma_ItaClick(Sender: TObject);
+procedure TForm1.Idioma_FraClick(Sender: TObject);
 begin
 Lang_Apply(5);
 TraduzirContagem;
 end;
+
 
 end.

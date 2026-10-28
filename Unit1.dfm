@@ -1889,14 +1889,17 @@ object Form1: TForm1
       end
       object Idioma_Esp: TMenuItem
         Caption = 'Espa'#241'ol'
+        RadioItem = True
         OnClick = Idioma_EspClick
       end
       object Idioma_Ita: TMenuItem
         Caption = 'Italiano'
+        RadioItem = True
         OnClick = Idioma_ItaClick
       end
       object Idioma_Fra: TMenuItem
         Caption = 'Fran'#231'ais'
+        RadioItem = True
         OnClick = Idioma_FraClick
       end
     end
