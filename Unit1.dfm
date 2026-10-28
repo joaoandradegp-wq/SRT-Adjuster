@@ -255,10 +255,10 @@ object Form1: TForm1
     Visible = False
   end
   object Image3: TImage
-    Left = 2129
-    Top = 476
-    Width = 46
-    Height = 46
+    Left = 2125
+    Top = 480
+    Width = 44
+    Height = 44
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -750,10 +750,10 @@ object Form1: TForm1
     OnClick = Label2Click
   end
   object Image5: TImage
-    Left = 2125
-    Top = 619
-    Width = 49
-    Height = 49
+    Left = 2120
+    Top = 618
+    Width = 52
+    Height = 52
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -876,7 +876,7 @@ object Form1: TForm1
   end
   object RichText1: TRichEdit
     Left = 14
-    Top = 240
+    Top = 235
     Width = 1755
     Height = 603
     Margins.Left = 9
@@ -1021,8 +1021,8 @@ object Form1: TForm1
       end>
   end
   object edit_legenda: TEdit
-    Left = 11
-    Top = 168
+    Left = 14
+    Top = 163
     Width = 2280
     Height = 54
     Margins.Left = 9
@@ -1396,7 +1396,7 @@ object Form1: TForm1
   end
   object panel_icone_legenda: TPanel
     Left = 21
-    Top = 172
+    Top = 168
     Width = 45
     Height = 45
     Margins.Left = 9
@@ -1825,7 +1825,7 @@ object Form1: TForm1
         OnClick = lstnumerosClick
       end
       object lstrenomear: TMenuItem
-        Caption = 'Ajuste de &M'#250'ltiplas Legendas - S'#233'ries'
+        Caption = 'Ajuste de &M'#250'ltiplas Legendas'
         OnClick = lstrenomearClick
       end
     end
@@ -1886,6 +1886,18 @@ object Form1: TForm1
         Caption = 'English'
         RadioItem = True
         OnClick = Idioma_EngClick
+      end
+      object Idioma_Esp: TMenuItem
+        Caption = 'Espa'#241'ol'
+        OnClick = Idioma_EspClick
+      end
+      object Idioma_Ita: TMenuItem
+        Caption = 'Italiano'
+        OnClick = Idioma_ItaClick
+      end
+      object Idioma_Fra: TMenuItem
+        Caption = 'Fran'#231'ais'
+        OnClick = Idioma_FraClick
       end
     end
     object Menu_Sobre: TMenuItem

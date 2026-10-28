@@ -6,6 +6,7 @@ uses SysUtils, Windows, IniFiles, Forms;
 
 var
   // 0 = Automatico (idioma do Windows) | 1 = Portugues | 2 = English
+  // 3 = Espanol | 4 = Italiano | 5 = Frances
   Language_Global: Integer = 0;
 
 function  GetLanguageWin: String;
@@ -31,14 +32,25 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-function UsePortuguese: Boolean;
+// Retorna o idioma efetivamente em uso (1=pt, 2=en, 3=es, 4=it, 5=fr).
+// No modo Automatico segue o idioma do Windows; qualquer outro vira English.
+//------------------------------------------------------------------------------
+function ActiveLang: Integer;
+var
+  S: String;
 begin
-  case Language_Global of
-    1: Result := True;
-    2: Result := False;
-  else
-    Result := (GetLanguageWin = 'pt');
+  if (Language_Global >= 1) and (Language_Global <= 5) then
+  begin
+    Result := Language_Global;
+    Exit;
   end;
+
+  S := GetLanguageWin;
+  if S = 'pt' then Result := 1
+  else if S = 'es' then Result := 3
+  else if S = 'it' then Result := 4
+  else if S = 'fr' then Result := 5
+  else Result := 2;
 end;
 
 //------------------------------------------------------------------------------
@@ -50,9 +62,8 @@ function Lang_SRT(id: Integer): String;
 begin
   Result := '';
 
-  if UsePortuguese then
-  begin
-
+  case ActiveLang of
+  1: begin
     case id of
   0: begin
      //----------------------------------------------------- Form1 (principal)
@@ -92,7 +103,7 @@ begin
      Form1.lstfraps.Caption:='Sincronia de Frame Rate - FPS';
      Form1.lstclosecaption.Caption:='&Remover Closed Captions';
      Form1.lstnumeros.Caption:='Correção Numérica de Índice';
-     Form1.lstrenomear.Caption:='Ajuste de &Múltiplas Legendas - Séries';
+     Form1.lstrenomear.Caption:='Ajuste de &Múltiplas Legendas';
      Form1.Menu_Caracter.Caption:='F&onte';
      Form1.lst_editAvancada.Caption:='Edição Avançada       ';
      Form1.lstitalic.Caption:='Itálico';
@@ -104,6 +115,9 @@ begin
      Form1.Idioma_Auto.Caption:='Automático';
      Form1.Idioma_Por.Caption:='Português';
      Form1.Idioma_Eng.Caption:='English';
+     Form1.Idioma_Esp.Caption:='Español';
+     Form1.Idioma_Ita.Caption:='Italiano';
+     Form1.Idioma_Fra.Caption:='Français';
      Form1.Menu_Sobre.Caption:='&Informações';
      Form1.Sobre1.Caption:='&Sobre...';
      Form1.Abrir1.Caption:='&Abrir...';
@@ -117,6 +131,9 @@ begin
      Form1.Idioma_Auto.Checked:=(Language_Global = 0);
      Form1.Idioma_Por.Checked :=(Language_Global = 1);
      Form1.Idioma_Eng.Checked :=(Language_Global = 2);
+     Form1.Idioma_Esp.Checked :=(Language_Global = 3);
+     Form1.Idioma_Ita.Checked :=(Language_Global = 4);
+     Form1.Idioma_Fra.Checked :=(Language_Global = 5);
      end;
   1: begin
      //----------------------------------------------------- Form2 (Ajuste de Tempo)
@@ -247,11 +264,615 @@ begin
  95: Result:='1 Closed Caption';
  96: Result:='%d Closed Captions';
     end;
-
-  end
+  end;
+  3: begin
+    case id of
+  0: begin
+     //----------------------------------------------------- Form1 (principal)
+     Form1.btnitalico.Hint:='Cursiva';
+     Form1.btnunderline.Hint:='Subrayado';
+     Form1.btnfonte.Hint:='Color';
+     Form1.btnfundo.Hint:='Fondo del subtítulo';
+     Form1.btnabrir.Hint:='Abrir...';
+     Form1.btnsalvar.Hint:='Guardar';
+     Form1.btnsalvarcomo.Hint:='Guardar como...';
+     Form1.btnprocurar.Hint:='Procesamiento de subtítulos';
+     Form1.btnconsertar.Hint:='Corrección de superposición de diálogos';
+     Form1.btneditar.Hint:='Editar';
+     Form1.btn_editAvancada.Hint:='Edición avanzada';
+     Form1.btn_ortografia.Hint:='Verificar ortografía';
+     Form1.btntags.Hint:='Cambiar color del subtítulo';
+     Form1.btntempo.Hint:='Ajuste de tiempo';
+     Form1.btnstretch.Hint:='Sincronización gradual - Stretch/Shrink';
+     Form1.btnfraps.Hint:='Sincronización de Frame Rate - FPS';
+     Form1.btnclosecaption.Hint:='Quitar Closed Captions';
+     Form1.btnnumeros.Hint:='Corrección numérica de índice';
+     Form1.btnrenomear.Hint:='Ajuste de múltiples subtítulos - Series';
+     Form1.Menu_Arquivo.Caption:='&Archivo';
+     Form1.lstabrir.Caption:='Abrir...                  ';
+     Form1.lsteditar.Caption:='Editar';
+     Form1.lstsalvar.Caption:='Guardar';
+     Form1.lstsalvarcomo.Caption:='Guardar como...';
+     Form1.lstrecente.Caption:='Últimos subtítulos';
+     Form1.lstsair.Caption:='Salir';
+     Form1.Menu_Ferramentas.Caption:='&Herramientas';
+     Form1.lstlocalizar.Caption:='Buscar...';
+     Form1.lstsubstituir.Caption:='Reemplazar...';
+     Form1.lstprocurar.Caption:='Procesamiento de subtítulos';
+     Form1.lstconsertar.Caption:='Corrección de superposición de diálogos';
+     Form1.lsttempo.Caption:='Ajuste de tiempo';
+     Form1.lststretch.Caption:='Sincronización gradual - Stretch/Shrink';
+     Form1.lstfraps.Caption:='Sincronización de Frame Rate - FPS';
+     Form1.lstclosecaption.Caption:='&Quitar Closed Captions';
+     Form1.lstnumeros.Caption:='Corrección numérica de índice';
+     Form1.lstrenomear.Caption:='Ajuste de &múltiples subtítulos';
+     Form1.Menu_Caracter.Caption:='Fue&nte';
+     Form1.lst_editAvancada.Caption:='Edición avanzada       ';
+     Form1.lstitalic.Caption:='Cursiva';
+     Form1.lstunderline.Caption:='Subrayado';
+     Form1.lstfonte.Caption:='Color';
+     Form1.lsttags.Caption:='Cambiar &color del subtítulo';
+     Form1.lst_ortografia.Caption:='&Verificar ortografía';
+     Form1.Menu_Idioma.Caption:='&Idioma';
+     Form1.Idioma_Auto.Caption:='Automático';
+     Form1.Idioma_Por.Caption:='Português';
+     Form1.Idioma_Eng.Caption:='English';
+     Form1.Idioma_Esp.Caption:='Español';
+     Form1.Idioma_Ita.Caption:='Italiano';
+     Form1.Idioma_Fra.Caption:='Français';
+     Form1.Menu_Sobre.Caption:='&Información';
+     Form1.Sobre1.Caption:='&Acerca de...';
+     Form1.Abrir1.Caption:='&Abrir...';
+     Form1.Copiar1.Caption:='Copiar';
+     Form1.Selecionar1.Caption:='Seleccionar todo';
+     Form1.Localizar1.Caption:='Buscar...';
+     Form1.SaveDialog1.Title:='Guardar como';
+     Form1.OpenDialog1.Filter:='Documento de subtítulos (*.srt)|*.srt';
+     Form1.SaveDialog1.Filter:='Documento de subtítulos (*.srt)|*.srt';
+     //-----------------------------------------------------
+     Form1.Idioma_Auto.Checked:=(Language_Global = 0);
+     Form1.Idioma_Por.Checked :=(Language_Global = 1);
+     Form1.Idioma_Eng.Checked :=(Language_Global = 2);
+     Form1.Idioma_Esp.Checked :=(Language_Global = 3);
+     Form1.Idioma_Ita.Checked :=(Language_Global = 4);
+     Form1.Idioma_Fra.Checked :=(Language_Global = 5);
+     end;
+  1: begin
+     //----------------------------------------------------- Form2 (Ajuste de Tempo)
+     Form2.Label2.Caption:='Segundos:';
+     Form2.Label1.Caption:='Minutos:';
+     Form2.Label3.Caption:='Horas:';
+     Form2.Label5.Caption:='Milisegundos:';
+     Form2.btnCancelar.Caption:='Cancelar';
+     Form2.GroupBox3.Caption:=' Ajustar ';
+     Form2.RadioTempo.Caption:='Tiempo del subtítulo';
+     Form2.RadioDuracao.Caption:='Duración de los diálogos';
+     Form2.RadioDepois.Caption:='El texto aparecerá después';
+     Form2.RadioAntes.Caption:='El texto aparecerá antes';
+     Form2.GroupBox2.Caption:=' Ajuste del tiempo: ';
+     Form2.GroupBox1.Caption:=' Sobre el texto ';
+     end;
+  2: begin
+     //----------------------------------------------------- Form3 (Stretch/Shrink)
+     Form3.Label1.Caption:='Primer diálogo:';
+     Form3.Label2.Caption:='Último diálogo:';
+     Form3.btnCancelar.Caption:='Cancelar';
+     end;
+  3: begin
+     //----------------------------------------------------- Form5 (FPS)
+     Form5.Label1.Caption:='Frame Rate actual:';
+     Form5.Label2.Caption:='Frame Rate deseado:';
+     Form5.btnCancelar.Caption:='Cancelar';
+     Form5.combo_fps_legenda.Hint:='Seleccione el FPS original del subtítulo';
+     Form5.combo_fps_video.Hint:='Seleccione el FPS al que desea convertir';
+     end;
+  4: begin
+     //----------------------------------------------------- Form6 (Localizar/Substituir)
+     Form6_substituir.Label1.Caption:='Bus&car:';
+     Form6_substituir.Label2.Caption:='Reempla&zar por:';
+     Form6_substituir.btn_localizar.Caption:='&Buscar';
+     Form6_substituir.btn_substituir.Caption:='&Reemplazar';
+     Form6_substituir.btn_substituir_tudo.Caption:='Reemplazar &todo';
+     Form6_substituir.btn_cancelar.Caption:='Cerrar';
+     Form6_substituir.CheckBox1.Caption:='Distinguir &mayúsculas de minúsculas';
+     Form6_substituir.CheckBox2.Caption:='Marcar &frases encontradas';
+     Form6_substituir.CheckBox3.Caption:='Coincidir &palabra completa';
+     end;
+  5: AboutBox.Caption:='Acerca de SRT Adjuster';
+ 10: Result:='Solo se utilizará el primer archivo.';
+ 11: Result:='El archivo cargado no es un documento SRT.';
+ 12: Result:='El documento cargado no contiene diálogos con el formato de un subtítulo SRT.';
+ 14: Result:='¡Se ajustó 1 subtítulo con éxito!';
+ 15: Result:='¡Se ajustaron %d subtítulos con éxito!';
+ 16: Result:='¡No fue necesario realizar ajustes en los subtítulos encontrados en este directorio!';
+ 17: Result:='El subtítulo actual ya existe.'+#13+'¿Desea reemplazarlo?                       ';
+ 18: Result:='Confirmar';
+ 19: Result:='Este subtítulo tiene 1 ocurrencia.';
+ 20: Result:='Este subtítulo tiene %d ocurrencias.';
+ 21: Result:='Este subtítulo no tiene ningún tipo de ocurrencia.';
+ 22: Result:='¡Superposiciones corregidas con éxito!';
+ 23: Result:='¿Desea guardar los cambios realizados en este subtítulo antes de salir?';
+ 24: Result:='¿Está seguro de que desea sobrescribir el subtítulo original?';
+ 25: Result:='¿Desea abrir ahora el video?';
+ 26: Result:='¡Corrección numérica realizada con éxito!';
+ 27: Result:='El archivo cargado no es un documento de subtítulos en formato SRT.';
+ 28: Result:='¡Cambio de color realizado con éxito!';
+ 29: Result:='No se encontró ningún closed caption.';
+ 30: Result:='¡Los closed captions se eliminaron con éxito!';
+ 31: Result:='1 Límite de línea';
+ 32: Result:='%d Límites de línea';
+ 33: Result:='1 Superposición';
+ 34: Result:='%d Superposiciones';
+ 35: Result:='%d Closed Captions';
+ 36: Result:='Buscar';
+ 37: Result:='Reemplazar';
+ 38: Result:='No se encontraron los archivos del diccionario Hunspell.';
+ 39: Result:='Error al inicializar Hunspell';
+ 40: Result:='Asegúrese de que exista solo un título de serie por directorio para que los subtítulos se ajusten correctamente.';
+ 41: Result:='%d Líneas';
+ 42: Result:='%d Diálogos';
+ 43: Result:='1 Línea';
+ 44: Result:='1 Diálogo';
+ 45: Result:='Ajuste de tiempo';
+ 46: Result:='Ajuste de duración';
+ 47: Result:='Aumentar la duración';
+ 48: Result:='Disminuir la duración';
+ 49: Result:=' Ajuste de la duración: ';
+ 50: Result:=' Sobre el diálogo ';
+ 51: Result:='El texto aparecerá después';
+ 52: Result:='El texto aparecerá antes';
+ 53: Result:=' Ajuste del tiempo: ';
+ 54: Result:=' Sobre el texto ';
+ 55: Result:='Está intentando que el texto aparezca demasiado pronto.'+#13+'¡Algunas líneas de texto (normalmente las primeras) pueden tener valores de tiempo NEGATIVOS!'+#13#13+'Esto solo se puede hacer ELIMINANDO estas líneas del archivo de destino...';
+ 56: Result:='La duración que definió está haciendo negativos algunos diálogos.';
+ 57: Result:='Defina una duración mayor que la definida actualmente...';
+ 58: Result:='Ajuste de tiempo realizado con éxito, pero se eliminó 1 diálogo.';
+ 59: Result:='Ajuste de tiempo realizado con éxito, pero se eliminaron %d diálogos.';
+ 60: Result:='¡Ajuste de tiempo realizado con éxito!';
+ 61: Result:='¡Ajuste de la duración de los diálogos realizado con éxito!';
+ 62: Result:='En este campo debe indicar el tiempo inicial del PRIMER diálogo del subtítulo.'+#13#13+'ATENCIÓN:'+#13+'No confunda el diálogo con la información de créditos sobre la creación/sincronización del subtítulo.';
+ 63: Result:='En este campo debe indicar el tiempo inicial del ÚLTIMO diálogo del subtítulo.'+#13#13+'ATENCIÓN:'+#13+'No confunda el diálogo con la información de créditos sobre la creación/sincronización del subtítulo.';
+ 64: Result:='¡El valor de tiempo indicado en PRIMER DIÁLOGO no es válido!'+#13+'Defina un valor inferior al formato máximo de 24 h.'+#13#13+'Error code:  #0301';
+ 65: Result:='¡El valor de tiempo indicado en ÚLTIMO DIÁLOGO no es válido!'+#13+'Defina un valor inferior al formato máximo de 24 h.'+#13#13+'Error code:  #0302';
+ 66: Result:='¡El valor de tiempo indicado en PRIMER DIÁLOGO no es válido!'+#13+'Defina un valor de tiempo INFERIOR al del ÚLTIMO DIÁLOGO.'+#13#13+'Error code:  #0303';
+ 67: Result:='¡El valor de tiempo indicado en ÚLTIMO DIÁLOGO no es válido!'+#13+'Defina un valor de tiempo SUPERIOR al del PRIMER DIÁLOGO.'+#13#13+'Error code:  #0304';
+ 68: Result:='Sincronización gradual - Stretch/Shrink';
+ 69: Result:='¡Sincronización gradual realizada con éxito!';
+ 70: Result:='Sincronización de Frame Rate - FPS';
+ 71: Result:='¡Sincronización de Frame Rate realizada con éxito!';
+ 72: Result:='En este campo debe indicar la TASA DE FOTOGRAMAS del video que desea sincronizar.'+#13#13+'Consulte las propiedades del archivo de video para obtener esta información.';
+ 73: Result:='En este campo debe indicar a qué TASA DE FOTOGRAMAS desea convertir, después de indicar el Frame Rate actual del archivo de video.';
+ 74: Result:='marcación';
+ 75: Result:='marcaciones';
+ 76: Result:='sustitución';
+ 77: Result:='sustituciones';
+ 78: Result:='No se pudo encontrar "%s"';
+ 79: Result:='Se realizó %d %s en todo el subtítulo.';
+ 80: Result:='Se realizaron %d %s en todo el subtítulo.';
+ 81: Result:='&Buscar siguiente';
+ 82: Result:='&Reemplazar siguiente';
+ 83: Result:='&Buscar';
+ 84: Result:='&Reemplazar';
+ 85: Result:='Buscar y &marcar';
+ 86: Result:='Versión %s'+#13+'JMBA Softwares 2004, 2026';
+ 87: Result:='Se encontraron %d archivos de subtítulos y video de una serie.'+#13#13+'¿Desea ajustar los subtítulos?';
+ 88: Result:='Se encontró un subtítulo con temporada y episodio repetidos en este directorio.'+#13#13+'Revise los subtítulos con %s antes de continuar.';
+ 89: Result:='La cantidad de EPISODIOS es mayor que la de sus archivos de subtítulos.'+#13+'Revise antes de continuar.'+#13#13+'Episodios: %d archivos'+#13+'Subtítulos: %d archivos';
+ 90: Result:='La cantidad de SUBTÍTULOS es mayor que la de sus archivos de video.'+#13+'Revise antes de continuar.'+#13#13+'Episodios: %d archivos'+#13+'Subtítulos: %d archivos';
+ 91: Result:='No se encontró ningún archivo de subtítulos o video de una serie en el formato estándar en este directorio.';
+ 92: Result:='No se pudo aplicar el formato de texto deseado.'+#13+'Elimine el actual antes de agregar otro o verifique que haya seleccionado correctamente el texto deseado.';
+ 93: Result:='No se pudo aplicar el formato de color al texto deseado.'+#13+'Elimine el actual antes de agregar otro o verifique que haya seleccionado correctamente el texto deseado.';
+ 94: Result:='© 2026 JMBA Softwares. Todos los derechos reservados.';
+ 95: Result:='1 Closed Caption';
+ 96: Result:='%d Closed Captions';
+    end;
+  end;
+  4: begin
+    case id of
+  0: begin
+     //----------------------------------------------------- Form1 (principal)
+     Form1.btnitalico.Hint:='Corsivo';
+     Form1.btnunderline.Hint:='Sottolineato';
+     Form1.btnfonte.Hint:='Colore';
+     Form1.btnfundo.Hint:='Sfondo del sottotitolo';
+     Form1.btnabrir.Hint:='Apri...';
+     Form1.btnsalvar.Hint:='Salva';
+     Form1.btnsalvarcomo.Hint:='Salva con nome...';
+     Form1.btnprocurar.Hint:='Elaborazione sottotitoli';
+     Form1.btnconsertar.Hint:='Correzione sovrapposizione dei dialoghi';
+     Form1.btneditar.Hint:='Modifica';
+     Form1.btn_editAvancada.Hint:='Modifica avanzata';
+     Form1.btn_ortografia.Hint:='Controllo ortografico';
+     Form1.btntags.Hint:='Cambia colore del sottotitolo';
+     Form1.btntempo.Hint:='Regolazione del tempo';
+     Form1.btnstretch.Hint:='Sincronizzazione graduale - Stretch/Shrink';
+     Form1.btnfraps.Hint:='Sincronizzazione Frame Rate - FPS';
+     Form1.btnclosecaption.Hint:='Rimuovi Closed Captions';
+     Form1.btnnumeros.Hint:='Correzione numerica dell''indice';
+     Form1.btnrenomear.Hint:='Regolazione di sottotitoli multipli';
+     Form1.Menu_Arquivo.Caption:='&File';
+     Form1.lstabrir.Caption:='Apri...                  ';
+     Form1.lsteditar.Caption:='Modifica';
+     Form1.lstsalvar.Caption:='Salva';
+     Form1.lstsalvarcomo.Caption:='Salva con nome...';
+     Form1.lstrecente.Caption:='Ultimi sottotitoli';
+     Form1.lstsair.Caption:='Esci';
+     Form1.Menu_Ferramentas.Caption:='&Strumenti';
+     Form1.lstlocalizar.Caption:='Trova...';
+     Form1.lstsubstituir.Caption:='Sostituisci...';
+     Form1.lstprocurar.Caption:='Elaborazione sottotitoli';
+     Form1.lstconsertar.Caption:='Correzione sovrapposizione dei dialoghi';
+     Form1.lsttempo.Caption:='Regolazione del tempo';
+     Form1.lststretch.Caption:='Sincronizzazione graduale - Stretch/Shrink';
+     Form1.lstfraps.Caption:='Sincronizzazione Frame Rate - FPS';
+     Form1.lstclosecaption.Caption:='&Rimuovi Closed Captions';
+     Form1.lstnumeros.Caption:='Correzione numerica dell''indice';
+     Form1.lstrenomear.Caption:='Regolazione di sottotitoli &multipli';
+     Form1.Menu_Caracter.Caption:='C&arattere';
+     Form1.lst_editAvancada.Caption:='Modifica avanzata       ';
+     Form1.lstitalic.Caption:='Corsivo';
+     Form1.lstunderline.Caption:='Sottolineato';
+     Form1.lstfonte.Caption:='Colore';
+     Form1.lsttags.Caption:='Cambia &colore del sottotitolo';
+     Form1.lst_ortografia.Caption:='&Controllo ortografico';
+     Form1.Menu_Idioma.Caption:='&Lingua';
+     Form1.Idioma_Auto.Caption:='Automatico';
+     Form1.Idioma_Por.Caption:='Português';
+     Form1.Idioma_Eng.Caption:='English';
+     Form1.Idioma_Esp.Caption:='Español';
+     Form1.Idioma_Ita.Caption:='Italiano';
+     Form1.Idioma_Fra.Caption:='Français';
+     Form1.Menu_Sobre.Caption:='&Informazioni';
+     Form1.Sobre1.Caption:='&Informazioni su...';
+     Form1.Abrir1.Caption:='&Apri...';
+     Form1.Copiar1.Caption:='Copia';
+     Form1.Selecionar1.Caption:='Seleziona tutto';
+     Form1.Localizar1.Caption:='Trova...';
+     Form1.SaveDialog1.Title:='Salva con nome';
+     Form1.OpenDialog1.Filter:='Documento di sottotitoli (*.srt)|*.srt';
+     Form1.SaveDialog1.Filter:='Documento di sottotitoli (*.srt)|*.srt';
+     //-----------------------------------------------------
+     Form1.Idioma_Auto.Checked:=(Language_Global = 0);
+     Form1.Idioma_Por.Checked :=(Language_Global = 1);
+     Form1.Idioma_Eng.Checked :=(Language_Global = 2);
+     Form1.Idioma_Esp.Checked :=(Language_Global = 3);
+     Form1.Idioma_Ita.Checked :=(Language_Global = 4);
+     Form1.Idioma_Fra.Checked :=(Language_Global = 5);
+     end;
+  1: begin
+     //----------------------------------------------------- Form2 (Ajuste de Tempo)
+     Form2.Label2.Caption:='Secondi:';
+     Form2.Label1.Caption:='Minuti:';
+     Form2.Label3.Caption:='Ore:';
+     Form2.Label5.Caption:='Millisecondi:';
+     Form2.btnCancelar.Caption:='Annulla';
+     Form2.GroupBox3.Caption:=' Regola ';
+     Form2.RadioTempo.Caption:='Tempo del sottotitolo';
+     Form2.RadioDuracao.Caption:='Durata dei dialoghi';
+     Form2.RadioDepois.Caption:='Il testo apparirà dopo';
+     Form2.RadioAntes.Caption:='Il testo apparirà prima';
+     Form2.GroupBox2.Caption:=' Regolazione del tempo: ';
+     Form2.GroupBox1.Caption:=' Sul testo ';
+     end;
+  2: begin
+     //----------------------------------------------------- Form3 (Stretch/Shrink)
+     Form3.Label1.Caption:='Primo dialogo:';
+     Form3.Label2.Caption:='Ultimo dialogo:';
+     Form3.btnCancelar.Caption:='Annulla';
+     end;
+  3: begin
+     //----------------------------------------------------- Form5 (FPS)
+     Form5.Label1.Caption:='Frame Rate attuale:';
+     Form5.Label2.Caption:='Frame Rate desiderato:';
+     Form5.btnCancelar.Caption:='Annulla';
+     Form5.combo_fps_legenda.Hint:='Seleziona gli FPS originali del sottotitolo';
+     Form5.combo_fps_video.Hint:='Seleziona gli FPS di destinazione';
+     end;
+  4: begin
+     //----------------------------------------------------- Form6 (Localizar/Substituir)
+     Form6_substituir.Label1.Caption:='T&rova:';
+     Form6_substituir.Label2.Caption:='Sostituisci &con:';
+     Form6_substituir.btn_localizar.Caption:='&Trova';
+     Form6_substituir.btn_substituir.Caption:='&Sostituisci';
+     Form6_substituir.btn_substituir_tudo.Caption:='Sostituisci t&utto';
+     Form6_substituir.btn_cancelar.Caption:='Chiudi';
+     Form6_substituir.CheckBox1.Caption:='Distingui &maiuscole/minuscole';
+     Form6_substituir.CheckBox2.Caption:='Evidenzia &frasi trovate';
+     Form6_substituir.CheckBox3.Caption:='Solo parole &intere';
+     end;
+  5: AboutBox.Caption:='Informazioni su SRT Adjuster';
+ 10: Result:='Verrà utilizzato solo il primo file.';
+ 11: Result:='Il file caricato non è un documento SRT.';
+ 12: Result:='Il documento caricato non contiene dialoghi nel formato di un sottotitolo SRT.';
+ 14: Result:='1 sottotitolo è stato regolato con successo!';
+ 15: Result:='%d sottotitoli sono stati regolati con successo!';
+ 16: Result:='Non è stato necessario apportare modifiche ai sottotitoli trovati in questa cartella!';
+ 17: Result:='Il sottotitolo attuale esiste già.'+#13+'Vuoi sostituirlo?                       ';
+ 18: Result:='Conferma';
+ 19: Result:='Questo sottotitolo contiene 1 occorrenza.';
+ 20: Result:='Questo sottotitolo contiene %d occorrenze.';
+ 21: Result:='Questo sottotitolo non contiene alcun tipo di occorrenza.';
+ 22: Result:='Sovrapposizioni corrette con successo!';
+ 23: Result:='Vuoi salvare le modifiche apportate a questo sottotitolo prima di uscire?';
+ 24: Result:='Sei sicuro di voler sovrascrivere il sottotitolo originale?';
+ 25: Result:='Vuoi aprire ora il video?';
+ 26: Result:='Correzione numerica eseguita con successo!';
+ 27: Result:='Il file caricato non è un documento di sottotitoli in formato SRT.';
+ 28: Result:='Cambio di colore eseguito con successo!';
+ 29: Result:='Nessun closed caption trovato.';
+ 30: Result:='I closed captions sono stati rimossi con successo!';
+ 31: Result:='1 Limite di riga';
+ 32: Result:='%d Limiti di riga';
+ 33: Result:='1 Sovrapposizione';
+ 34: Result:='%d Sovrapposizioni';
+ 35: Result:='%d Closed Captions';
+ 36: Result:='Trova';
+ 37: Result:='Sostituisci';
+ 38: Result:='File del dizionario Hunspell non trovati.';
+ 39: Result:='Errore di inizializzazione di Hunspell';
+ 40: Result:='Assicurati che ci sia un solo titolo di serie per cartella in modo che i sottotitoli vengano regolati correttamente.';
+ 41: Result:='%d Righe';
+ 42: Result:='%d Dialoghi';
+ 43: Result:='1 Riga';
+ 44: Result:='1 Dialogo';
+ 45: Result:='Regolazione del tempo';
+ 46: Result:='Regolazione della durata';
+ 47: Result:='Aumenta la durata';
+ 48: Result:='Diminuisci la durata';
+ 49: Result:=' Regolazione della durata: ';
+ 50: Result:=' Sul dialogo ';
+ 51: Result:='Il testo apparirà dopo';
+ 52: Result:='Il testo apparirà prima';
+ 53: Result:=' Regolazione del tempo: ';
+ 54: Result:=' Sul testo ';
+ 55: Result:='Stai cercando di far apparire il testo troppo presto.'+#13+'Alcune righe di testo (di solito le prime) potrebbero avere valori di tempo NEGATIVI!'+#13#13+'Questo si può fare solo ELIMINANDO queste righe dal file di destinazione...';
+ 56: Result:='La durata impostata sta rendendo negativi alcuni dialoghi.';
+ 57: Result:='Imposta una durata maggiore di quella attuale...';
+ 58: Result:='Regolazione del tempo eseguita con successo, ma 1 dialogo è stato eliminato.';
+ 59: Result:='Regolazione del tempo eseguita con successo, ma %d dialoghi sono stati eliminati.';
+ 60: Result:='Regolazione del tempo eseguita con successo!';
+ 61: Result:='Regolazione della durata dei dialoghi eseguita con successo!';
+ 62: Result:='In questo campo devi indicare il tempo iniziale del PRIMO dialogo del sottotitolo.'+#13#13+'ATTENZIONE:'+#13+'Non confondere il dialogo con le informazioni sui crediti relative alla creazione/sincronizzazione del sottotitolo.';
+ 63: Result:='In questo campo devi indicare il tempo iniziale dell''ULTIMO dialogo del sottotitolo.'+#13#13+'ATTENZIONE:'+#13+'Non confondere il dialogo con le informazioni sui crediti relative alla creazione/sincronizzazione del sottotitolo.';
+ 64: Result:='Il valore di tempo indicato in PRIMO DIALOGO non è valido!'+#13+'Imposta un valore inferiore al formato massimo di 24 ore.'+#13#13+'Error code:  #0301';
+ 65: Result:='Il valore di tempo indicato in ULTIMO DIALOGO non è valido!'+#13+'Imposta un valore inferiore al formato massimo di 24 ore.'+#13#13+'Error code:  #0302';
+ 66: Result:='Il valore di tempo indicato in PRIMO DIALOGO non è valido!'+#13+'Imposta un valore di tempo INFERIORE a quello dell''ULTIMO DIALOGO.'+#13#13+'Error code:  #0303';
+ 67: Result:='Il valore di tempo indicato in ULTIMO DIALOGO non è valido!'+#13+'Imposta un valore di tempo SUPERIORE a quello del PRIMO DIALOGO.'+#13#13+'Error code:  #0304';
+ 68: Result:='Sincronizzazione graduale - Stretch/Shrink';
+ 69: Result:='Sincronizzazione graduale eseguita con successo!';
+ 70: Result:='Sincronizzazione Frame Rate - FPS';
+ 71: Result:='Sincronizzazione Frame Rate eseguita con successo!';
+ 72: Result:='In questo campo devi indicare il FRAME RATE del video che vuoi sincronizzare.'+#13#13+'Controlla le proprietà del file video per ottenere questa informazione.';
+ 73: Result:='In questo campo devi indicare il FRAME RATE in cui vuoi convertire, dopo aver indicato il Frame Rate attuale del file video.';
+ 74: Result:='evidenziazione';
+ 75: Result:='evidenziazioni';
+ 76: Result:='sostituzione';
+ 77: Result:='sostituzioni';
+ 78: Result:='Impossibile trovare "%s"';
+ 79: Result:='È stata eseguita %d %s in tutto il sottotitolo.';
+ 80: Result:='Sono state eseguite %d %s in tutto il sottotitolo.';
+ 81: Result:='&Trova successivo';
+ 82: Result:='&Sostituisci successivo';
+ 83: Result:='&Trova';
+ 84: Result:='&Sostituisci';
+ 85: Result:='Trova ed &evidenzia';
+ 86: Result:='Versione %s'+#13+'JMBA Softwares 2004, 2026';
+ 87: Result:='Sono stati trovati %d file di sottotitoli e video di una serie.'+#13#13+'Vuoi regolare i sottotitoli?';
+ 88: Result:='In questa cartella è stato trovato un sottotitolo con stagione ed episodio ripetuti.'+#13#13+'Controlla i sottotitoli con %s prima di procedere.';
+ 89: Result:='Il numero di EPISODI è superiore a quello dei relativi file di sottotitoli.'+#13+'Controlla prima di procedere.'+#13#13+'Episodi: %d file'+#13+'Sottotitoli: %d file';
+ 90: Result:='Il numero di SOTTOTITOLI è superiore a quello dei relativi file video.'+#13+'Controlla prima di procedere.'+#13#13+'Episodi: %d file'+#13+'Sottotitoli: %d file';
+ 91: Result:='Impossibile trovare in questa cartella alcun file di sottotitoli o video di una serie nel formato standard.';
+ 92: Result:='Impossibile applicare la formattazione del testo desiderata.'+#13+'Rimuovi quella attuale prima di aggiungerne un''altra oppure verifica di aver selezionato correttamente il testo desiderato.';
+ 93: Result:='Impossibile applicare la formattazione del colore al testo desiderato.'+#13+'Rimuovi quella attuale prima di aggiungerne un''altra oppure verifica di aver selezionato correttamente il testo desiderato.';
+ 94: Result:='© 2026 JMBA Softwares. Tutti i diritti riservati.';
+ 95: Result:='1 Closed Caption';
+ 96: Result:='%d Closed Captions';
+    end;
+  end;
+  5: begin
+    case id of
+  0: begin
+     //----------------------------------------------------- Form1 (principal)
+     Form1.btnitalico.Hint:='Italique';
+     Form1.btnunderline.Hint:='Souligné';
+     Form1.btnfonte.Hint:='Couleur';
+     Form1.btnfundo.Hint:='Arrière-plan du sous-titre';
+     Form1.btnabrir.Hint:='Ouvrir...';
+     Form1.btnsalvar.Hint:='Enregistrer';
+     Form1.btnsalvarcomo.Hint:='Enregistrer sous...';
+     Form1.btnprocurar.Hint:='Traitement des sous-titres';
+     Form1.btnconsertar.Hint:='Correction du chevauchement des dialogues';
+     Form1.btneditar.Hint:='Modifier';
+     Form1.btn_editAvancada.Hint:='Édition avancée';
+     Form1.btn_ortografia.Hint:='Vérifier l''orthographe';
+     Form1.btntags.Hint:='Changer la couleur du sous-titre';
+     Form1.btntempo.Hint:='Réglage du temps';
+     Form1.btnstretch.Hint:='Synchronisation progressive - Stretch/Shrink';
+     Form1.btnfraps.Hint:='Synchronisation du Frame Rate - FPS';
+     Form1.btnclosecaption.Hint:='Supprimer les Closed Captions';
+     Form1.btnnumeros.Hint:='Correction numérique de l''index';
+     Form1.btnrenomear.Hint:='Réglage de plusieurs sous-titres - Séries';
+     Form1.Menu_Arquivo.Caption:='&Fichier';
+     Form1.lstabrir.Caption:='Ouvrir...                  ';
+     Form1.lsteditar.Caption:='Modifier';
+     Form1.lstsalvar.Caption:='Enregistrer';
+     Form1.lstsalvarcomo.Caption:='Enregistrer sous...';
+     Form1.lstrecente.Caption:='Derniers sous-titres';
+     Form1.lstsair.Caption:='Quitter';
+     Form1.Menu_Ferramentas.Caption:='&Outils';
+     Form1.lstlocalizar.Caption:='Rechercher...';
+     Form1.lstsubstituir.Caption:='Remplacer...';
+     Form1.lstprocurar.Caption:='Traitement des sous-titres';
+     Form1.lstconsertar.Caption:='Correction du chevauchement des dialogues';
+     Form1.lsttempo.Caption:='Réglage du temps';
+     Form1.lststretch.Caption:='Synchronisation progressive - Stretch/Shrink';
+     Form1.lstfraps.Caption:='Synchronisation du Frame Rate - FPS';
+     Form1.lstclosecaption.Caption:='&Supprimer les Closed Captions';
+     Form1.lstnumeros.Caption:='Correction numérique de l''index';
+     Form1.lstrenomear.Caption:='Réglage de &plusieurs sous-titres';
+     Form1.Menu_Caracter.Caption:='&Police';
+     Form1.lst_editAvancada.Caption:='Édition avancée       ';
+     Form1.lstitalic.Caption:='Italique';
+     Form1.lstunderline.Caption:='Souligné';
+     Form1.lstfonte.Caption:='Couleur';
+     Form1.lsttags.Caption:='Changer la &couleur du sous-titre';
+     Form1.lst_ortografia.Caption:='&Vérifier l''orthographe';
+     Form1.Menu_Idioma.Caption:='&Langue';
+     Form1.Idioma_Auto.Caption:='Automatique';
+     Form1.Idioma_Por.Caption:='Português';
+     Form1.Idioma_Eng.Caption:='English';
+     Form1.Idioma_Esp.Caption:='Español';
+     Form1.Idioma_Ita.Caption:='Italiano';
+     Form1.Idioma_Fra.Caption:='Français';
+     Form1.Menu_Sobre.Caption:='&Informations';
+     Form1.Sobre1.Caption:='À &propos...';
+     Form1.Abrir1.Caption:='&Ouvrir...';
+     Form1.Copiar1.Caption:='Copier';
+     Form1.Selecionar1.Caption:='Tout sélectionner';
+     Form1.Localizar1.Caption:='Rechercher...';
+     Form1.SaveDialog1.Title:='Enregistrer sous';
+     Form1.OpenDialog1.Filter:='Document de sous-titres (*.srt)|*.srt';
+     Form1.SaveDialog1.Filter:='Document de sous-titres (*.srt)|*.srt';
+     //-----------------------------------------------------
+     Form1.Idioma_Auto.Checked:=(Language_Global = 0);
+     Form1.Idioma_Por.Checked :=(Language_Global = 1);
+     Form1.Idioma_Eng.Checked :=(Language_Global = 2);
+     Form1.Idioma_Esp.Checked :=(Language_Global = 3);
+     Form1.Idioma_Ita.Checked :=(Language_Global = 4);
+     Form1.Idioma_Fra.Checked :=(Language_Global = 5);
+     end;
+  1: begin
+     //----------------------------------------------------- Form2 (Ajuste de Tempo)
+     Form2.Label2.Caption:='Secondes :';
+     Form2.Label1.Caption:='Minutes :';
+     Form2.Label3.Caption:='Heures :';
+     Form2.Label5.Caption:='Millisecondes :';
+     Form2.btnCancelar.Caption:='Annuler';
+     Form2.GroupBox3.Caption:=' Ajuster ';
+     Form2.RadioTempo.Caption:='Temps du sous-titre';
+     Form2.RadioDuracao.Caption:='Durée des dialogues';
+     Form2.RadioDepois.Caption:='Le texte viendra après';
+     Form2.RadioAntes.Caption:='Le texte viendra avant';
+     Form2.GroupBox2.Caption:=' Réglage du temps : ';
+     Form2.GroupBox1.Caption:=' À propos du texte ';
+     end;
+  2: begin
+     //----------------------------------------------------- Form3 (Stretch/Shrink)
+     Form3.Label1.Caption:='Premier dialogue :';
+     Form3.Label2.Caption:='Dernier dialogue :';
+     Form3.btnCancelar.Caption:='Annuler';
+     end;
+  3: begin
+     //----------------------------------------------------- Form5 (FPS)
+     Form5.Label1.Caption:='Frame Rate actuel :';
+     Form5.Label2.Caption:='Frame Rate souhaité :';
+     Form5.btnCancelar.Caption:='Annuler';
+     Form5.combo_fps_legenda.Hint:='Sélectionnez le FPS d''origine du sous-titre';
+     Form5.combo_fps_video.Hint:='Sélectionnez le FPS vers lequel convertir';
+     end;
+  4: begin
+     //----------------------------------------------------- Form6 (Localizar/Substituir)
+     Form6_substituir.Label1.Caption:='Re&chercher :';
+     Form6_substituir.Label2.Caption:='Remplacer &par :';
+     Form6_substituir.btn_localizar.Caption:='&Rechercher';
+     Form6_substituir.btn_substituir.Caption:='&Remplacer';
+     Form6_substituir.btn_substituir_tudo.Caption:='Remplacer &tout';
+     Form6_substituir.btn_cancelar.Caption:='Fermer';
+     Form6_substituir.CheckBox1.Caption:='Respecter la &casse';
+     Form6_substituir.CheckBox2.Caption:='Marquer les &phrases trouvées';
+     Form6_substituir.CheckBox3.Caption:='Mot en&tier';
+     end;
+  5: AboutBox.Caption:='À propos de SRT Adjuster';
+ 10: Result:='Seul le premier fichier sera utilisé.';
+ 11: Result:='Le fichier chargé n''est pas un document SRT.';
+ 12: Result:='Le document chargé ne contient aucun dialogue au format d''un sous-titre SRT.';
+ 14: Result:='1 sous-titre a été réglé avec succès !';
+ 15: Result:='%d sous-titres ont été réglés avec succès !';
+ 16: Result:='Aucun réglage n''a été nécessaire pour les sous-titres trouvés dans ce dossier !';
+ 17: Result:='Le sous-titre actuel existe déjà.'+#13+'Voulez-vous le remplacer ?                       ';
+ 18: Result:='Confirmer';
+ 19: Result:='Ce sous-titre contient 1 occurrence.';
+ 20: Result:='Ce sous-titre contient %d occurrences.';
+ 21: Result:='Ce sous-titre ne contient aucune occurrence.';
+ 22: Result:='Chevauchements corrigés avec succès !';
+ 23: Result:='Voulez-vous enregistrer les modifications apportées à ce sous-titre avant de quitter ?';
+ 24: Result:='Êtes-vous sûr de vouloir écraser le sous-titre original ?';
+ 25: Result:='Voulez-vous ouvrir la vidéo maintenant ?';
+ 26: Result:='Correction numérique effectuée avec succès !';
+ 27: Result:='Le fichier chargé n''est pas un document de sous-titres au format SRT.';
+ 28: Result:='Changement de couleur effectué avec succès !';
+ 29: Result:='Aucun closed caption trouvé.';
+ 30: Result:='Les closed captions ont été supprimés avec succès !';
+ 31: Result:='1 Limite de ligne';
+ 32: Result:='%d Limites de ligne';
+ 33: Result:='1 Chevauchement';
+ 34: Result:='%d Chevauchements';
+ 35: Result:='%d Closed Captions';
+ 36: Result:='Rechercher';
+ 37: Result:='Remplacer';
+ 38: Result:='Fichiers du dictionnaire Hunspell introuvables.';
+ 39: Result:='Erreur d''initialisation de Hunspell';
+ 40: Result:='Assurez-vous qu''il n''y a qu''un seul titre de série par dossier afin que les sous-titres soient réglés correctement.';
+ 41: Result:='%d Lignes';
+ 42: Result:='%d Dialogues';
+ 43: Result:='1 Ligne';
+ 44: Result:='1 Dialogue';
+ 45: Result:='Réglage du temps';
+ 46: Result:='Réglage de la durée';
+ 47: Result:='Augmenter la durée';
+ 48: Result:='Diminuer la durée';
+ 49: Result:=' Réglage de la durée : ';
+ 50: Result:=' À propos du dialogue ';
+ 51: Result:='Le texte viendra après';
+ 52: Result:='Le texte viendra avant';
+ 53: Result:=' Réglage du temps : ';
+ 54: Result:=' À propos du texte ';
+ 55: Result:='Vous essayez de faire apparaître le texte trop tôt.'+#13+'Certaines lignes de texte (généralement les premières) peuvent avoir des valeurs de temps NÉGATIVES !'+#13#13+'Cela ne peut se faire qu''en SUPPRIMANT ces lignes du fichier de destination...';
+ 56: Result:='La durée que vous avez définie rend négatifs certains dialogues.';
+ 57: Result:='Définissez une durée supérieure à celle définie actuellement...';
+ 58: Result:='Réglage du temps effectué avec succès, mais 1 dialogue a été supprimé.';
+ 59: Result:='Réglage du temps effectué avec succès, mais %d dialogues ont été supprimés.';
+ 60: Result:='Réglage du temps effectué avec succès !';
+ 61: Result:='Réglage de la durée des dialogues effectué avec succès !';
+ 62: Result:='Dans ce champ, vous devez indiquer le temps de début du PREMIER dialogue du sous-titre.'+#13#13+'ATTENTION :'+#13+'Ne confondez pas le dialogue avec les informations de crédits relatives à la création/synchronisation du sous-titre.';
+ 63: Result:='Dans ce champ, vous devez indiquer le temps de début du DERNIER dialogue du sous-titre.'+#13#13+'ATTENTION :'+#13+'Ne confondez pas le dialogue avec les informations de crédits relatives à la création/synchronisation du sous-titre.';
+ 64: Result:='La valeur de temps indiquée dans PREMIER DIALOGUE n''est pas valide !'+#13+'Définissez une valeur inférieure au format maximal de 24 h.'+#13#13+'Error code:  #0301';
+ 65: Result:='La valeur de temps indiquée dans DERNIER DIALOGUE n''est pas valide !'+#13+'Définissez une valeur inférieure au format maximal de 24 h.'+#13#13+'Error code:  #0302';
+ 66: Result:='La valeur de temps indiquée dans PREMIER DIALOGUE n''est pas valide !'+#13+'Définissez une valeur de temps INFÉRIEURE à celle du DERNIER DIALOGUE.'+#13#13+'Error code:  #0303';
+ 67: Result:='La valeur de temps indiquée dans DERNIER DIALOGUE n''est pas valide !'+#13+'Définissez une valeur de temps SUPÉRIEURE à celle du PREMIER DIALOGUE.'+#13#13+'Error code:  #0304';
+ 68: Result:='Synchronisation progressive - Stretch/Shrink';
+ 69: Result:='Synchronisation progressive effectuée avec succès !';
+ 70: Result:='Synchronisation du Frame Rate - FPS';
+ 71: Result:='Synchronisation du Frame Rate effectuée avec succès !';
+ 72: Result:='Dans ce champ, vous devez indiquer le FRAME RATE de la vidéo que vous souhaitez synchroniser.'+#13#13+'Consultez les propriétés du fichier vidéo pour obtenir cette information.';
+ 73: Result:='Dans ce champ, vous devez indiquer le FRAME RATE vers lequel vous souhaitez convertir, après avoir indiqué le Frame Rate actuel du fichier vidéo.';
+ 74: Result:='marquage';
+ 75: Result:='marquages';
+ 76: Result:='remplacement';
+ 77: Result:='remplacements';
+ 78: Result:='Impossible de trouver "%s"';
+ 79: Result:='%d %s effectué dans tout le sous-titre.';
+ 80: Result:='%d %s effectués dans tout le sous-titre.';
+ 81: Result:='&Rechercher le suivant';
+ 82: Result:='&Remplacer le suivant';
+ 83: Result:='&Rechercher';
+ 84: Result:='&Remplacer';
+ 85: Result:='Rechercher et &marquer';
+ 86: Result:='Version %s'+#13+'JMBA Softwares 2004, 2026';
+ 87: Result:='%d fichiers de sous-titres et de vidéo d''une série ont été trouvés.'+#13#13+'Voulez-vous régler les sous-titres ?';
+ 88: Result:='Un sous-titre avec une saison et un épisode en double a été trouvé dans ce dossier.'+#13#13+'Vérifiez les sous-titres avec %s avant de continuer.';
+ 89: Result:='Le nombre d''ÉPISODES est supérieur à celui de leurs fichiers de sous-titres.'+#13+'Vérifiez avant de continuer.'+#13#13+'Épisodes : %d fichiers'+#13+'Sous-titres : %d fichiers';
+ 90: Result:='Le nombre de SOUS-TITRES est supérieur à celui de leurs fichiers vidéo.'+#13+'Vérifiez avant de continuer.'+#13#13+'Épisodes : %d fichiers'+#13+'Sous-titres : %d fichiers';
+ 91: Result:='Aucun fichier de sous-titres ou de vidéo d''une série au format standard n''a été trouvé dans ce dossier.';
+ 92: Result:='Impossible d''appliquer la mise en forme de texte souhaitée.'+#13+'Supprimez l''actuelle avant d''en ajouter une autre ou vérifiez que vous avez correctement sélectionné le texte souhaité.';
+ 93: Result:='Impossible d''appliquer la mise en couleur au texte souhaité.'+#13+'Supprimez l''actuelle avant d''en ajouter une autre ou vérifiez que vous avez correctement sélectionné le texte souhaité.';
+ 94: Result:='© 2026 JMBA Softwares. Tous droits réservés.';
+ 95: Result:='1 Closed Caption';
+ 96: Result:='%d Closed Captions';
+    end;
+  end;
   else
   begin
-
     case id of
   0: begin
      //----------------------------------------------------- Form1 (principal)
@@ -291,7 +912,7 @@ begin
      Form1.lstfraps.Caption:='Frame Rate Sync - FPS';
      Form1.lstclosecaption.Caption:='&Remove Closed Captions';
      Form1.lstnumeros.Caption:='Numeric Index Correction';
-     Form1.lstrenomear.Caption:='&Multiple Subtitles Adjustment - Series';
+     Form1.lstrenomear.Caption:='&Multiple Subtitles Adjustment';
      Form1.Menu_Caracter.Caption:='F&ont';
      Form1.lst_editAvancada.Caption:='Advanced Editing       ';
      Form1.lstitalic.Caption:='Italic';
@@ -303,6 +924,9 @@ begin
      Form1.Idioma_Auto.Caption:='Automatic';
      Form1.Idioma_Por.Caption:='Português';
      Form1.Idioma_Eng.Caption:='English';
+     Form1.Idioma_Esp.Caption:='Español';
+     Form1.Idioma_Ita.Caption:='Italiano';
+     Form1.Idioma_Fra.Caption:='Français';
      Form1.Menu_Sobre.Caption:='&Information';
      Form1.Sobre1.Caption:='&About...';
      Form1.Abrir1.Caption:='&Open...';
@@ -316,6 +940,9 @@ begin
      Form1.Idioma_Auto.Checked:=(Language_Global = 0);
      Form1.Idioma_Por.Checked :=(Language_Global = 1);
      Form1.Idioma_Eng.Checked :=(Language_Global = 2);
+     Form1.Idioma_Esp.Checked :=(Language_Global = 3);
+     Form1.Idioma_Ita.Checked :=(Language_Global = 4);
+     Form1.Idioma_Fra.Checked :=(Language_Global = 5);
      end;
   1: begin
      //----------------------------------------------------- Form2 (Ajuste de Tempo)
@@ -446,7 +1073,7 @@ begin
  95: Result:='1 Closed Caption';
  96: Result:='%d Closed Captions';
     end;
-
+  end;
   end;
 end;
 

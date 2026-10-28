@@ -122,6 +122,9 @@ type
     Label2: TLabel;
     ListBox3: TListBox;
     Image5: TImage;
+    Idioma_Esp: TMenuItem;
+    Idioma_Ita: TMenuItem;
+    Idioma_Fra: TMenuItem;
     procedure ListBox1Click(Sender: TObject);
     procedure btnsalvarcomoClick(Sender: TObject);
     procedure btnprocurarClick(Sender: TObject);
@@ -189,6 +192,9 @@ type
     procedure lstclosecaptionClick(Sender: TObject);
     procedure Label2Click(Sender: TObject);
     procedure ListBox3Click(Sender: TObject);
+    procedure Idioma_EspClick(Sender: TObject);
+    procedure Idioma_ItaClick(Sender: TObject);
+    procedure Idioma_FraClick(Sender: TObject);
   private
   { Private declarations }
     //-----------------------------------------------------------------
@@ -453,11 +459,20 @@ begin
   case Idioma of
     1: Result := 'pt_BR';
     2: Result := 'en_US';
+    3: Result := 'es_ES';
+    4: Result := 'it_IT';
+    5: Result := 'fr';
   else
     if GetLanguageWin = 'pt' then
-    Result := 'pt_BR'
+      Result := 'pt_BR'
+    else if GetLanguageWin = 'es' then
+      Result := 'es_ES'
+    else if GetLanguageWin = 'it' then
+      Result := 'it_IT'
+    else if GetLanguageWin = 'fr' then
+      Result := 'fr'
     else
-    Result := 'en_US';
+      Result := 'en_US';
   end;
 end;
 //-------------------------------------------------------------------------------------------------
@@ -2616,6 +2631,24 @@ end;
 procedure TForm1.Idioma_EngClick(Sender: TObject);
 begin
 Lang_Apply(2);
+TraduzirContagem;
+end;
+
+procedure TForm1.Idioma_EspClick(Sender: TObject);
+begin
+Lang_Apply(3);
+TraduzirContagem;
+end;
+
+procedure TForm1.Idioma_FraClick(Sender: TObject);
+begin
+Lang_Apply(4);
+TraduzirContagem;
+end;
+
+procedure TForm1.Idioma_ItaClick(Sender: TObject);
+begin
+Lang_Apply(5);
 TraduzirContagem;
 end;
 
