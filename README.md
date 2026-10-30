@@ -10,14 +10,22 @@ SRT Adjuster é uma ferramenta para editar, ajustar e sincronizar legendas SRT d
   <img src="https://img.shields.io/badge/Status-Ativo-success">
   <img src="https://img.shields.io/badge/Plataforma-Windows-blue">
   <img src="https://img.shields.io/badge/Tipo-Editor%20de%20Legenda-orange">
+  <img src="https://img.shields.io/badge/Arquitetura-x86 | x64-blue">
   <img src="https://img.shields.io/badge/Languages-PT--BR%20%7C%20EN%20%7C%20ES%20%7C%20IT%20%7C%20FR-purple">
+</p>
+
+<p align="center">
+<img src="https://flagcdn.com/w20/br.png" width="20"> Português-BR&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://flagcdn.com/w20/us.png" width="20"> English&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://flagcdn.com/w20/es.png" width="20"> Español&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://flagcdn.com/w20/it.png" width="20"> Italiano&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://flagcdn.com/w20/fr.png" width="20"> Français
 </p>
 
 ---
 
 ## ✨ Funcionalidades
 
-<br>
 <table style="border: none; border-collapse: collapse;">
 <tr>
 <td width="50%" valign="top" style="border: none; padding: 15px;">
