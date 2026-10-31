@@ -198,6 +198,10 @@ type
   private
   { Private declarations }
     //-----------------------------------------------------------------
+    {TRADUZIR CONTAGEM - 01/09}
+    //-----------------------------------------------------------------
+    FIdLabel1, FIdLabel2, FIdLabel3: Integer;
+    //-----------------------------------------------------------------
     {ARRASTA E SOLTA - 01/02}
     //-----------------------------------------------------------------
     procedure WMDropFiles(var Msg: TWMDropFiles); message WM_DROPFILES;
@@ -207,6 +211,7 @@ type
     function S(v: Integer): Integer;
     procedure AjustarAlturas;
     //-----------------------------------------------------------------
+    {ORGANIZAR LISTAS}
     procedure OrganizarListas;
     procedure ToggleLista(LB: TListBox; Lbl: TLabel);
     //-----------------------------------------------------------------
@@ -273,6 +278,19 @@ implementation
 uses Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, CommCtrl, Funcoes, Language, System.IOUtils;
 
 //-------------------------------------------------------------------------------------------------
+{TRADUZIR CONTAGEM - 03/09}
+//-------------------------------------------------------------------------------------------------
+function TextoContagem(Id, N: Integer): String;
+begin
+  case Id of
+    31, 33, 95: Result := Lang_SRT(Id);
+  else
+    Result := Format(Lang_SRT(Id), [N]);
+  end;
+end;
+//-------------------------------------------------------------------------------------------------
+{TRADUZIR CONTAGEM - 02/09}
+//-------------------------------------------------------------------------------------------------
 function NumeroDoCaption(const S: string): Integer;
 var
 i: Integer;
@@ -285,21 +303,36 @@ N:='';
 Result:=StrToIntDef(N,0);
 end;
 //-------------------------------------------------------------------------------------------------
+{TRADUZIR CONTAGEM - 04/09}
+//-------------------------------------------------------------------------------------------------
 procedure TForm1.TraduzirContagem;
 var
 nLinhas, nDialogos: Integer;
 begin
-  if not Label4.Visible then
-  Exit;
+  if Label4.Visible then
+  begin
+  nLinhas  :=NumeroDoCaption(Label4.Caption);
+  nDialogos:=NumeroDoCaption(Label8.Caption);
+  Label4.Caption:=Format(Lang_SRT(41),[nLinhas]);
+  Label8.Caption:=Format(Lang_SRT(42),[nDialogos]);
+  end;
 
-nLinhas  :=NumeroDoCaption(Label4.Caption);
-nDialogos:=NumeroDoCaption(Label8.Caption);
+  if (FIdLabel1 <> 0) and (Label1.Caption <> '') then
+  Label1.Caption:=TextoContagem(FIdLabel1, NumeroDoCaption(Label1.Caption));
 
-Label4.Caption:=Format(Lang_SRT(41),[nLinhas]);
-Label8.Caption:=Format(Lang_SRT(42),[nDialogos]);
+  if (FIdLabel2 <> 0) and (Label2.Caption <> '') then
+  Label2.Caption:=TextoContagem(FIdLabel2, NumeroDoCaption(Label2.Caption));
+
+  if (FIdLabel3 <> 0) and (Label3.Caption <> '') then
+  Label3.Caption:=TextoContagem(FIdLabel3, NumeroDoCaption(Label3.Caption));
+
+Image1.Left:=Label1.Left+Label1.Width+S(3);
+Image2.Left:=Image1.Left;
+Image3.Left:=Label3.Left+Label3.Width+S(3);
+Image5.Left:=Label2.Left+Label2.Width+S(3);
 end;
 //-------------------------------------------------------------------------------------------------
-{Rola o Destino para a mesma primeira linha visível da Origem}
+{SINCRONIZAR ROLAGEM - 01/02}
 //-------------------------------------------------------------------------------------------------
 procedure SincronizarRolagem(Origem, Destino: TRichEdit);
 var
@@ -310,7 +343,7 @@ PrimDestino:=SendMessage(Destino.Handle, EM_GETFIRSTVISIBLELINE, 0, 0);
 SendMessage(Destino.Handle, EM_LINESCROLL, 0, PrimOrigem - PrimDestino);
 end;
 //-------------------------------------------------------------------------------------------------
-{Empilha Label1/ListBox1, Label3/ListBox2 e Label2/ListBox3 sem sobrepor}
+{ORGANIZAR LISTAS - 01/05}
 //-------------------------------------------------------------------------------------------------
 procedure TForm1.OrganizarListas;
 var
@@ -343,6 +376,8 @@ Image3.Top := Label3.Top - S(1);
 Image5.Top := Label2.Top - S(1);
 end;
 //-------------------------------------------------------------------------------------------------
+{TOGGLE LISTA - 01/04}
+//-------------------------------------------------------------------------------------------------
 procedure TForm1.ToggleLista(LB: TListBox; Lbl: TLabel);
 begin
   if (LB.Items.Count > 0) and (not LB.Visible) then
@@ -358,23 +393,24 @@ begin
   else
   LB.Visible := False;
 
+{ORGANIZAR LISTAS - 02/05}
 OrganizarListas;
 end;
 //-------------------------------------------------------------------------------------------------
-{ESCALA DE DPI}
+//ESCALA DE DPI
 //-------------------------------------------------------------------------------------------------
-{Converte um valor em pixels (pensado para 96 DPI) para o DPI atual do form}
+//Converte um valor em pixels (pensado para 96 DPI) para o DPI atual do form
 function TForm1.S(v: Integer): Integer;
 begin
 Result := MulDiv(v, CurrentPPI, 96);
 end;
 //-------------------------------------------------------------------------------------------------
-{Ajusta a altura dos RichEdit (1 ou 2 visíveis) até a barra de status}
+//Ajusta a altura dos RichEdit (1 ou 2 visíveis) até a barra de status}
 procedure TForm1.AjustarAlturas;
 var
 area: Integer;
 begin
-area := StatusBar1.Top - RichText1.Top - S(4); //--> espaço útil até a barra de status
+area := StatusBar1.Top - RichText1.Top - S(4);
 
   if RichText2.Visible then
   begin
@@ -1085,7 +1121,8 @@ begin
   else
   begin
   Lista_Indices(RichText2,RichText1,ListBox1,True, vt_sobreposicao);
-  SincronizarRolagem(RichText2,RichText1); //--> RichText1 acompanha o RichText2
+  {SINCRONIZAR ROLAGEM - 02/02}
+  SincronizarRolagem(RichText2,RichText1);
   end;
 //----------------------------------------------------------------
 end;
@@ -1302,30 +1339,39 @@ ProgressBar1.Refresh;
 
    //-----------------------------------------------------------------------
    //CLOSED CAPTION - TEXTOS
+   {TRADUZIR CONTAGEM - 05/09}
    //-----------------------------------------------------------------------
    if (cont3 > 0) then
    begin
      if (cont3 = 1) then
-     Label2.Caption:=Lang_SRT(95)
+     FIdLabel2:=95
      else
-     Label2.Caption:=Format(Lang_SRT(96),[cont3]);
+     FIdLabel2:=96;
 
+   Label2.Caption:=Format(Lang_SRT(96),[cont3]);
+
+   //----------------------------------------
    Image5.Left:=Label2.Left+Label2.Width+S(3);
    Label2.Visible:=True;
    Image5.Visible:=True;
+   //----------------------------------------
    btnclosecaption.Enabled:=True;
    lstclosecaption.Enabled:=True;
+   //----------------------------------------
    end;
 
    //-----------------------------------------------------------------------
    //LIMITES DE LINHA - TEXTOS
+   {TRADUZIR CONTAGEM - 06/09}
    //-----------------------------------------------------------------------
    if (cont1 > 0) then
    begin
-    if (cont1 = 1) then
-    Label3.Caption:=Lang_SRT(31)
-    else
-    Label3.Caption:=Format(Lang_SRT(32),[cont1]);
+     if (cont1 = 1) then
+     FIdLabel3:=31
+     else
+     FIdLabel3:=32;
+
+   Label3.Caption:=Format(Lang_SRT(32),[cont1]);
 
    //----------------------------------------
    Image3.Left:=Label3.Left+Label3.Width+S(3);
@@ -1344,13 +1390,16 @@ ProgressBar1.Refresh;
 
    //-----------------------------------------------------------------------
    //SOBREPOSIÇÕES - TEXTOS
+   {TRADUZIR CONTAGEM - 07/09}
    //-----------------------------------------------------------------------
    if (cont2 > 0) then
    begin
-      if (cont2 = 1) then
-      Label1.Caption:=Lang_SRT(33)
-      else
-      Label1.Caption:=Format(Lang_SRT(34),[cont2]);
+     if (cont2 = 1) then
+     FIdLabel1:=33
+     else
+     FIdLabel1:=34;
+
+   Label1.Caption:=Format(Lang_SRT(34),[cont2]);
 
    //----------------------------------------
    Image1.Left:=Label1.Left+Label1.Width+S(3);
@@ -1386,6 +1435,7 @@ ProgressBar1.Refresh;
      StatusBar1.Panels[0].Text:=Lang_SRT(21);
      end;
 
+{ORGANIZAR LISTAS - 03/05}
 OrganizarListas;
 
 ProgressBar1.Visible:=False;
@@ -1518,6 +1568,7 @@ Image3.Left:=Label3.Left+Label3.Width+S(3);
 Image5.Left:=Label2.Left+Label2.Width+S(3);
 //--------------------------------------------------
 
+{ORGANIZAR LISTAS - 04/05}
 OrganizarListas;
 
 SendMessage(RichText1.Handle,WM_VSCROLL,SB_TOP,0);
@@ -1582,16 +1633,19 @@ end;
 
 procedure TForm1.Label1Click(Sender: TObject);
 begin
+{TOGGLE LISTA - 02/04}
 ToggleLista(ListBox1, Label1);   {Sobreposições}
 end;
 
 procedure TForm1.Label3Click(Sender: TObject);
 begin
+{TOGGLE LISTA - 03/04}
 ToggleLista(ListBox2, Label3);   {Limites de linha}
 end;
 
 procedure TForm1.Label2Click(Sender: TObject);
 begin
+{TOGGLE LISTA - 04/04}
 ToggleLista(ListBox3, Label2);   {Closed Caption}
 end;
 
@@ -2590,6 +2644,9 @@ btn_ortografia.Enabled:=True;
 lst_ortografia.Enabled:=True;
 //----------------------------
 
+  //----------------------------
+  {TRADUZIR CONTAGEM - 08/09}
+  //----------------------------
   if ContadorRemocoes = 0 then
   begin
   Label1.Caption:='';
@@ -2599,7 +2656,8 @@ lst_ortografia.Enabled:=True;
   end
   else
   begin
-  Label1.Caption:=Format(Lang_SRT(35),[DialogosComCC]);
+  FIdLabel1:=35;
+  Label1.Caption:=TextoContagem(FIdLabel1, DialogosComCC);
   Label1.Font.Color:=clBlue;
   Label1.Visible:=True;
   Image2.Left:=Label1.Left+Label1.Width+S(3);
@@ -2607,7 +2665,9 @@ lst_ortografia.Enabled:=True;
   StatusBar1.Panels[0].Text := Lang_SRT(30);
   end;
 
+{ORGANIZAR LISTAS - 05/05}
 OrganizarListas;
+
 Panel1.Visible := False;
 end;
 
@@ -2616,6 +2676,9 @@ begin
 btnclosecaption.Click;
 end;
 
+//-------------------------------------------------------------------------------------------------
+{TRADUZIR CONTAGEM - 09/09 (Idioma_Auto, Por, Eng, Esp, Ita e Fra)}
+//-------------------------------------------------------------------------------------------------
 procedure TForm1.Idioma_AutoClick(Sender: TObject);
 begin
 Lang_Apply(0);

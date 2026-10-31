@@ -48,7 +48,7 @@ object Form1: TForm1
   end
   object Label8: TLabel
     Left = 1787
-    Top = 360
+    Top = 368
     Width = 189
     Height = 38
     Margins.Left = 9
