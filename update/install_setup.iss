@@ -5,9 +5,9 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{3AEA3DA5-9A0C-423B-878B-E8627502C741}
+AppId={{4630C192-6817-4171-B1CF-97672585FC59}
 AppName=SRT Adjuster
-AppVersion=1.4.1
+AppVersion=2.0
 AppPublisher=JMBA Softwares
 AppPublisherURL=http://phobosfreeware.blogspot.com.br/
 AppSupportURL=http://phobosfreeware.blogspot.com.br/
@@ -17,7 +17,7 @@ DefaultGroupName=SRT Adjuster
 DisableDirPage=yes
 DisableProgramGroupPage=yes
 OutputDir=C:\Users\Phobos\Desktop
-OutputBaseFilename=SRTAdjuster_1.4.1_Setup
+OutputBaseFilename=SRTAdjuster_2.0_Setup
 SetupIconFile=C:\JMBA Softwares\SRT Adjuster\bin\subtitle.ico
 Compression=lzma2
 SolidCompression=yes
@@ -30,6 +30,7 @@ Root: HKCR; Subkey: "SRT Adjuster\DefaultIcon"; ValueType: string; ValueName: ""
 Root: HKCR; Subkey: "SRT Adjuster\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\SRTAdjuster.exe"" ""%1"""
 
 [Languages]
+Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 
 [Tasks]
@@ -41,7 +42,7 @@ Source: "C:\JMBA Softwares\SRT Adjuster\SRTAdjuster.exe"; DestDir: "{app}"; Flag
 Source: "C:\JMBA Softwares\SRT Adjuster\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "SRTAdjuster.ini,unins000.dat,unins000.exe"
 
 [Icons]
-Name: "{group}\SRT Adjuster 1.4"; Filename: "{app}\SRTAdjuster.exe"; IconFilename: "{app}\bin\application.ico"
+Name: "{group}\SRT Adjuster 2.0"; Filename: "{app}\SRTAdjuster.exe"; IconFilename: "{app}\bin\application.ico"
 Name: "{group}\Desinstalar"; Filename: "{uninstallexe}"; IconFilename: "{app}\bin\uninstall.ico"
 Name: "{commondesktop}\SRT Adjuster"; Filename: "{app}\SRTAdjuster.exe"; Tasks: desktopicon; IconFilename: "{app}\bin\application.ico"
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\SRT Adjuster"; Filename: "{app}\SRTAdjuster.exe"; Tasks: quicklaunchicon; IconFilename: "{app}\bin\application.ico"
