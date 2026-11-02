@@ -153,7 +153,7 @@ Português, inglês, espanhol, italiano e francês. No modo Automático o progra
 ## 📸 Preview
 
 <p align="center">
-  <img width="500" alt="image" src="https://github.com/user-attachments/assets/67080672-63e1-4229-a5bf-e41b17e190b6" />
+  <img width="500" alt="image" src="https://github.com/user-attachments/assets/ab5f3f6b-2b7f-4f86-8421-06a04ffe705c" />
 </p>
 
 ---
