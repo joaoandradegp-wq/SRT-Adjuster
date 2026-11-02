@@ -2,3 +2,6 @@
 *.dcu
 !MruUnit.dcu
 SRTAdjuster.exe
+/__history
+/state
+SRT-Adjuster.rar

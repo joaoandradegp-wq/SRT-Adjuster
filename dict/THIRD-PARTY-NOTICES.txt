@@ -1,0 +1,103 @@
+THIRD-PARTY NOTICES
+===================
+
+This application uses third-party Hunspell spelling dictionaries. The
+dictionaries are separate from the application's original code and remain
+subject to their respective copyright notices and license terms.
+
+IMPORTANT
+---------
+The license terms can differ between dictionaries. This notice is a summary
+and does not replace the original README, copyright notices, or license texts
+distributed by the upstream projects. Keep those original notices with the
+corresponding dictionary files.
+
+1. BRAZILIAN PORTUGUESE — pt_BR
+-------------------------------
+Upstream project: VERO / LibreOffice Brazilian Portuguese dictionary
+Author/maintainer identified in upstream notices: Raimundo Santos Moura and
+contributors.
+License information: the upstream README identifies GNU Lesser General
+Public License version 3 (LGPLv3) and Mozilla Public License (MPL).
+Source and original notices:
+https://github.com/LibreOffice/dictionaries/tree/master/pt_BR
+
+Retain the original README and all copyright/license notices shipped with
+the exact pt_BR files used by this application.
+
+2. AMERICAN ENGLISH — en_US
+---------------------------
+Upstream project: SCOWL / English Hunspell dictionaries (confirm against the
+source from which the files were obtained).
+The LibreOffice English dictionary README attributes the word lists to SCOWL
+and notes that the affix file is based on an Ispell file covered by a BSD
+license.
+Sources:
+https://wordlist.aspell.net/hunspell-readme/
+https://github.com/LibreOffice/dictionaries/tree/master/en
+
+The exact license and attribution depend on the specific en_US files used.
+Retain the original README/license notices from the source of those files.
+
+3. SPANISH — es_ES
+------------------
+Upstream project: LibreOffice / Hunspell Spanish dictionary
+The upstream README states that the spelling dictionary may be used under
+one of these alternative licenses:
+- GNU General Public License (GPL), version 3 or later;
+- GNU Lesser General Public License (LGPL), version 3 or later; or
+- Mozilla Public License (MPL), version 1.1 or later.
+
+Source and original notices:
+https://github.com/LibreOffice/dictionaries/tree/master/es
+README:
+https://github.com/LibreOffice/dictionaries/blob/master/es/README_hunspell_es.txt
+License details:
+https://github.com/LibreOffice/dictionaries/blob/master/es/LICENSE.md
+
+This application does not claim ownership of the Spanish dictionary. The
+selected license and its conditions must be respected for the files
+redistributed with this application.
+
+4. ITALIAN — it_IT
+------------------
+Upstream project: LibreOffice / Italian Hunspell dictionary
+The dictionary's own files and README contain the applicable copyright and
+license notices. Check and retain the notices from the exact version used.
+Source:
+https://github.com/LibreOffice/dictionaries/tree/master/it_IT
+
+Do not assume that the Italian dictionary has the same license as the other
+dictionaries or that the repository's top-level license replaces the
+dictionary-specific terms.
+
+5. FRENCH — fr
+--------------
+Upstream project: Dicollecte / LibreOffice French spelling dictionary
+The LibreOffice licensing information identifies Olivier R. (Dicollecte)
+and lists these alternative licenses:
+- Mozilla Public License (MPL), version 1.1 or later;
+- GNU General Public License (GPL), version 2.0 or later; or
+- GNU Lesser General Public License (LGPL), version 2.1 or later.
+
+Source and original notices:
+https://github.com/LibreOffice/dictionaries/tree/master/fr_FR
+French dictionary README:
+https://github.com/LibreOffice/dictionaries/blob/master/fr_FR/dictionaries/README_dict_fr.txt
+LibreOffice licensing information:
+https://api.libreoffice.org/share/readme/LICENSE.html
+
+Keep the original French dictionary README and the selected license text
+with the redistributed files.
+
+GENERAL NOTICE
+--------------
+Hunspell is a separate spelling-checking library and has its own license.
+This file covers the third-party dictionaries listed above, not the Hunspell
+library itself or any other third-party component.
+
+Hunspell project:
+https://github.com/hunspell/hunspell
+
+No ownership of third-party dictionary contents is claimed by the author of
+this application. All rights remain with their respective copyright holders.

@@ -3,14 +3,23 @@
 </p>
 
 <p align="center">
-SRT Adjuster é uma ferramenta para editar, ajustar e sincronizar legendas SRT de forma simples e intuitiva. Reúne recursos de diversos editores em uma interface amigável com edição estilo Bloco de Notas, permitindo correções automáticas, ajustes de tempo e duração, pesquisa avançada, aplicação de efeitos, sincronização gradativa, conversão de FPS, renomeação em massa e correção automática da numeração dos diálogos. Não requer dependências externas.
+SRT Adjuster é uma ferramenta para editar, ajustar e sincronizar legendas SRT de forma simples e intuitiva. Reúne recursos de diversos editores em uma interface amigável com edição estilo Bloco de Notas, permitindo correções automáticas, ajustes de tempo e duração, pesquisa avançada, aplicação de efeitos, sincronização gradativa, conversão de FPS, renomeação em massa e correção automática da numeração dos diálogos. Disponível em português, inglês, espanhol, italiano e francês. Não requer dependências externas.
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Status-Ativo-success">
   <img src="https://img.shields.io/badge/Plataforma-Windows-blue">
   <img src="https://img.shields.io/badge/Tipo-Editor%20de%20Legenda-orange">
-  <img src="https://img.shields.io/badge/Languages-PT--BR%20%7C%20EN-purple">
+  <img src="https://img.shields.io/badge/Arquitetura-x86 | x64-blue">
+  <img src="https://img.shields.io/badge/Languages-PT--BR%20%7C%20EN%20%7C%20ES%20%7C%20IT%20%7C%20FR-purple">
+</p>
+
+<p align="center">
+<img src="https://flagcdn.com/w20/br.png" width="20"> Português-BR&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://flagcdn.com/w20/us.png" width="20"> English&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://flagcdn.com/w20/es.png" width="20"> Español&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://flagcdn.com/w20/it.png" width="20"> Italiano&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://flagcdn.com/w20/fr.png" width="20"> Français
 </p>
 
 ---
@@ -23,7 +32,9 @@ SRT Adjuster é uma ferramenta para editar, ajustar e sincronizar legendas SRT d
 
 #### ⚡ CORREÇÕES AUTOMÁTICAS
 
-Identifica sobreposições de diálogo e limites excedentes de linha oferecendo correção automática para as sobreposições e fácil localização dos limites excedentes de linha.
+Identifica sobreposições de diálogo e limites excedentes de linha (diálogos com mais de duas linhas), listando cada ocorrência para que você clique e vá direto ao ponto na legenda.
+
+As sobreposições são corrigidas automaticamente, com o texto original e o corrigido na mesma tela para comparação antes de salvar.
 <br><br>
 </td>
 
@@ -41,7 +52,7 @@ Ajusta o tempo ou a duração dos diálogos em toda a legenda por horas, minutos
 
 #### ✏️ EDIÇÃO AVANÇADA
 
-Realiza um highlight de toda a estrutura da legenda para melhor visualização, além de permitir a inserção de efeitos de itálico/sublinhado e cores no diálogo que desejar (utilizado para criar créditos de criação).
+Realiza um highlight de toda a estrutura da legenda para melhor visualização, além de permitir a inserção de efeitos de itálico/sublinhado e cores no diálogo que desejar (utilizado para criar créditos de criação). Também é possível alterar o tamanho da fonte e alternar o fundo do editor entre claro e escuro.
 
 Pesquisa/Substituição/Marcação: Foi implementado um novo método de pesquisa e identificação a partir dos critérios que o usuário desejar.
 <br><br>
@@ -87,8 +98,8 @@ Em caso de se adicionar ou subtrair diálogos manualmente, é possível corrigir
 
 #### 📝 VERIFICAÇÃO ORTOGRÁFICA
 
-Utilização da biblioteca hunspell.dll, verifica erros ortográficos em diálogos PT-BR ou EN-US e demonstra em tela para facilitar a identificação e correção.
-<br>
+Utilização da biblioteca hunspell.dll, verifica erros ortográficos nos diálogos e demonstra em tela para facilitar a identificação e correção. O dicionário acompanha o idioma escolhido no programa: PT-BR, EN-US, ES, IT ou FR.
+<br><br>
 </td>
 </tr>
 
@@ -105,13 +116,35 @@ Caso a legenda, originalmente branca, está atrapalhando a visualização dos di
 
 #### 🧹 REMOÇÃO DE CLOSED CAPTION
 
-Remove automaticamente elementos de Closed Caption (CC), como descrições de sons, músicas e identificações de falas, deixando a legenda mais limpa e focada apenas nos diálogos.
+Identifica os diálogos com Closed Captions (CC) e remove automaticamente descrições de sons, músicas e identificações de falas, deixando a legenda mais limpa e focada apenas nos diálogos. Diálogos que ficam vazios após a remoção são descartados.
 
 Essa funcionalidade é especialmente útil, pois na maioria dos casos não existe uma versão da legenda sem Closed Caption disponível, tornando o ajuste manual trabalhoso e demorado.
 <br><br>
 </td>
 </tr>
 
+<tr>
+<td width="50%" valign="top" style="border: none; padding: 15px;">
+
+#### 🌍 INTERFACE MULTIIDIOMA
+
+Português, inglês, espanhol, italiano e francês. No modo Automático o programa segue o idioma do Windows (e usa inglês quando o idioma não é um dos suportados), e a escolha feita no menu Idioma é lembrada na próxima abertura. A troca é aplicada na hora, incluindo mensagens, contadores e o dicionário da verificação ortográfica.
+<br><br>
+</td>
+
+<td width="50%" valign="top" style="border: none; padding: 15px;">
+
+#### 📂 PRATICIDADE NO DIA A DIA
+
+- Arraste e solte um arquivo .srt na janela para abri-lo
+- Lista das últimas legendas abertas
+- Abertura direta ao associar a extensão .srt ao programa
+- Detecção automática da codificação (ANSI ou UTF-8) ao abrir; o arquivo é salvo em UTF-8
+- Ao salvar, oferece abrir o vídeo correspondente, quando encontrado na mesma pasta
+- Interface ajustada à escala de DPI do Windows
+<br>
+</td>
+</tr>
 
 </table>
 

@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, Buttons, Mask, ComCtrls, ExtCtrls, StrUtils,
-  WinSkinData, OleCtnrs, MPlayer, RXSpin, pngimage;
+  OleCtnrs, MPlayer, pngimage;
 
 type
   TForm3 = class(TForm)
@@ -16,7 +16,6 @@ type
     btnOK: TSpeedButton;
     btnCancelar: TSpeedButton;
     Bevel1: TBevel;
-    SkinData1: TSkinData;
     Image1: TImage;
     Image2: TImage;
     duvida_pri_dialogo: TSpeedButton;

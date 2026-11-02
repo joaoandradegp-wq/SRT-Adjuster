@@ -1,7 +1,7 @@
 program SRTAdjuster;
 
 uses
-  Forms,
+  Forms,Windows,
   Unit1 in 'Unit1.pas' {Form1},
   Unit2 in 'Unit2.pas' {Form2},
   Unit3 in 'Unit3.pas' {Form3},
@@ -19,7 +19,7 @@ uses
 
 const
 //-------------------------------------------------------
-SRT_VERSAO_Global = '1.5';
+SRT_VERSAO_Global = '2.0';
 SRT_VERSAO     = SRT_VERSAO_Global;
 SRT_BLOG       = 'http://phobosfreeware.blogspot.com.br';
 //-------------------------------------------------------
@@ -27,11 +27,12 @@ var
 //------------------------------------------------------
 SRT_EXE,
 SRT_RAIZ:String;
+T: UInt64;
 //------------------------------------------------------
 
 begin
   Application.Initialize;
-  Application.Title := 'SRT Adjuster 1.5';
+  Application.Title := 'SRT Adjuster 2.0';
   SRT_EXE  := Copy(ExtractFileName(Application.ExeName), 1,
                    Length(ExtractFileName(Application.ExeName)) - 4);
   SRT_RAIZ := ExtractFilePath(Application.ExeName);
@@ -42,7 +43,14 @@ begin
   try
     Splash_Screen.Show;
     Splash_Screen.Update;
-    Sleep(3000);
+    T := GetTickCount64;
+
+      while GetTickCount64 - T < 3000 do
+      begin
+      Application.ProcessMessages;
+      Sleep(10);
+      end;
+
   finally
     Splash_Screen.Free;
   end;

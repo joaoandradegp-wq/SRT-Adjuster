@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Buttons, StdCtrls, WinSkinData, ComCtrls, StrUtils;
+  Dialogs, Buttons, StdCtrls, ComCtrls, StrUtils;
 
 type
   TForm6_substituir = class(TForm)
@@ -19,7 +19,6 @@ type
     CheckBox1: TCheckBox;
     CheckBox2: TCheckBox;
     CheckBox3: TCheckBox;
-    SkinData1: TSkinData;
     procedure Edit1Change(Sender: TObject);
     procedure btn_cancelarClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
