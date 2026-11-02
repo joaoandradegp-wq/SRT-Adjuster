@@ -34948,10 +34948,10 @@ object splash_screen: Tsplash_screen
     Stretch = True
   end
   object Label1: TLabel
-    Left = 369
-    Top = 725
-    Width = 957
-    Height = 54
+    Left = 355
+    Top = 732
+    Width = 992
+    Height = 44
     Margins.Left = 9
     Margins.Top = 9
     Margins.Right = 9
@@ -34959,8 +34959,8 @@ object splash_screen: Tsplash_screen
     Caption = #169' 2026 JMBA Softwares. Todos os direitos reservados.'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -40
-    Font.Name = 'Segoe UI'
+    Font.Height = -36
+    Font.Name = 'Verdana'
     Font.Style = []
     Font.Quality = fqClearTypeNatural
     ParentFont = False
