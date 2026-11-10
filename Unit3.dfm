@@ -1,18 +1,14 @@
 object Form3: TForm3
   Left = 371
   Top = 314
-  Margins.Left = 9
-  Margins.Top = 9
-  Margins.Right = 9
-  Margins.Bottom = 9
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
-  ClientHeight = 510
-  ClientWidth = 1092
+  ClientHeight = 170
+  ClientWidth = 357
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -33
+  Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   KeyPreview = True
@@ -20,100 +16,75 @@ object Form3: TForm3
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
-  PixelsPerInch = 288
-  TextHeight = 37
+  TextHeight = 13
   object Label1: TLabel
-    Left = 155
-    Top = 152
-    Width = 277
-    Height = 48
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 55
+    Top = 35
+    Width = 92
+    Height = 15
     Caption = 'Primeiro Di'#225'logo:'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -36
+    Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
   end
   object Label2: TLabel
-    Left = 183
-    Top = 222
-    Width = 249
-    Height = 48
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 64
+    Top = 67
+    Width = 83
+    Height = 15
     Caption = #218'ltimo Di'#225'logo:'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -36
+    Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
   end
   object btnOK: TSpeedButton
-    Left = 24
-    Top = 384
-    Width = 723
-    Height = 99
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 8
+    Top = 128
+    Width = 241
+    Height = 33
     Caption = 'OK'
     Enabled = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -32
+    Font.Height = -11
     Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
     OnClick = btnOKClick
   end
   object btnCancelar: TSpeedButton
-    Left = 768
-    Top = 384
-    Width = 291
-    Height = 99
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 256
+    Top = 128
+    Width = 97
+    Height = 33
     Caption = 'Cancelar'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -32
+    Font.Height = -11
     Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
     OnClick = btnCancelarClick
   end
   object Bevel1: TBevel
-    Left = 6
-    Top = 327
-    Width = 1077
-    Height = 30
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 2
+    Top = 109
+    Width = 359
+    Height = 10
     Shape = bsBottomLine
     Style = bsRaised
   end
   object Image1: TImage
-    Left = 838
-    Top = 155
-    Width = 48
-    Height = 48
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 280
+    Top = 35
+    Width = 16
+    Height = 16
     Picture.Data = {
       0954506E67496D61676589504E470D0A1A0A0000000D49484452000000800000
       00800806000000C33E61CB00000006624B474400FF00FF00FFA0BDA793000010
@@ -256,14 +227,10 @@ object Form3: TForm3
     Visible = False
   end
   object Image2: TImage
-    Left = 838
-    Top = 230
-    Width = 48
-    Height = 48
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 280
+    Top = 70
+    Width = 16
+    Height = 16
     Picture.Data = {
       0954506E67496D61676589504E470D0A1A0A0000000D49484452000000800000
       00800806000000C33E61CB00000006624B474400FF00FF00FFA0BDA793000010
@@ -406,59 +373,47 @@ object Form3: TForm3
     Visible = False
   end
   object duvida_pri_dialogo: TSpeedButton
-    Left = 753
-    Top = 146
-    Width = 69
-    Height = 66
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 258
+    Top = 33
+    Width = 23
+    Height = 22
     ImageIndex = 1
     ImageName = 'Duvidas'
     Images = Form1.VirtualImageList2
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -36
+    Font.Height = -12
     Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ParentFont = False
     OnClick = duvida_pri_dialogoClick
   end
   object duvida_ult_dialogo: TSpeedButton
-    Left = 753
-    Top = 221
-    Width = 69
-    Height = 66
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 258
+    Top = 64
+    Width = 23
+    Height = 22
     ImageIndex = 1
     ImageName = 'Duvidas'
     Images = Form1.VirtualImageList2
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -36
+    Font.Height = -12
     Font.Name = 'Verdana'
     Font.Style = [fsBold]
     ParentFont = False
     OnClick = duvida_ult_dialogoClick
   end
   object MaskEdit1: TMaskEdit
-    Left = 450
-    Top = 151
-    Width = 297
-    Height = 52
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 149
+    Top = 35
+    Width = 105
+    Height = 23
     EditMask = '!99:99:99,999;1;_'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -36
-    Font.Name = 'Verdana'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     MaxLength = 12
     ParentFont = False
@@ -467,19 +422,15 @@ object Form3: TForm3
     OnChange = MaskEdit1Change
   end
   object MaskEdit2: TMaskEdit
-    Left = 450
-    Top = 221
-    Width = 297
-    Height = 52
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 149
+    Top = 64
+    Width = 105
+    Height = 23
     EditMask = '!99:99:99,999;1;_'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -36
-    Font.Name = 'Verdana'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     MaxLength = 12
     ParentFont = False

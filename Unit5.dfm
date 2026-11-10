@@ -1,19 +1,15 @@
 object Form5: TForm5
   Left = 674
   Top = 311
-  Margins.Left = 9
-  Margins.Top = 9
-  Margins.Right = 9
-  Margins.Bottom = 9
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Duvidas'
-  ClientHeight = 510
-  ClientWidth = 993
+  ClientHeight = 170
+  ClientWidth = 357
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -33
+  Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   KeyPreview = True
@@ -21,133 +17,100 @@ object Form5: TForm5
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
-  PixelsPerInch = 288
-  TextHeight = 37
+  TextHeight = 13
   object Label1: TLabel
-    Left = 156
-    Top = 105
-    Width = 280
-    Height = 48
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 52
+    Top = 35
+    Width = 93
+    Height = 15
     Caption = 'Frame Rate Atual:'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -36
+    Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
   end
   object Label2: TLabel
-    Left = 91
-    Top = 201
-    Width = 345
-    Height = 48
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 30
+    Top = 67
+    Width = 113
+    Height = 15
     Caption = 'Frame Rate Desejado:'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -36
+    Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
   end
   object btnOK: TSpeedButton
-    Left = 24
-    Top = 384
-    Width = 627
-    Height = 99
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 8
+    Top = 128
+    Width = 241
+    Height = 33
     Caption = 'OK'
     Enabled = False
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -32
+    Font.Height = -11
     Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
     OnClick = btnOKClick
   end
   object btnCancelar: TSpeedButton
-    Left = 672
-    Top = 384
-    Width = 291
-    Height = 99
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 256
+    Top = 128
+    Width = 97
+    Height = 33
     Caption = 'Cancelar'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -32
+    Font.Height = -11
     Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
     OnClick = btnCancelarClick
   end
   object Bevel1: TBevel
-    Left = 24
-    Top = 336
-    Width = 981
-    Height = 30
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 2
+    Top = 109
+    Width = 359
+    Height = 10
     Shape = bsBottomLine
     Style = bsRaised
   end
   object duvida_fps_atual: TSpeedButton
-    Left = 775
-    Top = 100
-    Width = 69
-    Height = 66
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 258
+    Top = 33
+    Width = 23
+    Height = 22
     ImageIndex = 1
     ImageName = 'Duvidas'
     Images = Form1.VirtualImageList2
     OnClick = duvida_fps_atualClick
   end
   object duvida_fps_desejado: TSpeedButton
-    Left = 775
-    Top = 193
-    Width = 69
-    Height = 66
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 258
+    Top = 64
+    Width = 23
+    Height = 22
     ImageIndex = 1
     ImageName = 'Duvidas'
     Images = Form1.VirtualImageList2
     OnClick = duvida_fps_desejadoClick
   end
   object combo_fps_legenda: TComboBox
-    Left = 454
-    Top = 104
-    Width = 315
-    Height = 56
+    Left = 149
+    Top = 32
+    Width = 105
+    Height = 23
     Hint = 'Selecione qual o FPS original da legenda'
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
     Style = csDropDownList
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -36
+    Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Style = []
     ItemIndex = 0
@@ -171,19 +134,15 @@ object Form5: TForm5
       '30')
   end
   object combo_fps_video: TComboBox
-    Left = 454
-    Top = 200
-    Width = 315
-    Height = 56
+    Left = 149
+    Top = 64
+    Width = 105
+    Height = 23
     Hint = 'Selecione o FPS para o qual deseja converter'
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
     Style = csDropDownList
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -36
+    Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Style = []
     ItemIndex = 0
