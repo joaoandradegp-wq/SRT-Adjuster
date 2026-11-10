@@ -17,6 +17,8 @@ type
   private
     { Private declarations }
     FIndicator: TActivityIndicator;
+    {FONTE LABEL SPLASH - 01/03}
+    procedure AjustarFonteLabel;
   public
     { Public declarations }
     procedure AjustarTamanho;
@@ -30,6 +32,18 @@ implementation
 uses Unit1, Language;
 
 {$R *.dfm}
+
+{FONTE LABEL SPLASH - 02/03}
+procedure Tsplash_screen.AjustarFonteLabel;
+const
+PERC_FONTE = 0.05;
+MIN_FONTE_PX = 14;
+begin
+Label1.ParentFont := False;
+Label1.Font.Height := -Max(Round(ClientHeight * PERC_FONTE), MIN_FONTE_PX);
+Label1.AutoSize := True;
+Label1.Transparent := True;
+end;
 
 procedure Tsplash_screen.AjustarTamanho;
 const
@@ -99,15 +113,30 @@ Exe: string;
 begin
 AjustarTamanho;
 
+{FONTE LABEL SPLASH - 03/03}
+AjustarFonteLabel;
+
 Label1.Caption := Lang_SRT(94);
 Label1.Left := (ClientWidth - Label1.Width) div 2;
-Label1.Top := ClientHeight - Label1.Height - MulDiv(6, CurrentPPI, 96);
+
+{LABEL E LOADING PROPORCIONAIS - 01/03}
+Label1.Top := ClientHeight - Label1.Height - Round(ClientHeight * 0.015);
 
 FIndicator := TActivityIndicator.Create(Self);
 FIndicator.Parent := Self;
-FIndicator.IndicatorSize := aisMedium;
+
+{LABEL E LOADING PROPORCIONAIS - 02/03}
+  if ClientHeight >= 600 then
+  FIndicator.IndicatorSize := aisXLarge
+  else if ClientHeight >= 400 then
+  FIndicator.IndicatorSize := aisLarge
+  else
+  FIndicator.IndicatorSize := aisMedium;
+
 FIndicator.Left := (ClientWidth - FIndicator.Width) div 2;
-FIndicator.Top := ClientHeight - FIndicator.Height - MulDiv(50, CurrentPPI, 96);
+
+{LABEL E LOADING PROPORCIONAIS - 03/03}
+FIndicator.Top := Label1.Top - FIndicator.Height - Round(ClientHeight * 0.13);
 FIndicator.Animate := True;
 
 Exe := ExtractFilePath(ParamStr(0)) + 'check_update.exe';

@@ -34942,7 +34942,7 @@ object splash_screen: Tsplash_screen
   object Label1: TLabel
     Left = 118
     Top = 244
-    Width = 342
+    Width = 345
     Height = 14
     Caption = #169' 2026 JMBA Softwares. Todos os direitos reservados.'
     Font.Charset = ANSI_CHARSET
