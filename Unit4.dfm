@@ -1,10 +1,6 @@
 object splash_screen: Tsplash_screen
   Left = 348
   Top = 218
-  Margins.Left = 9
-  Margins.Top = 9
-  Margins.Right = 9
-  Margins.Bottom = 9
   Anchors = []
   AutoSize = True
   BorderIcons = []
@@ -16,23 +12,19 @@ object splash_screen: Tsplash_screen
   Ctl3D = False
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -33
+  Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   Position = poMainFormCenter
+  Scaled = False
   OnClose = FormClose
   OnCreate = FormCreate
-  PixelsPerInch = 288
-  TextHeight = 37
+  TextHeight = 13
   object Image1: TImage
     Left = 0
     Top = 0
     Width = 1701
     Height = 793
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
     AutoSize = True
     Center = True
     Picture.Data = {
@@ -34948,18 +34940,14 @@ object splash_screen: Tsplash_screen
     Stretch = True
   end
   object Label1: TLabel
-    Left = 355
-    Top = 732
-    Width = 992
-    Height = 44
-    Margins.Left = 9
-    Margins.Top = 9
-    Margins.Right = 9
-    Margins.Bottom = 9
+    Left = 118
+    Top = 244
+    Width = 342
+    Height = 14
     Caption = #169' 2026 JMBA Softwares. Todos os direitos reservados.'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -36
+    Font.Height = -12
     Font.Name = 'Verdana'
     Font.Style = []
     Font.Quality = fqClearTypeNatural
