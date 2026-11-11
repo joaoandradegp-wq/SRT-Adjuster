@@ -36,7 +36,7 @@ uses Unit1, Language;
 {FONTE LABEL SPLASH - 02/03}
 procedure Tsplash_screen.AjustarFonteLabel;
 const
-PERC_FONTE = 0.05;
+PERC_FONTE = 0.04;
 MIN_FONTE_PX = 14;
 begin
 Label1.ParentFont := False;
